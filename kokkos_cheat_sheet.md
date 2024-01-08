@@ -1,8 +1,8 @@
 # Cheat Sheet
 
-## Memory
+## Memory
 
-### Different Memory Spaces
+### Different Memory Spaces
 
 ### View 
 
@@ -12,16 +12,16 @@
 
 ## Kernel
 
-### Parallel_for
+### Parallel_for
 
-### MdRange
+### MdRange
 
 ### Hierarchical Parallelism
 
 ### Task Parallelism
 
-### Scratch Memory
+### Scratch Memory
 
-### Atomics
+### Atomics
 
 ### ScatterView
