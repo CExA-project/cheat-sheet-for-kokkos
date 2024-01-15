@@ -119,8 +119,6 @@ caching on a CPU and coalescing on a GPU.
 
 ### DualView
 
-Dualviews 
-
 ### Mirror
 
 Mirrors are views of equivalent arrays residing in possibly different memory spaces.
@@ -158,14 +156,100 @@ Kokkos :: deepcopy (hostView , view);
 ## Kernel
 
 ### Parallel_for
++Custom: 
+``` cpp 
+parallel_for ( " Label " ,
+RangePolicy < ExecutionSpace >(0, numberOfIntervals) ,
+[=] ( const int64_t i ) {
+/* ... body ... */
+});
+```
+
++Default
+``` cpp
+parallel_for ( " Label " ,
+numberOfIntervals, // == RangePolicy < >(0 , numberOfIntervals)
+[=] ( const int64_t i ) {
+/* ... body ... */
+});
+```
 
 ### MdRange
 
+MDRangePolicy is used to define a multi-dimensional range for parallel iteration.
+Here is an exemple for two iterations: 
+
+```cpp 
+Kokkos::MDRangePolicy<Kokkos::Rank<2>> policy({0, 0}, {N, M});
+```
+
 ### Hierarchical Parallelism
+
+Kokkos supports hierarchical parallelism with the use of teams. Key commands include TeamPolicy to define teams, TeamThreadRange for team-level iteration, and parallel_for within a team.
++Example
+
+```cpp 
+Kokkos::TeamPolicy team_policy(Number_Of_Teams, Team_Size); #We ususally take Team_Size = KOKKOS::AUTO
+Kokkos::parallel_for(team_policy, KOKKOS_LAMBDA(const Kokkos::TeamPolicy::member_type& teamMember) {
+  const int team_rank = teamMember.team_rank();
+  Kokkos::TeamThreadRange(teamMember, vector_length, i) {
+    // Parallel computation within a team
+  }
+});
+```
 
 ### Task Parallelism
 
 ### Scratch Memory
+
+2 levels of Scratch Memory Space: 
+- 0: limited size but fast.
+- 1: Larger allocation but equivalent to high bandwidth memory in latency.
+
+Useful when same member of a team read the same data multiple times.
+
+```cpp 
+TeamPolicy < ExecutionSpace > policy ( numberOfTeams , teamSize );
+
+// Define a scratch memory view type
+typedef View < double * , ExecutionSpace::scratch_memory_space, MemoryUnmanaged > ScratchPadView ;
+
+// Compute how much scratch memory ( in bytes ) is needed
+size_t bytes = ScratchPadView::shmem_size ( vectorSize );
+
+// Tell the policy how much scratch memory is needed
+int level = 0;
+
+parallel_for ( policy.set_scratch_size ( level , PerTeam ( bytes )),
+KOKKOS_LAMBDA ( const member_type & teamMember ) {
+
+// Create a view from the pre - existing scratch memory
+ScratchPadView scratch ( teamMember . team_scratch ( level ) ,
+vectorSize );
+});
+```
+
+Don't forget the use of team_barrier to prevent threads to use scratch before all threads are done loading
++Example
+
+```cpp 
+operator ()( member_type teamMember ) {
+Scra tchPadVi ew scratch (...);
+parallel_for ( ThreadVectorRange ( teamMember , vectorSize ) ,
+[=] ( int i ) {
+scratch ( i ) = B ( element , i );
+});
+teamMember . teambarrier ( ) ;
+parallel_for ( TeamThreadRange ( teamMember , numberOfQPs ) ,
+[=] ( int qp ) {
+double total = 0;
+for ( int i = 0; i < vectorSize ; ++ i ) {
+total += A ( element , qp , i ) * scratch ( i );
+}
+result ( element , qp ) = total ;
+});
+}
+```
 
 ### Atomics
 
