@@ -119,6 +119,43 @@ caching on a CPU and coalescing on a GPU.
 
 ### DualView
 
++ DualView Concept: DualView in Kokkos provides two views: one for the host (h_view) and one for the device (d_view). You can operate on these views independently and synchronize them when necessary.
+
++ Synchronization: DualView has methods for synchronizing data between host and device: sync_to_host() and sync_to_device(). These ensure that the most recent data is available on the host or device before you begin operations there.
+
++ Modifiers: DualView uses modifiers to indicate the most recent data location (modified_host or modified_device). This helps to minimize unnecessary data transfers.
+
++ Example: 
+```cpp
+int main(int argc, char* argv[]) {
+  Kokkos::initialize(argc, argv);
+
+  {
+    // Create a DualView of size 10
+    Kokkos::DualView<double*> a_dual("A", 10);
+
+    // Modify the device view
+    Kokkos::parallel_for("Initialize", Kokkos::RangePolicy<>(0,10), KOKKOS_LAMBDA(int i) {
+      a_dual.d_view(i) = i;
+    });
+
+    // Mark device view as modified
+    a_dual.modify_device();
+
+    // Synchronize data from device to host
+    a_dual.sync_host();
+
+    // Access data on the host
+    for (size_t i = 0; i < a_dual.extent(0); ++i) {
+      std::cout << a_dual.h_view(i) << std::endl;
+    }
+  }
+
+  Kokkos::finalize();
+  return 0;
+}
+```
+
 ### Mirror
 
 Mirrors are views of equivalent arrays residing in possibly different memory spaces.
@@ -156,7 +193,7 @@ Kokkos :: deepcopy (hostView , view);
 ## Kernel
 
 ### Parallel_for
-+Custom: 
++ Custom: 
 ``` cpp 
 parallel_for ( " Label " ,
 RangePolicy < ExecutionSpace >(0, numberOfIntervals) ,
@@ -165,7 +202,7 @@ RangePolicy < ExecutionSpace >(0, numberOfIntervals) ,
 });
 ```
 
-+Default
++ Default
 ``` cpp
 parallel_for ( " Label " ,
 numberOfIntervals, // == RangePolicy < >(0 , numberOfIntervals)
@@ -186,7 +223,7 @@ Kokkos::MDRangePolicy<Kokkos::Rank<2>> policy({0, 0}, {N, M});
 ### Hierarchical Parallelism
 
 Kokkos supports hierarchical parallelism with the use of teams. Key commands include TeamPolicy to define teams, TeamThreadRange for team-level iteration, and parallel_for within a team.
-+Example
++ Example
 
 ```cpp 
 Kokkos::TeamPolicy team_policy(Number_Of_Teams, Team_Size); #We ususally take Team_Size = KOKKOS::AUTO
@@ -230,7 +267,8 @@ vectorSize );
 ```
 
 Don't forget the use of team_barrier to prevent threads to use scratch before all threads are done loading
-+Example
+
++ Example
 
 ```cpp 
 operator ()( member_type teamMember ) {
@@ -252,5 +290,31 @@ result ( element , qp ) = total ;
 ```
 
 ### Atomics
+
+In Kokkos, atomic operations are essential for ensuring data consistency in parallel computing environments. They are particularly useful when multiple threads simultaneously update shared data.
+
++ Example
+
+- atomic_add
+```cpp
+Kokkos::parallel_for (N , KOKKOS_LAMBDA ( const size_t index ) {
+	const Something value = ...;
+	const int bucketIndex = computeBucketIndex ( value );
+	Kokkos :: atomic_add (& _histogram ( bucketIndex ) , 1);
+});
+```
+
+- atomic_exchanges 
+
+```cpp 
+// Assign * dest to val , return former value of * dest
+template < typename T >
+T atomic_exchange ( T * dest , T val );
+
+// If * dest == comp then assign * dest to val
+// Return true if succeeds .
+template < typename T >
+bool atomic_compare_exchange_strong ( T * dest , T comp , T val );
+```
 
 ### ScatterView
