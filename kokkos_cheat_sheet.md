@@ -1,6 +1,12 @@
 # Cheat Sheet
 
-## Memory
+Kokkos Core implements a programming model in C++ for writing performance portable applications targeting all major HPC platforms. For that purpose it provides abstractions for both parallel execution of code and data management. Kokkos is designed to target complex node architectures with N-level memory hierarchies and multiple types of execution resources. It currently can use CUDA, HIP, SYCL, HPX, OpenMP and C++ threads as backend programming models with several other backends development.
+
+Full documentation : https://kokkos.org/kokkos-core-wiki/index.html
+
+## Installation
+
+## Memory Management
 
 ### View 
 
@@ -40,7 +46,7 @@ Kokkos::parallel_for(100, KOKKOS_LAMBDA(const int i) {
 
 1. Host Memory Space
 
-- Kokkos::HostSpace
+- `Kokkos::HostSpace`
 
     The default memory space for data that resides on the host (CPU).
     Accessible from the host but not directly from the GPU.
@@ -52,7 +58,7 @@ Example:
 Kokkos::View<double*, Kokkos::HostSpace> hostView("hostView", size);
 ```
 
-- Kokkos::CudaHostPinnedSpace
+- `Kokkos::CudaHostPinnedSpace`
 
     Used for data on the host that is pinned for efficient transfer to/from GPU.
     Allows for asynchronous data transfers between host and GPU.
@@ -65,7 +71,8 @@ Kokkos::View<double*, Kokkos::CudaHostPinnedSpace> pinnedView("pinnedView", size
 ```
 
 2. GPU Memory Spaces
-- Kokkos::CudaSpace
+   
+- `Kokkos::CudaSpace`
 
     Default memory space for data that resides on an NVIDIA GPU.
     Accessible from the GPU but not from the host.
@@ -77,7 +84,7 @@ Example:
 Kokkos::View<double*, Kokkos::CudaSpace> gpuView("gpuView", size);
 ```
 
-- Kokkos::CudaUVMSpace
+- `Kokkos::CudaUVMSpace`
 
     Unified Virtual Memory (UVM) space for NVIDIA GPUs.
     Data is accessible from both the host and the GPU, with a performance trade-off.
@@ -90,7 +97,7 @@ Kokkos::View<double*, Kokkos::CudaUVMSpace> uvmView("uvmView", size);
 ```
 
 + Shared Memory Space
-- Kokkos::ScratchMemorySpace
+- `Kokkos::ScratchMemorySpace`
 
     Used for temporary data within parallel constructs, like inside a kernel.
     Allocated per thread or per team of threads and is not visible outside.
@@ -107,7 +114,7 @@ Kokkos::parallel_for(Kokkos::TeamPolicy<>(numTeams, teamSize), KOKKOS_LAMBDA(con
 
 ### Views Layouts
 
-Views can have different memory layouts, like Kokkos::LayoutLeft (column-major) or Kokkos::LayoutRight (row-major).
+Views can have different memory layouts, like `Kokkos::LayoutLeft` (column-major) or `Kokkos::LayoutRight` (row-major).
 
 ```cpp
 View < double *** , Layout, Space > name (...);
@@ -119,11 +126,11 @@ caching on a CPU and coalescing on a GPU.
 
 ### DualView
 
-+ DualView Concept: DualView in Kokkos provides two views: one for the host (h_view) and one for the device (d_view). You can operate on these views independently and synchronize them when necessary.
++ DualView Concept: DualView in Kokkos provides two views: one for the host (`h_view`) and one for the device (`d_view`). You can operate on these views independently and synchronize them when necessary.
 
-+ Synchronization: DualView has methods for synchronizing data between host and device: sync_to_host() and sync_to_device(). These ensure that the most recent data is available on the host or device before you begin operations there.
++ Synchronization: DualView has methods for synchronizing data between host and device: `sync_to_host()` and `sync_to_device()`. These ensure that the most recent data is available on the host or device before you begin operations there.
 
-+ Modifiers: DualView uses modifiers to indicate the most recent data location (modified_host or modified_device). This helps to minimize unnecessary data transfers.
++ Modifiers: DualView uses modifiers to indicate the most recent data location (`modified_host` or `modified_device`). This helps to minimize unnecessary data transfers.
 
 + Example: 
 ```cpp
@@ -193,14 +200,6 @@ Kokkos :: deepcopy (hostView , view);
 ## Kernel
 
 ### Parallel_for
-+ Custom: 
-``` cpp 
-parallel_for ( " Label " ,
-RangePolicy < ExecutionSpace >(0, numberOfIntervals) ,
-[=] ( const int64_t i ) {
-/* ... body ... */
-});
-```
 
 + Default
 ``` cpp
@@ -211,7 +210,16 @@ numberOfIntervals, // == RangePolicy < >(0 , numberOfIntervals)
 });
 ```
 
-### MdRange
++ Custom: 
+``` cpp 
+parallel_for ( " Label " ,
+RangePolicy < ExecutionSpace >(0, numberOfIntervals) ,
+[=] ( const int64_t i ) {
+/* ... body ... */
+});
+```
+
+### MDRange
 
 MDRangePolicy is used to define a multi-dimensional range for parallel iteration.
 Here is an exemple for two iterations: 
@@ -234,8 +242,6 @@ Kokkos::parallel_for(team_policy, KOKKOS_LAMBDA(const Kokkos::TeamPolicy::member
   }
 });
 ```
-
-### Task Parallelism
 
 ### Scratch Memory
 
@@ -291,7 +297,8 @@ result ( element , qp ) = total ;
 
 ### Atomics
 
-In Kokkos, atomic operations are essential for ensuring data consistency in parallel computing environments. They are particularly useful when multiple threads simultaneously update shared data.
+In Kokkos, atomic operations are essential for ensuring data consistency in parallel computing environments.
+They are particularly useful when multiple threads simultaneously update shared data.
 
 + Example
 
