@@ -4,83 +4,174 @@ Kokkos Core implements a programming model in C++ for writing performance portab
 
 Full documentation : https://kokkos.org/kokkos-core-wiki/index.html
 
+## Table of Contents
+
+- [Cheat Sheet](#cheat-sheet)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Memory Management](#memory-management)
+    - [View, the multidimensional array data container](#view-the-multidimensional-array-data-container)
+      - [Creating a View](#creating-a-view)
+      - [Accessing Elements](#accessing-elements)
+      - [Managing Views](#managing-views)
+    - [Memory Spaces](#memory-spaces)
+      - [Generic Memory Space](#generic-memory-space)
+      - [CUDA-specific Memory Spaces](#cuda-specific-memory-spaces)
+      - [HIP-specific Memory Spaces](#hip-specific-memory-spaces)
+      - [Unified Virtual Memory or Shared Space](#unified-virtual-memory-or-shared-space)
+      - [Scratch Memory Spaces](#scratch-memory-spaces)
+    - [Views Layouts](#views-layouts)
+    - [Mirroring a view](#mirroring-a-view)
+    - [DualView](#dualview)
+  - [Kernel](#kernel)
+    - [Parallel_for](#parallel_for)
+    - [MDRange](#mdrange)
+    - [Hierarchical Parallelism](#hierarchical-parallelism)
+    - [Scratch Memory](#scratch-memory)
+    - [Atomics](#atomics)
+    - [ScatterView](#scatterview)
+
 ## Installation
 
 ## Memory Management
 
-### View 
+### View, the multidimensional array data container
 
-What is a Kokkos View?
-
-* A Kokkos View is a multidimensional array or a tensor. It abstracts data containers and provides a consistent interface for data access across different memory spaces.
+* A Kokkos View is a multidimensional array. It abstracts data containers and provides a consistent interface for data access across different memory spaces.
 * Views are the primary data structure in Kokkos and can be used on both host and device.
 
-Basic Usage
-1. Creating a View
+#### Creating a View
 
-> Syntax: Kokkos::View<DataType> viewName("viewName", dimensions...);
+Template parameters:
+```cpp
+Kokkos::View<DataType [, LayoutType] [, MemorySpace] [, MemoryTraits] viewName>;
+```
+
+- `DataType`: Defines the fundamental scalar type of the View and its dimensionality. The basic structure is `ScalarType*[]` where the number of `*` denotes the number of runtime length dimensions (dynamic allocation) and the number of `[]` defines the compile time dimensions (static). Due to C++ type restrictions runtime dimensions must come first.
+- `LayoutType`: The layout of the view (optional).
+- `MemorySpace`: The memory space where the view is allocated (optional). By default, the view is allocated in the default memory space of the execution space.
+- `MemoryTraits`: The memory traits of the view (optional).
+
+Constructors:
+
+- Default constructor without allocation
+```cpp
+View()
+```
+
+- Default constructor with allocation
+```cpp
+View(const std::string &name, const IntType&... indices)
+```
+
+- Copy constructor with compatible view `rhs`
+```cpp
+View(const View<DataType>& rhs)
+```
 
 + Example:
 ```cpp
 // A 1D view of doubles
 Kokkos::View<double*> view1D("view1D", 100);
 
+// Const view of doubles
+Kokkos::View<const double*> constView1D("constView1D", 100) = view1D;
+
 // A 2D view of integers
 Kokkos::View<int**> view2D("view2D", 50, 50);
+
+// 3D view with 2 runtime dimensions and 1 compile time dimension
+Kokkos::View<double**[25]> view3D("view3D", 50, 42, 25);
 ```
 
-2. Accessing Elements
+#### Accessing Elements
 
-+ Use regular array indexing syntax.
+Data access is done using the parenthesis operator `()`.
 
-``` cpp 
-Kokkos::parallel_for(100, KOKKOS_LAMBDA(const int i) {
-    view1D(i) = 1.5 * i;
-    for(int j = 0; j < 50; ++j) {
-        view2D(i, j) = i + j;
-    }
-});
+```cpp
+view1D(i) = 1.5 * i;
+for(int j = 0; j < 50; ++j) {
+    view2D(i, j) = i + j;
+}
 ```
 
-### Different Memory Spaces to store Views on Kokkos
+#### Managing Views
 
-1. Host Memory Space
+- `size()` returns the total number of elements in the view.
+- `rank()` returns the number of dimensions.
+- `extent()` returns the number of elements in each dimension.
+-  `layout()` returns the layout of the view.
+- `resize()` Reallocates a view to have the new dimensions. Can grow or shrink, and will preserve content of the common subextents.
+- `realloc()` Reallocates a view to have the new dimensions. Can grow or shrink, and will not preserve content.
+
+### Memory Layouts
+
+Layout Determines the mapping of indices into the underlying 1D memory storage.
+
+Views can have different memory layouts, like `Kokkos::LayoutLeft` (column-major) or `Kokkos::LayoutRight` (row-major).
+
+- `LayoutRight()`: strides increase from the right most to the left most dimension (row-major or C-like).
+
+- `LayoutLeft()`: strides increase from the left most to the right most dimension (column-major or Fortran-like).
+
+- `LayoutStride()`: strides can be arbitrary for each dimension.
+
+If no layout specified, default for that memory space is used.
+`LayoutLeft` for CudaSpace, `LayoutRight` for HostSpace.
+For performance, memory access patterns must result in
+caching on a CPU and coalescing on a GPU.
+
+```cpp
+// 2D view with LayoutRight
+Kokkos::View<double**, Kokkos::LayoutRight> view2D("view2D", 50, 50);
+```
+
+### Memory Spaces
+
+The concept of a MemorySpace is the fundamental abstraction to represent the “where” and the “how” that memory allocation and access takes place in Kokkos.
+Most code that uses Kokkos should be written to the generic concept of a MemorySpace rather than any specific instance.
+
+related doc page : https://kokkos.org/kokkos-core-wiki/API/core/memory_spaces.html
+
+#### Generic Memory Space
+
+- `Kokkos::DefaultExecutionSpace::memory_space`
+
+    The default memory space for the default execution space.
+    This is the memory space used by Views when no memory space is specified.
+
+- `Kokkos::DefaultHostExecutionSpace::memory_space`
+
+    The default memory space for the default host execution space. If the code is compiled for CPU only, this is the same as `Kokkos::DefaultExecutionSpace::memory_space`.
 
 - `Kokkos::HostSpace`
 
     The default memory space for data that resides on the host (CPU).
     Accessible from the host but not directly from the GPU.
 
-Example:
-
 ```cpp
-
 Kokkos::View<double*, Kokkos::HostSpace> hostView("hostView", size);
 ```
+
+#### CUDA-specific Memory Spaces
+
+**Warning:** These memory spaces are only available when compiling for the corresponding architecture.
 
 - `Kokkos::CudaHostPinnedSpace`
 
     Used for data on the host that is pinned for efficient transfer to/from GPU.
     Allows for asynchronous data transfers between host and GPU.
 
-Example:
-
 ```cpp
-
 Kokkos::View<double*, Kokkos::CudaHostPinnedSpace> pinnedView("pinnedView", size);
 ```
-
-2. GPU Memory Spaces
    
 - `Kokkos::CudaSpace`
 
     Default memory space for data that resides on an NVIDIA GPU.
     Accessible from the GPU but not from the host.
 
-Example:
-
 ```cpp
-
 Kokkos::View<double*, Kokkos::CudaSpace> gpuView("gpuView", size);
 ```
 
@@ -89,20 +180,68 @@ Kokkos::View<double*, Kokkos::CudaSpace> gpuView("gpuView", size);
     Unified Virtual Memory (UVM) space for NVIDIA GPUs.
     Data is accessible from both the host and the GPU, with a performance trade-off.
 
-Example:
-
 ```cpp
-
 Kokkos::View<double*, Kokkos::CudaUVMSpace> uvmView("uvmView", size);
 ```
 
-+ Shared Memory Space
+#### HIP-specific Memory Spaces
+
+**Warning:** These memory spaces are only available when compiling for the corresponding architecture.
+
+- `Kokkos::HIPHostPinnedSpace`
+
+    Used for data on the host that is pinned for efficient transfer to/from GPU.
+    Allows for asynchronous data transfers between host and GPU.
+
+```cpp
+Kokkos::View<double*, Kokkos::HIPHostPinnedSpace> pinnedView("pinnedView", size);
+```
+
+- `Kokkos::HIPSpace`
+
+    Default memory space for data that resides on an AMD GPU.
+    Accessible from the GPU but not from the host.
+
+```cpp
+Kokkos::View<double*, Kokkos::HIPSpace> gpuView("gpuView", size);
+```
+
+- `Kokkos::HIPManagedSpace`
+
+    Unified Virtual Memory (UVM) space for AMD GPUs.
+    Data is accessible from both the host and the GPU, with a performance trade-off.
+
+```cpp
+Kokkos::View<double*, Kokkos::HIPUVMSpace> uvmView("uvmView", size);
+```
+
+#### SYCL-specific Memory Spaces
+
+**Warning:** These memory spaces are only available when compiling for the corresponding architecture.
+
+- `Kokkos::Experimental::SYCLDeviceUSMSpace`
+
+- `Kokkos::Experimental::SYCLHostUSMSpace`
+
+- `Kokkos::Experimental::SYCLSharedUSMSpace`
+
+#### Unified Virtual Memory or Shared Space
+
+`Kokkos::SharedSpace` is an Memory Space alias that represents memory that can be accessed by any enabled ExecutionSpace() type using the UVM concept.
+The movement is done automatically by the OS and driver at the moment of access.
+Performance depends on hardware and driver support.
+
+
+```cpp
+Kokkos::View<double*, Kokkos::SharedSpace> sharedView("sharedView", size);
+```
+
+#### Scratch Memory Spaces
+
 - `Kokkos::ScratchMemorySpace`
 
     Used for temporary data within parallel constructs, like inside a kernel.
     Allocated per thread or per team of threads and is not visible outside.
-
-Example:
 
 ```cpp
 
@@ -112,17 +251,75 @@ Kokkos::parallel_for(Kokkos::TeamPolicy<>(numTeams, teamSize), KOKKOS_LAMBDA(con
 });
 ```
 
-### Views Layouts
+### View traits
 
-Views can have different memory layouts, like `Kokkos::LayoutLeft` (column-major) or `Kokkos::LayoutRight` (row-major).
+Traits Sets access properties via enum parameters for the templated Kokkos::MemoryTraits<> class:
+
+- `Unmanaged`: The View will not be reference counted. The allocation has to be provided to the constructor.
 
 ```cpp
-View < double *** , Layout, Space > name (...);
+// Example of unmanaged view on CPU
+double* data = new double[size];
+Kokkos::View<double*, Kokkos::Unmanaged> unmanagedView(data, size);
+
+// Example of unmanaged view on GPU using CUDA
+double* data;
+cudaMalloc(&data, size * sizeof(double));
+Kokkos::View<double*, Kokkos::Unmanaged, Kokkos::CudaSpace> unmanagedView(data, size);
 ```
-If no layout specified, default for that memory space is used.
-LayoutLeft for CudaSpace, LayoutRight for HostSpace.
-For performance, memory access patterns must result in
-caching on a CPU and coalescing on a GPU.
+
+- `Atomic()`: All accesses to the view will use atomic operations.
+
+```cpp
+Kokkos::View<double*, Kokkos::Atomic> atomicView("atomicView", size);
+``` 
+
+- `RandomAccess`: Hint that the view is used in a random access manner. If the view is also const this will trigger special load operations on GPUs (i.e. texture fetches).
+On CUDA, this will use texture memory.
+
+```cpp
+const size_t N0 = ...;
+Kokkos::View<int*> a_nonconst ("a", N0); // allocate nonconst View
+// Assign to const, RandomAccess View
+Kokkos::View<const int*, Kokkos::MemoryTraits<Kokkos::RandomAccess>> a_ra = a_nonconst;
+```
+
+- `Restrict`: There is no aliasing of the view by other data structures in the current scope.
+
+
+### Mirroring a view
+
+Mirrors are views of equivalent arrays residing in possibly different memory spaces.
+
+1. Create a view’s array in some memory space.
+```cpp
+typedef Kokkos :: View < double * , Space > ViewType ;
+ViewType view (...);
+```
+2. Create hostView, a mirror of the view’s array residing in the
+host memory space.
+``` cpp 
+ViewType::HostMirror hostView =
+Kokkos::createmirrorview( view );
+```
+
+3. Populate hostView on the host (from file, etc.).
+4. Deep copy hostView’s array to view’s array.
+```cpp 
+Kokkos::deepcopy(view, hostView );
+```
+5. Launch a kernel processing the view’s array.
+```cpp
+Kokkos::parallel_for(" Label ",
+RangePolicy <Space>(0 , size ) ,
+KOKKOS_LAMBDA (...) { use and change view });
+```
+
+6. If needed, deep copy the view’s updated array back to the
+hostView’s array to write file, etc.
+```cpp
+Kokkos :: deepcopy (hostView , view);
+```
 
 ### DualView
 
@@ -161,40 +358,6 @@ int main(int argc, char* argv[]) {
   Kokkos::finalize();
   return 0;
 }
-```
-
-### Mirror
-
-Mirrors are views of equivalent arrays residing in possibly different memory spaces.
-
-1. Create a view’s array in some memory space.
-```cpp
-typedef Kokkos :: View < double * , Space > ViewType ;
-ViewType view (...);
-```
-2. Create hostView, a mirror of the view’s array residing in the
-host memory space.
-``` cpp 
-ViewType::HostMirror hostView =
-Kokkos::createmirrorview( view );
-```
-
-3. Populate hostView on the host (from file, etc.).
-4. Deep copy hostView’s array to view’s array.
-```cpp 
-Kokkos::deepcopy(view, hostView );
-```
-5. Launch a kernel processing the view’s array.
-```cpp
-Kokkos::parallel_for(" Label ",
-RangePolicy <Space>(0 , size ) ,
-KOKKOS_LAMBDA (...) { use and change view });
-```
-
-6. If needed, deep copy the view’s updated array back to the
-hostView’s array to write file, etc.
-```cpp
-Kokkos :: deepcopy (hostView , view);
 ```
 
 ## Kernel
