@@ -7,6 +7,7 @@ Links:
 - Full documentation: https://kokkos.org/kokkos-core-wiki/index.html
 - GitHub sources: https://github.com/kokkos
 - Tutorials: https://github.com/kokkos/kokkos-tutorials
+- Training lecture series: https://github.com/kokkos/kokkos-tutorials/tree/main/LectureSeries
 
 ## Table of Contents
 
@@ -45,6 +46,65 @@ Links:
     - [Atomics](#atomics)
 
 ## Installation
+
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
+
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/building.html
+
+<img title="Doc" alt="Doc" src="./images/training.png" height="20"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_01_Introduction.pdf
+
+### Requirements
+
+Minimum Compiler Versions:
+
+- GCC: 5.3.0
+- Clang: 4.0.0
+- Clang: 10.0.0 (as CUDA compiler) 
+- Intel: 17.0.1
+- NVCC: 9.2.88
+- NVC++: 21.5
+- ROCM: 4.5
+- MSVC: 19.29
+- IBM XL: 16.1.1
+- Fujitsu: 4.5.0
+- ARM/Clang 20.1
+
+Primary Tested Compilers:
+
+- GCC: 5.3.0, 6.1.0, 7.3.0, 8.3, 9.2, 10.0
+- NVCC: 9.2.88, 10.1, 11.0
+- Clang: 8.0.0, 9.0.0, 10.0.0, 12.0.0
+- Intel 17.4, 18.1, 19.5
+- MSVC: 19.29
+- ARM/Clang: 20.1
+- IBM XL: 16.1.1
+- ROCM: 4.5.0
+
+Build system:
+
+- CMake >= 3.16: required
+- CMake >= 3.18: Fortran linkage. This does not affect most mixed Fortran/Kokkos builds. See build issues.
+- CMake >= 3.21.1 for NVC++
+
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/requirements.html
+
+### Build
+
+Kokkos developers propose 3 different ways to build Kokkos:
+
+- Inline build: Kokkos is built as part of the application.
+- Installed package: Kokkos is built as a separate package and installed.
+- Spack package: Kokkos is built as a separate package and installed using Spack.
+
+### Inline build
+
+Use `add_subdirectory(kokkos)` with the Kokkos source and again just link with `target_link_libraries(Kokkos::kokkos)`. The examples in examples/cmake_build_installed and examples/cmake_build_in_tree can help get you started.
+
+<img title="Code" alt="Code" src="./images/code.png" height="20"> Code exmaple: 
+
+#### Spack
+
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/building.html#spack
 
 ## Initialization
 
@@ -593,21 +653,6 @@ Here is an exemple for two iterations:
 Kokkos::MDRangePolicy<Kokkos::Rank<2>> policy({0, 0}, {N, M});
 ```
 
-### Hierarchical Parallelism
-
-Kokkos supports hierarchical parallelism with the use of teams. Key commands include TeamPolicy to define teams, TeamThreadRange for team-level iteration, and parallel_for within a team.
-+ Example
-
-```cpp 
-Kokkos::TeamPolicy team_policy(Number_Of_Teams, Team_Size); #We ususally take Team_Size = KOKKOS::AUTO
-Kokkos::parallel_for(team_policy, KOKKOS_LAMBDA(const Kokkos::TeamPolicy::member_type& teamMember) {
-  const int team_rank = teamMember.team_rank();
-  Kokkos::TeamThreadRange(teamMember, vector_length, i) {
-    // Parallel computation within a team
-  }
-});
-```
-
 ### Scratch Memory
 
 2 levels of Scratch Memory Space: 
@@ -688,3 +733,20 @@ T atomic_exchange ( T * dest , T val );
 template < typename T >
 bool atomic_compare_exchange_strong ( T * dest , T comp , T val );
 ```
+
+## Hierarchical Parallelism
+
+Kokkos supports hierarchical parallelism with the use of teams. Key commands include TeamPolicy to define teams, TeamThreadRange for team-level iteration, and parallel_for within a team.
++ Example
+
+```cpp 
+Kokkos::TeamPolicy team_policy(Number_Of_Teams, Team_Size); #We ususally take Team_Size = KOKKOS::AUTO
+Kokkos::parallel_for(team_policy, KOKKOS_LAMBDA(const Kokkos::TeamPolicy::member_type& teamMember) {
+  const int team_rank = teamMember.team_rank();
+  Kokkos::TeamThreadRange(teamMember, vector_length, i) {
+    // Parallel computation within a team
+  }
+});
+```
+
+## Macros
