@@ -2,7 +2,11 @@
 
 Kokkos Core implements a programming model in C++ for writing performance portable applications targeting all major HPC platforms. For that purpose it provides abstractions for both parallel execution of code and data management. Kokkos is designed to target complex node architectures with N-level memory hierarchies and multiple types of execution resources. It currently can use CUDA, HIP, SYCL, HPX, OpenMP and C++ threads as backend programming models with several other backends development.
 
-Full documentation : https://kokkos.org/kokkos-core-wiki/index.html
+Links:
+
+- Full documentation: https://kokkos.org/kokkos-core-wiki/index.html
+- GitHub sources: https://github.com/kokkos
+- Tutorials: https://github.com/kokkos/kokkos-tutorials
 
 ## Table of Contents
 
@@ -32,6 +36,40 @@ Full documentation : https://kokkos.org/kokkos-core-wiki/index.html
     - [ScatterView](#scatterview)
 
 ## Installation
+
+## Initialization
+
+### headers:
+
+Headers:
+```cpp
+#include <Kokkos_Core.hpp>
+#include <Kokkos_Kernel.hpp>
+```
+
+### Initialize and finalize Kokkos:
+
+```cpp
+Kokkos::initialize(int& argc, char* argv[]);
+```
+
+```cpp 
+Kokkos::finalize();
+```
+
+### Command-line arguments
+
+Command-line arguments can be passed to Kokkos::initialize() and are parsed by Kokkos and removed from the argument list.
+
+- `-kokkos-help` / `–help`: print help message with the list of available options.
+
+- `-kokkos-threads=INT` / `–threads=INT`: specify total number of threads or number of threads per NUMA region if used in conjunction with --numa option.
+
+- `-kokkos-numa=INT` / `–numa=INT`: specify number of NUMA regions used by process.
+
+- `-device-id=INT`: specify device id to be used by Kokkos.
+
+- `-num-devices=INT[,INT]`: used when running MPI jobs. Specify the number of devices per node to be used. Process to device mapping happens by obtaining the local MPI rank and assigning devices round-robin. The optional second argument allows for an existing device to be ignored. This is most useful on workstations with multiple GPUs, one of which is used to drive screen output.
 
 ## Memory Management
 
@@ -268,7 +306,7 @@ cudaMalloc(&data, size * sizeof(double));
 Kokkos::View<double*, Kokkos::Unmanaged, Kokkos::CudaSpace> unmanagedView(data, size);
 ```
 
-- `Atomic()`: All accesses to the view will use atomic operations.
+- `Atomic`: All accesses to the view will use atomic operations.
 
 ```cpp
 Kokkos::View<double*, Kokkos::Atomic> atomicView("atomicView", size);
@@ -286,40 +324,81 @@ Kokkos::View<const int*, Kokkos::MemoryTraits<Kokkos::RandomAccess>> a_ra = a_no
 
 - `Restrict`: There is no aliasing of the view by other data structures in the current scope.
 
+Memory traits can be combined using the `Kokkos::MemoryTraits<>` class and `|`.
 
-### Mirroring a view
+```cpp
+// Example of unmanaged, atomic, random access view on GPU using CUDA
+double* data;
+cudaMalloc(&data, size * sizeof(double));
+Kokkos::View<double*,  Kokkos::CudaSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged | Kokkos::Atomic | Kokkos::RandomAccess>> unmanagedView(data, size);
+```
 
-Mirrors are views of equivalent arrays residing in possibly different memory spaces.
+### View copy
 
-1. Create a view’s array in some memory space.
+Kokkos automatically manages deallocation of Views through a reference-counting mechanism.
+Copying or assigning a View does a shallow copy, and changes the reference count.
+
+```cpp
+Kokkos::View<int*> a ("a", 10);
+Kokkos::View<int*> b ("b", 10);
+a = b; // assignment does shallow copy
+```
+
+- `deep_copy(dest, src)`: Copies data from `src` view to `dest` view. The views must have the same dimensions, data type and reside in the same memory space.
+
+```cpp
+Kokkos::View<double*> view1("view1", size);
+Kokkos::View<double*> view2("view2", size);
+
+// Hard copy of view1 to view2
+Kokkos::deep_copy(view2, view1);
+```
+
+Doc page: https://kokkos.org/kokkos-core-wiki/API/core/view/deep_copy.html
+
+Code examples:
+- [Kokkos example - simple memoryspace](https://github.com/kokkos/kokkos/blob/master/example/tutorial/04_simple_memoryspaces/simple_memoryspaces.cpp)
+- [Kokkos example - overlapping deepcopy](https://github.com/kokkos/kokkos/blob/master/example/tutorial/Advanced_Views/07_Overlapping_DeepCopy/overlapping_deepcopy.cpp)
+- [Kokkos Tutorials - Exercise 3](https://github.com/kokkos/kokkos-tutorials/blob/main/Exercises/03/Solution/exercise_3_solution.cpp)
+
+### HostMirror
+
+A `HostMirror` view is a view that is allocated in the host memory space as a mirror of a device view.
+There is a `create_mirror` and `create_mirror_view` function which allocate views of the HostMirror type of view.
+
+- `Kokkos::create_mirror()` : Creates a host mirror view of a device view and always allocate a new view
+
 ```cpp
 typedef Kokkos :: View < double * , Space > ViewType ;
 ViewType view (...);
-```
-2. Create hostView, a mirror of the view’s array residing in the
-host memory space.
-``` cpp 
-ViewType::HostMirror hostView =
-Kokkos::createmirrorview( view );
+
+ViewType::HostMirror hostView = Kokkos::create_mirror( view );
 ```
 
-3. Populate hostView on the host (from file, etc.).
-4. Deep copy hostView’s array to view’s array.
+- `Kokkos::create_mirror_view()`: Creates a host mirror view of a device view but will only create a new view if the original one is not in HostSpace
+
+```cpp
+typedef Kokkos :: View < double * , Space > ViewType ;
+ViewType view (...);
+
+ViewType::HostMirror hostView = Kokkos::create_mirror_view( view );
+```
+
+Deep copy between hostView’s array to or from view’s array can be achieved using `Kokkos::deepcopy()`.
+
 ```cpp 
+// From host to device
 Kokkos::deepcopy(view, hostView );
-```
-5. Launch a kernel processing the view’s array.
-```cpp
-Kokkos::parallel_for(" Label ",
-RangePolicy <Space>(0 , size ) ,
-KOKKOS_LAMBDA (...) { use and change view });
+
+// From device to host
+Kokkos::deepcopy(hostView , view );
 ```
 
-6. If needed, deep copy the view’s updated array back to the
-hostView’s array to write file, etc.
-```cpp
-Kokkos :: deepcopy (hostView , view);
-```
+Doc page: https://kokkos.org/kokkos-core-wiki/API/core/view/create_mirror.html
+
+Code examples:
+- [Kokkos example - simple memoryspace](https://github.com/kokkos/kokkos/blob/master/example/tutorial/04_simple_memoryspaces/simple_memoryspaces.cpp)
+- [Kokkos Tutorials - Exercise 3](https://github.com/kokkos/kokkos-tutorials/blob/main/Exercises/03/Solution/exercise_3_solution.cpp)
 
 ### DualView
 
