@@ -98,9 +98,63 @@ Kokkos developers propose 3 different ways to build Kokkos:
 
 ### Inline build
 
-Use `add_subdirectory(kokkos)` with the Kokkos source and again just link with `target_link_libraries(Kokkos::kokkos)`. The examples in examples/cmake_build_installed and examples/cmake_build_in_tree can help get you started.
+Use `add_subdirectory(kokkos)` with the Kokkos source and again just link with `target_link_libraries(Kokkos::kokkos)`.
 
 <img title="Code" alt="Code" src="./images/code.png" height="20"> Code exmaple: 
+- https://github.com/kokkos/kokkos/tree/master/example/build_cmake_in_tree
+
+### Installed package
+
+Default installation:
+
+```bash
+cmake <path to the Kokkos sources> \
+ -DCMAKE_CXX_COMPILER=<your C++ compiler> \
+ -DCMAKE_INSTALL_PREFIX=${kokkos_install_folder}
+```
+
+Possible CPU backends:
+
+- `-DKokkos_ENABLE_SERIAL=ON`: activate the SERIAL backend (`ON`by default)
+- `-DKokkos_ENABLE_OPENMP=ON`: activate the OpenMP backend
+- `-DKokkos_ENABLE_PTHREAD=ON`: activate the PTHREAD backend
+
+Possible GPU backends:
+
+- `-DKokkos_ENABLE_CUDA=ON`: activate the CUDA backend
+- `-DKokkos_ENABLE_HIP=ON`: activate the HIP backend
+- `-DKokkos_ENABLE_SYCL=ON`: activate the SYCL backend (experimental)
+- `-DKokkos_ENABLE_OPENMPTARGET=ON`: activate the OpenMP target backend (experimental)
+- `-DKokkos_ENABLE_HPX=ON`: activate the HPX backend (experimental)
+
+<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> You can only select `SERIAL`, one CPU backend and one GPU backend at a time.
+
+CMake compiling options:
+
+| Option | Description | Default |
+| ----------- | ----------- | -----|
+| `Kokkos_ENABLE_AGGRESSIVE_VECTORIZATION` | Aggressively vectorize loops | OFF |
+| `Kokkos_ENABLE_COMPILER_WARNINGS` | Print all compiler warnings | OFF |
+| `Kokkos_ENABLE_CUDA_CONSTEXPR` | Activate experimental relaxed constexpr functions | OFF |
+| `Kokkos_ENABLE_CUDA_LAMBDA` | Activate experimental lambda features | OFF |
+| `Kokkos_ENABLE_CUDA_LDG_INTRINSIC` | Use CUDA LDG intrinsics | OFF |
+| `Kokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE` | Enable relocatable device code (RDC) for CUDA | OFF |
+| `Kokkos_ENABLE_DEBUG` | Activate extra debug features - may increase compile times | OFF |
+| `Kokkos_ENABLE_DEBUG_BOUNDS_CHECK` | Use bounds checking - will increase runtime | OFF |Ò
+| `Kokkos_ENABLE_DEBUG_DUALVIEW_MODIFY_CHECK` | Debug check on dual views | OFF |
+| `Kokkos_ENABLE_DEPRECATED_CODE` | Enable deprecated code | OFF |
+| `Kokkos_ENABLE_EXAMPLES` | Enable building examples | OFF |
+| `Kokkos_ENABLE_HIP_MULTIPLE_KERNEL_INSTANTIATIONS` | Instantiate multiple kernels at compile time - improve performance but increase compile time | OFF |
+| `Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE` | Enable relocatable device code (RDC) for HIP | OFF |
+| `Kokkos_ENABLE_LARGE_MEM_TESTS` | Perform extra large memory tests | OFF |
+| `Kokkos_ENABLE_TESTS` | Enable building tests | OFF |
+| `Kokkos_ENABLE_TUNING` | Create bindings for tuning tools | OFF |
+
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/keywords.html
+
+<img title="Code" alt="Code" src="./images/code.png" height="20"> Code exmaple: 
+- https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed
+- https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed_different_compiler
 
 #### Spack
 
