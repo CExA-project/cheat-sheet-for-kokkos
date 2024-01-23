@@ -71,6 +71,31 @@ Command-line arguments can be passed to Kokkos::initialize() and are parsed by K
 
 - `-num-devices=INT[,INT]`: used when running MPI jobs. Specify the number of devices per node to be used. Process to device mapping happens by obtaining the local MPI rank and assigning devices round-robin. The optional second argument allows for an existing device to be ignored. This is most useful on workstations with multiple GPUs, one of which is used to drive screen output.
 
+### Initialization by struc
+
+```cpp
+struct Kokkos::InitArguments {
+  int num_threads;
+  int num_numa;
+  int device_id;
+  int ndevices;
+  int skip_device;
+  bool disable_warnings;
+};
+```
+
+```cpp
+Kokkos::InitArguments args;
+// 8 (CPU) threads per NUMA region
+args.num_threads = 8;
+// 2 (CPU) NUMA regions per process
+args.num_numa = 2;
+// If Kokkos was built with CUDA enabled, use the GPU with device ID 1.
+args.device_id = 1;
+
+Kokkos::initialize(args);
+```
+
 ## Memory Management
 
 ### View, the multidimensional array data container
@@ -138,9 +163,10 @@ for(int j = 0; j < 50; ++j) {
 - `size()` returns the total number of elements in the view.
 - `rank()` returns the number of dimensions.
 - `extent()` returns the number of elements in each dimension.
--  `layout()` returns the layout of the view.
+- `layout()` returns the layout of the view.
 - `resize()` Reallocates a view to have the new dimensions. Can grow or shrink, and will preserve content of the common subextents.
 - `realloc()` Reallocates a view to have the new dimensions. Can grow or shrink, and will not preserve content.
+- `data()` returns a pointer to the underlying data.
 
 ### Memory Layouts
 
@@ -193,7 +219,7 @@ Kokkos::View<double*, Kokkos::HostSpace> hostView("hostView", size);
 
 #### CUDA-specific Memory Spaces
 
-**Warning:** These memory spaces are only available when compiling for the corresponding architecture.
+<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> These memory spaces are only available when compiling for the corresponding architecture.
 
 - `Kokkos::CudaHostPinnedSpace`
 
@@ -224,7 +250,7 @@ Kokkos::View<double*, Kokkos::CudaUVMSpace> uvmView("uvmView", size);
 
 #### HIP-specific Memory Spaces
 
-**Warning:** These memory spaces are only available when compiling for the corresponding architecture.
+<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> These memory spaces are only available when compiling for the corresponding architecture.
 
 - `Kokkos::HIPHostPinnedSpace`
 
@@ -439,7 +465,95 @@ int main(int argc, char* argv[]) {
 }
 ```
 
-## Kernel
+### Subview
+
+A subview is a view that is a subset of another view that mimic the behavior of languages like Python or Fortran.
+
+- `Kokkos::subview`: Function to take a subview of a View. Use ``Kokkos::ALL`` to specify all elements in a dimension. Use ``Kokkos::make_pair`` to specify a range of elements in a dimension.
+
+```cpp
+// Create a 2D view
+Kokkos::View<double**> view2D("view2D", 50, 50);
+
+// Create a subview of the first 10 rows
+Kokkos::View<double**> subview2D = Kokkos::subview(view2D, Kokkos::ALL, Kokkos::make_pair(0, 10));
+```
+
+Another way of getting a subview is through the appropriate View constructor.
+  
+```cpp
+// Create a 2D view
+Kokkos::View<double**> view2D("view2D", 50, 50);
+
+// Create a subview of the first 10 rows
+Kokkos::View<double**> subview2D(view2D, Kokkos::ALL, Kokkos::make_pair(0, 10));
+```
+
+<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> A subview has the same reference count as its parent View, so the parent View won’t be deallocated before all subviews go away.
+
+<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> Every subview is also a View. This means that you may take a subview of a subview.
+
+Doc pages:
+- https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Subviews.html
+- https://kokkos.org/kokkos-core-wiki/API/core/view/subview.html
+
+### ScatterView
+
+**Experimental feature**
+
+<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> Need `#include<Kokkos_ScatterView.hpp>`
+
+A `Kokkos::Experimental::ScatterView` is a view extension that wraps an existing view ain order to efficiently perform scatter operations.
+Scatter operations potentially write to the same memory location from multiple threads.
+ScatterView provides a mechanism to efficiently handle this situation by using atomics or grid duplication to update the underlying view.
+
+```cpp
+template <class DataType , class Layout , class Space , class Operation , int Duplication , int Contribution > class ScatterView;
+```
+
+- `DataType`: Defines the fundamental scalar type of the View and its dimensionality. The basic structure is `ScalarType*[]` where the number of `*` denotes the number of runtime length dimensions (dynamic allocation) and the number of `[]` defines the compile time dimensions (static). Due to C++ type restrictions runtime dimensions must come first.
+- `Layout`: The layout of the view (optional). See [Views Layouts](#Memory_Layouts).
+- `Space`: The memory space where the view is allocated (optional).
+- `Operation`: The operation to perform when scattering (optional). By default, the operation is `Kokkos::Experimental::ScatterSum`. Other operations are `Kokkos::ScatterProd`, `Kokkos::Experimental::ScatterMin` and `Kokkos::Experimental::ScatterMax`.
+- `Duplication`: whether to duplicate the grid or not (optional). By default, the duplication is `Kokkos::Experimental::ScatterDuplicated`. Other options are `Kokkos::Experimental::ScatterNonDuplicated`.
+- `Contribution`: whether to contribute to use atomics. By default, the contribution is `Kokkos::Experimental::ScatterAtomic`. Other options are `Kokkos::Experimental::ScatterNonAtomic`.
+
+```cpp
+#include<Kokkos_ScatterView.hpp>
+
+...
+
+// Compute histogram of values in view1D
+KOKKOS_INLINE_FUNCTION int get_index(double pos) { ... }
+KOKKOS_INLINE_FUNCTION double compute(double weight) { ... }
+
+// List of elements to process
+Kokkos::View<double*> positions("positions", 100);
+Kokkos::View<double*> weight("weight", 100);
+
+// Historgram of N bins
+Kokkos::View<double*> histogram("bar", N);
+
+Kokkos::Experimental::ScatterView<double*> scatter(histogram);
+Kokkos::parallel_for(100, KOKKOS_LAMBDA(int i) {
+    auto access = scatter.access();
+    auto index = get_index(positions(i);
+    auto contribution = compute(weight(i);
+    access(index) += contribution;
+});
+
+// Copy results back to histogram
+Kokkos::Experimental::contribute(results, scatter);
+```
+
+Doc page: https://kokkos.org/kokkos-core-wiki/API/containers/ScatterView.html
+
+Related Tutorial: https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_03_MDRangeMoreViews.pdf
+
+Code examples:
+- [Kokkos Tutorials - ScatterView](https://github.com/kokkos/kokkos-tutorials/tree/main/Exercises/scatter_view)
+
+## Parallelism dispatch
 
 ### Parallel_for
 
@@ -565,5 +679,3 @@ T atomic_exchange ( T * dest , T val );
 template < typename T >
 bool atomic_compare_exchange_strong ( T * dest , T comp , T val );
 ```
-
-### ScatterView
