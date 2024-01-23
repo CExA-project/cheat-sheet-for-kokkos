@@ -204,7 +204,7 @@ Kokkos::View<double**, Kokkos::LayoutRight> view2D("view2D", 50, 50);
 The concept of a MemorySpace is the fundamental abstraction to represent the “where” and the “how” that memory allocation and access takes place in Kokkos.
 Most code that uses Kokkos should be written to the generic concept of a MemorySpace rather than any specific instance.
 
-related doc page : https://kokkos.org/kokkos-core-wiki/API/core/memory_spaces.html
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/core/memory_spaces.html
 
 #### Generic Memory Space
 
@@ -389,7 +389,7 @@ Kokkos::View<double*> view2("view2", size);
 Kokkos::deep_copy(view2, view1);
 ```
 
-Doc page: https://kokkos.org/kokkos-core-wiki/API/core/view/deep_copy.html
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/core/view/deep_copy.html
 
 Code examples:
 - [Kokkos example - simple memoryspace](https://github.com/kokkos/kokkos/blob/master/example/tutorial/04_simple_memoryspaces/simple_memoryspaces.cpp)
@@ -429,7 +429,7 @@ Kokkos::deepcopy(view, hostView );
 Kokkos::deepcopy(hostView , view );
 ```
 
-Doc page: https://kokkos.org/kokkos-core-wiki/API/core/view/create_mirror.html
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/core/view/create_mirror.html
 
 Code examples:
 - [Kokkos example - simple memoryspace](https://github.com/kokkos/kokkos/blob/master/example/tutorial/04_simple_memoryspaces/simple_memoryspaces.cpp)
@@ -555,7 +555,7 @@ Kokkos::parallel_for(100, KOKKOS_LAMBDA(int i) {
 Kokkos::Experimental::contribute(results, scatter);
 ```
 
-Doc page: https://kokkos.org/kokkos-core-wiki/API/containers/ScatterView.html
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/containers/ScatterView.html
 
 Related Tutorial: https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_03_MDRangeMoreViews.pdf
 
