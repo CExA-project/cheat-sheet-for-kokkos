@@ -13,27 +13,36 @@ Links:
 - [Cheat Sheet](#cheat-sheet)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
+  - [Initialization](#initialization)
+    - [headers:](#headers)
+    - [Initialize and finalize Kokkos:](#initialize-and-finalize-kokkos)
+    - [Command-line arguments](#command-line-arguments)
+    - [Initialization by struc](#initialization-by-struc)
   - [Memory Management](#memory-management)
     - [View, the multidimensional array data container](#view-the-multidimensional-array-data-container)
       - [Creating a View](#creating-a-view)
       - [Accessing Elements](#accessing-elements)
       - [Managing Views](#managing-views)
+    - [Memory Layouts](#memory-layouts)
     - [Memory Spaces](#memory-spaces)
       - [Generic Memory Space](#generic-memory-space)
       - [CUDA-specific Memory Spaces](#cuda-specific-memory-spaces)
       - [HIP-specific Memory Spaces](#hip-specific-memory-spaces)
+      - [SYCL-specific Memory Spaces](#sycl-specific-memory-spaces)
       - [Unified Virtual Memory or Shared Space](#unified-virtual-memory-or-shared-space)
       - [Scratch Memory Spaces](#scratch-memory-spaces)
-    - [Views Layouts](#views-layouts)
-    - [Mirroring a view](#mirroring-a-view)
+    - [View traits](#view-traits)
+    - [View copy](#view-copy)
+    - [HostMirror](#hostmirror)
     - [DualView](#dualview)
-  - [Kernel](#kernel)
+    - [Subview](#subview)
+    - [ScatterView](#scatterview)
+  - [Parallelism dispatch](#parallelism-dispatch)
     - [Parallel_for](#parallel_for)
     - [MDRange](#mdrange)
     - [Hierarchical Parallelism](#hierarchical-parallelism)
     - [Scratch Memory](#scratch-memory)
     - [Atomics](#atomics)
-    - [ScatterView](#scatterview)
 
 ## Installation
 
@@ -512,7 +521,7 @@ template <class DataType , class Layout , class Space , class Operation , int Du
 ```
 
 - `DataType`: Defines the fundamental scalar type of the View and its dimensionality. The basic structure is `ScalarType*[]` where the number of `*` denotes the number of runtime length dimensions (dynamic allocation) and the number of `[]` defines the compile time dimensions (static). Due to C++ type restrictions runtime dimensions must come first.
-- `Layout`: The layout of the view (optional). See [Views Layouts](#Memory_Layouts).
+- `Layout`: The layout of the view (optional). See [Views Layouts](memory-layouts).
 - `Space`: The memory space where the view is allocated (optional).
 - `Operation`: The operation to perform when scattering (optional). By default, the operation is `Kokkos::Experimental::ScatterSum`. Other operations are `Kokkos::ScatterProd`, `Kokkos::Experimental::ScatterMin` and `Kokkos::Experimental::ScatterMax`.
 - `Duplication`: whether to duplicate the grid or not (optional). By default, the duplication is `Kokkos::Experimental::ScatterDuplicated`. Other options are `Kokkos::Experimental::ScatterNonDuplicated`.
