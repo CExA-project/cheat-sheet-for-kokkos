@@ -1,0 +1,4 @@
+- <img title="Code" alt="Code" src="./images/code.png" height="20"> Link to compilable code examples
+- <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> Link to documentation pages
+- <img title="Training" alt="Training" src="./images/training.png" height="20"> Link to training pages
+- <img title="Warning" alt="Warning" src="./images/warning.png" height="20"> Warning
