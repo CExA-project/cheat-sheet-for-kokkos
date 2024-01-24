@@ -11,11 +11,22 @@ Links:
 - Tutorials: https://github.com/kokkos/kokkos-tutorials
 - Training lecture series: https://github.com/kokkos/kokkos-tutorials/tree/main/LectureSeries
 
+Pictograms:
+<img title="Code" alt="Code" src="./images/code.png" height="20">
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20">
+<img title="Warning" alt="Warning" src="./images/warning.png" height="20">
+<img title="Training" alt="Training" src="./images/training.png" height="20">
+
 ## Table of Contents
 
-- [Cheat Sheet](#cheat-sheet)
+- [KOKKOS Cheat Sheet](#kokkos-cheat-sheet)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
+    - [Requirements](#requirements)
+    - [Build](#build)
+    - [Inline build](#inline-build)
+    - [Installed package](#installed-package)
+    - [Spack](#spack)
   - [Initialization](#initialization)
     - [headers:](#headers)
     - [Initialize and finalize Kokkos:](#initialize-and-finalize-kokkos)
@@ -23,29 +34,13 @@ Links:
     - [Initialization by struc](#initialization-by-struc)
   - [Memory Management](#memory-management)
     - [View, the multidimensional array data container](#view-the-multidimensional-array-data-container)
-      - [Creating a View](#creating-a-view)
-      - [Accessing Elements](#accessing-elements)
-      - [Managing Views](#managing-views)
     - [Memory Layouts](#memory-layouts)
     - [Memory Spaces](#memory-spaces)
-      - [Generic Memory Space](#generic-memory-space)
-      - [CUDA-specific Memory Spaces](#cuda-specific-memory-spaces)
-      - [HIP-specific Memory Spaces](#hip-specific-memory-spaces)
-      - [SYCL-specific Memory Spaces](#sycl-specific-memory-spaces)
-      - [Unified Virtual Memory or Shared Space](#unified-virtual-memory-or-shared-space)
-      - [Scratch Memory Spaces](#scratch-memory-spaces)
     - [View traits](#view-traits)
     - [View copy](#view-copy)
     - [HostMirror](#hostmirror)
     - [DualView](#dualview)
     - [Subview](#subview)
-    - [ScatterView](#scatterview)
-  - [Parallelism dispatch](#parallelism-dispatch)
-    - [Parallel_for](#parallel_for)
-    - [MDRange](#mdrange)
-    - [Hierarchical Parallelism](#hierarchical-parallelism)
-    - [Scratch Memory](#scratch-memory)
-    - [Atomics](#atomics)
 
 ## Installation
 
@@ -625,7 +620,7 @@ Kokkos::deep_copy(view2, view1);
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/core/view/deep_copy.html
 
-Code examples:
+<img title="Code" alt="Code" src="./images/code.png" height="20"> Code examples:
 - [Kokkos example - simple memoryspace](https://github.com/kokkos/kokkos/blob/master/example/tutorial/04_simple_memoryspaces/simple_memoryspaces.cpp)
 - [Kokkos example - overlapping deepcopy](https://github.com/kokkos/kokkos/blob/master/example/tutorial/Advanced_Views/07_Overlapping_DeepCopy/overlapping_deepcopy.cpp)
 - [Kokkos Tutorials - Exercise 3](https://github.com/kokkos/kokkos-tutorials/blob/main/Exercises/03/Solution/exercise_3_solution.cpp)
@@ -665,7 +660,7 @@ Kokkos::deepcopy(hostView , view );
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/core/view/create_mirror.html
 
-Code examples:
+<img title="Code" alt="Code" src="./images/code.png" height="20"> Code examples:
 - [Kokkos example - simple memoryspace](https://github.com/kokkos/kokkos/blob/master/example/tutorial/04_simple_memoryspaces/simple_memoryspaces.cpp)
 - [Kokkos Tutorials - Exercise 3](https://github.com/kokkos/kokkos-tutorials/blob/main/Exercises/03/Solution/exercise_3_solution.cpp)
 
@@ -791,9 +786,9 @@ Kokkos::Experimental::contribute(results, scatter);
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/containers/ScatterView.html
 
-Related Tutorial: https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_03_MDRangeMoreViews.pdf
+<img title="Training" alt="Training" src="./images/training.png" height="20"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_03_MDRangeMoreViews.pdf
 
-Code examples:
+<img title="Code" alt="Code" src="./images/code.png" height="20"> Code examples:
 - [Kokkos Tutorials - ScatterView](https://github.com/kokkos/kokkos-tutorials/tree/main/Exercises/scatter_view)
 
 ## Parallelism dispatch
