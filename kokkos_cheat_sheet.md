@@ -244,6 +244,8 @@ IBM CPU architectures:
 | `Kokkos_ARCH_POWER8` | Optimize for IBM POWER8 architecture | ON/OFF |
 | `Kokkos_ARCH_POWER9` | Optimize for IBM POWER9 architecture | ON/OFF |
 
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
+
 #### Examples for the latest architectures:
 
 For AMD MI250 GPUs with HIP and OpenMP support:
@@ -270,17 +272,13 @@ For Intel Ponte Vecchio GPUs with SYCL and OpenMP support:
 cmake . -DKokkos_ENABLE_SYCL=ON -DKokkos_ARCH_INTEL_PVC=ON  -DKokkos_ENABLE_OPENMP=ON
 ```
 
-#### More
-
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/keywords.html
-
-<img title="Code" alt="Code" src="./images/code.png" height="20"> Code exmaple: 
+<img title="Code" alt="Code" src="./images/code.png" height="20"> For more code exmaples: 
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed_different_compiler
 
 ### Spack
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/building.html#spack
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/building.html#spack
 
 ## Initialization
 
