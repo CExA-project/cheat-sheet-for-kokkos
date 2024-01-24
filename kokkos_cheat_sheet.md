@@ -1,6 +1,8 @@
-# Cheat Sheet
+# KOKKOS Cheat Sheet
 
 Kokkos Core implements a programming model in C++ for writing performance portable applications targeting all major HPC platforms. For that purpose it provides abstractions for both parallel execution of code and data management. Kokkos is designed to target complex node architectures with N-level memory hierarchies and multiple types of execution resources. It currently can use CUDA, HIP, SYCL, HPX, OpenMP and C++ threads as backend programming models with several other backends development.
+
+<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> Only for Kokkos 4.2 and more, for older verison look at the doc.
 
 Links:
 
@@ -104,8 +106,8 @@ Use `add_subdirectory(kokkos)` with the Kokkos source and again just link with `
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_in_tree
 
 ### Installed package
-
-Default installation:
+ 
+#### Default installation:
 
 ```bash
 cmake <path to the Kokkos sources> \
@@ -113,13 +115,13 @@ cmake <path to the Kokkos sources> \
  -DCMAKE_INSTALL_PREFIX=${kokkos_install_folder}
 ```
 
-Possible CPU backends:
+#### CPU backends:
 
 - `-DKokkos_ENABLE_SERIAL=ON`: activate the SERIAL backend (`ON`by default)
 - `-DKokkos_ENABLE_OPENMP=ON`: activate the OpenMP backend
 - `-DKokkos_ENABLE_PTHREAD=ON`: activate the PTHREAD backend
 
-Possible GPU backends:
+#### GPU backends:
 
 - `-DKokkos_ENABLE_CUDA=ON`: activate the CUDA backend
 - `-DKokkos_ENABLE_HIP=ON`: activate the HIP backend
@@ -129,7 +131,7 @@ Possible GPU backends:
 
 <img title="Warning" alt="Warning" src="./images/warning.png" height="15"> You can only select `SERIAL`, one CPU backend and one GPU backend at a time.
 
-CMake compiling options:
+#### CMake compiling options:
 
 | Option | Description | Default |
 | ----------- | ----------- | -----|
@@ -150,13 +152,133 @@ CMake compiling options:
 | `Kokkos_ENABLE_TESTS` | Enable building tests | OFF |
 | `Kokkos_ENABLE_TUNING` | Create bindings for tuning tools | OFF |
 
+#### Third-party Libraries (TPLs)
+
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
+
+#### Architecture Optimization
+
+- `Kokkos_ARCH_NATIVE=ON/OFF`: Optimize for the local CPU architecture
+
+ARM-based architectures:
+
+| Option             | Description                           | VALUES |
+| ------------------ | ------------------------------------- | ------ |
+| `Kokkos_ARCH_A64FX` | Optimize for ARMv8.2 with SVE Support | ON/OFF |
+| `Kokkos_ARCH_ARMV80` | Optimize for ARMV80 architecture | ON/OFF |
+| `Kokkos_ARCH_ARMV81` | Optimize for ARMV81 architecture | ON/OFF |
+| `Kokkos_ARCH_ARMV8_THUNDERX` | Optimize for ARMV8_THUNDERX architecture | ON/OFF |
+| `Kokkos_ARCH_ARMV8_THUNDERX2` | Optimize for the ARMV8_THUNDERX2 architecture | ON/OFF |
+
+NVIDIA GPU architectures:
+
+| Option | Description | GPU cards | VALUES |
+| ----------- | ----------- | -----| ------ |
+| `Kokkos_ARCH_AMPERE90` | Optimize for the NVIDIA Ampere generation CC 9.0 | | ON/OFF |
+| `Kokkos_ARCH_ADA89` | Optimize for the NVIDIA Ada generation CC 8.9 | | ON/OFF |
+| `Kokkos_ARCH_AMPERE80` | Optimize for the NVIDIA Ampere generation CC 8.0 | A100 | ON/OFF |
+| `Kokkos_ARCH_AMPERE86` | Optimize for the NVIDIA Ampere generation CC 8.6 | | ON/OFF |
+| `Kokkos_ARCH_KEPLER32` | Optimize for the NVIDIA Kepler generation CC 3.2 | | ON/OFF |
+| `Kokkos_ARCH_KEPLER30` | Optimize for the NVIDIA Kepler generation CC 3.0 | | ON/OFF |
+| `Kokkos_ARCH_KEPLER35` | Optimize for the NVIDIA Kepler generation CC 3.5 | | ON/OFF |
+| `Kokkos_ARCH_KEPLER37` | Optimize for the NVIDIA Kepler generation CC 3.7 | | ON/OFF |
+| `Kokkos_ARCH_MAXWELL50` | Optimize for the NVIDIA Maxwell generation CC 5.0 | | ON/OFF |
+| `Kokkos_ARCH_MAXWELL52` | Optimize for the NVIDIA Maxwell generation CC 5.2 | | ON/OFF |
+| `Kokkos_ARCH_MAXWELL53` | Optimize for the NVIDIA Maxwell generation CC 5.3 | | ON/OFF |
+| `Kokkos_ARCH_PASCAL60` | Optimize for the NVIDIA Pascal generation CC 6.0 | | ON/OFF |
+| `Kokkos_ARCH_PASCAL61` | Optimize for the NVIDIA Pascal generation CC 6.1 | | ON/OFF |
+| `Kokkos_ARCH_TURING75` | Optimize for the NVIDIA Turing generation CC 7.5 | T4 | ON/OFF |
+| `Kokkos_ARCH_VOLTA70` | Optimize for the NVIDIA Volta generation CC 7.0 | P100 | ON/OFF |
+| `Kokkos_ARCH_VOLTA72` | Optimize for the NVIDIA Volta generation CC 7.2  | | ON/OFF |
+
+AMD CPU architectures:
+
+| Option | Description | VALUES |
+| ----------- | ----------- | -----|
+| `Kokkos_ARCH_AMDAVX` | Optimize for AMDAVX architecture | ON/OFF |
+| `Kokkos_ARCH_ZEN` | Optimize for Zen architecture | ON/OFF |
+| `Kokkos_ARCH_ZEN2` | Optimize for Zen2 architecture | ON/OFF |
+| `Kokkos_ARCH_ZEN3` | Optimize for Zen3 architecture | ON/OFF |
+
+AMD GPU architectures:
+
+| Option | Description | GPU cards |VALUES |
+| ----------- | ----------- | ----- | -----|
+| `Kokkos_ARCH_AMD_GFX906` | Optimize for AMD GPU MI50/MI60 GFX906 | MI50/MI60 | ON/OFF |
+| `Kokkos_ARCH_AMD_GFX908` | Optimize for AMD GPU MI100 GFX908 | MI100 | ON/OFF |
+| `Kokkos_ARCH_AMD_GFX90A` | Optimize for AMD GPU MI200 series GFX90A | MI200 series: MI210, MI250, MI250X | ON/OFF |
+| `Kokkos_ARCH_AMD_GFX1030` | Optimize for AMD GPU V620/W6800 GFX1030 | V620, W6800 | ON/OFF |
+| `Kokkos_ARCH_AMD_GFX1100` | Optimize for AMD GPU 7900xt GFX1100 | 7900xt | ON/OFF |
+
+Intel CPU architectures:
+
+| Option | Description | VALUES |
+| ----------- | ----------- | -----|
+| `Kokkos_ARCH_BDW` | Optimize for Intel Broadwell processor architecture | ON/OFF |
+| `Kokkos_ARCH_HSW` | Optimize for Intel Haswell processor architecture | ON/OFF |
+| `Kokkos_ARCH_KNL` | Optimize for Intel Knights Landing processor architecture | ON/OFF |
+| `Kokkos_ARCH_KNC` | Optimize for Intel Knights Corner processor architecture | ON/OFF |
+| `Kokkos_ARCH_INTEL_GEN` | Optimize for Intel GPUs, Just-In-Time compilation | ON/OFF |
+| `Kokkos_ARCH_INTEL_DG1` | Optimize for Intel Iris XeMAX GPU | ON/OFF |
+| `Kokkos_ARCH_INTEL_GEN9` | Optimize for Intel GPU Gen9 | ON/OFF |
+| `Kokkos_ARCH_INTEL_GEN11` | Optimize for Intel GPU Gen11 | ON/OFF |
+| `Kokkos_ARCH_INTEL_GEN12` | Optimize for Intel GPU Gen12 | ON/OFF |
+| `Kokkos_ARCH_SKX` | Optimize for Skylake architecture | ON/OFF |
+| `Kokkos_ARCH_SNB` | Optimize for Sandy Bridge architecture | ON/OFF |
+| `Kokkos_ARCH_SPR` | Optimize for Sapphire Rapids architecture | ON/OFF |
+| `Kokkos_ARCH_WSM` | Optimize for Westmere architecture | ON/OFF |
+
+Intel GPU architectures:
+
+| Option | Description | VALUES |
+| ----------- | ----------- | -----|
+| `Kokkos_ARCH_INTEL_XEHP` | Optimize for Intel GPU Xe-HP | ON/OFF |
+| `Kokkos_ARCH_INTEL_PVC` | Optimize for Intel GPU Ponte Vecchio/GPU Max | ON/OFF |
+
+IBM CPU architectures:
+
+| Option | Description | VALUES |
+| ----------- | ----------- | -----|
+| `Kokkos_ARCH_BGQ` | Optimize for IBM Blue Gene Q architecture | ON/OFF |
+| `Kokkos_ARCH_POWER7` | Optimize for IBM POWER7 architecture | ON/OFF |
+| `Kokkos_ARCH_POWER8` | Optimize for IBM POWER8 architecture | ON/OFF |
+| `Kokkos_ARCH_POWER9` | Optimize for IBM POWER9 architecture | ON/OFF |
+
+#### Examples for the latest architectures:
+
+For AMD MI250 GPUs with HIP and OpenMP support:
+
+```bash
+cmake . -DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_OPENMP=ON -DKokkos_ARCH_AMD_GFX90A=ON
+```
+
+For NVIDIA A100 GPUs with CUDA and OpenMP support:
+
+```bash
+cmake . -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON  -DKokkos_ENABLE_OPENMP=ON
+```
+
+For NVIDIA V100 GPUs with CUDA and OpenMP support:
+
+```bash
+cmake . -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_VOLTA70=ON  -DKokkos_ENABLE_OPENMP=ON
+```
+
+For Intel Ponte Vecchio GPUs with SYCL and OpenMP support:
+
+```bash
+cmake . -DKokkos_ENABLE_SYCL=ON -DKokkos_ARCH_INTEL_PVC=ON  -DKokkos_ENABLE_OPENMP=ON
+```
+
+#### More
+
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/keywords.html
 
 <img title="Code" alt="Code" src="./images/code.png" height="20"> Code exmaple: 
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed_different_compiler
 
-#### Spack
+### Spack
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/building.html#spack
 
