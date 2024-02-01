@@ -1,11 +1,11 @@
 # Personna
 
-| Name       | Computer science | Experience | Plasticity |
-|------------|------------------|------------|------------|
-| Alphonse   | 1                | 4          | 1          |
-| Béatrice   | 4                | 3          | 4          |
-| Christophe | 5                | 5          | 2          |
-| Dolorès    | 3                | 1          | 5          |
+| Name       | Computer science | Plasticity | Experience | Time available |
+|------------|------------------|------------|------------|----------------|
+| Alphonse   | 1                | 1          | 4          | 5              |
+| Béatrice   | 4                | 4          | 3          | 2              |
+| Christophe | 5                | 2          | 5          | 3              |
+| Dolorès    | 3                | 5          | 1          | 1              |
 
 ## Alphonse
 
