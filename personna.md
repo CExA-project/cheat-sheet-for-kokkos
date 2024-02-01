@@ -16,7 +16,7 @@ She wants to code with Kokkos efficiently without getting lost in the documentat
 
 Former CUDA developper for six years, he is specialized in GPU code tuning.
 
-He wants to transition Kokkos to target other GPUs without having to learn their specific language.
+He wants to transition to Kokkos to target other GPUs without having to learn their specific language.
 
 ## Dolorès
 
