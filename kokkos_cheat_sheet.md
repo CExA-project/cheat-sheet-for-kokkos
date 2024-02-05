@@ -18,263 +18,37 @@ Pictograms:
 - <img title="Training" alt="Training" src="./images/training.png" height="20"> Link to training pages
 - <img title="Warning" alt="Warning" src="./images/warning.png" height="20"> Warning
 
-## Table of Contents
-
-- [KOKKOS Cheat Sheet](#kokkos-cheat-sheet)
-  - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
-    - [Requirements](#requirements)
-    - [Build](#build)
-    - [Inline build](#inline-build)
-    - [Installed package](#installed-package)
-    - [Spack](#spack)
-  - [Initialization](#initialization)
-    - [headers:](#headers)
-    - [Initialize and finalize Kokkos:](#initialize-and-finalize-kokkos)
-    - [Command-line arguments](#command-line-arguments)
-    - [Initialization by struc](#initialization-by-struc)
-  - [Memory Management](#memory-management)
-    - [View, the multidimensional array data container](#view-the-multidimensional-array-data-container)
-    - [Memory Layouts](#memory-layouts)
-    - [Memory Spaces](#memory-spaces)
-    - [View traits](#view-traits)
-    - [View copy](#view-copy)
-    - [HostMirror](#hostmirror)
-    - [DualView](#dualview)
-    - [Subview](#subview)
-
-## Installation
-
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
-
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/building.html
-
-<img title="Doc" alt="Doc" src="./images/training.png" height="20"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_01_Introduction.pdf
-
-### Requirements
-
-Minimum Compiler Versions:
-
-- GCC: 5.3.0
-- Clang: 4.0.0
-- Clang: 10.0.0 (as CUDA compiler) 
-- Intel: 17.0.1
-- NVCC: 9.2.88
-- NVC++: 21.5
-- ROCM: 4.5
-- MSVC: 19.29
-- IBM XL: 16.1.1
-- Fujitsu: 4.5.0
-- ARM/Clang 20.1
-
-Primary Tested Compilers:
-
-- GCC: 5.3.0, 6.1.0, 7.3.0, 8.3, 9.2, 10.0
-- NVCC: 9.2.88, 10.1, 11.0
-- Clang: 8.0.0, 9.0.0, 10.0.0, 12.0.0
-- Intel 17.4, 18.1, 19.5
-- MSVC: 19.29
-- ARM/Clang: 20.1
-- IBM XL: 16.1.1
-- ROCM: 4.5.0
-
-Build system:
-
-- CMake >= 3.16: required
-- CMake >= 3.18: Fortran linkage. This does not affect most mixed Fortran/Kokkos builds. See build issues.
-- CMake >= 3.21.1 for NVC++
-
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/requirements.html
-
-### Build
-
-Kokkos developers propose 3 different ways to build Kokkos:
-
-- Inline build: Kokkos is built as part of the application.
-- Installed package: Kokkos is built as a separate package and installed.
-- Spack package: Kokkos is built as a separate package and installed using Spack.
-
-### Inline build
-
-Use `add_subdirectory(kokkos)` with the Kokkos source and again just link with `target_link_libraries(Kokkos::kokkos)`.
-
-<img title="Code" alt="Code" src="./images/code.png" height="20"> Code exmaple: 
-- https://github.com/kokkos/kokkos/tree/master/example/build_cmake_in_tree
-
-### Installed package
- 
-#### Default installation:
-
-```bash
-cmake <path to the Kokkos sources> \
- -DCMAKE_CXX_COMPILER=<your C++ compiler> \
- -DCMAKE_INSTALL_PREFIX=${kokkos_install_folder}
-```
-
-#### CPU backends:
-
-- `-DKokkos_ENABLE_SERIAL=ON`: activate the SERIAL backend (`ON`by default)
-- `-DKokkos_ENABLE_OPENMP=ON`: activate the OpenMP backend
-- `-DKokkos_ENABLE_PTHREAD=ON`: activate the PTHREAD backend
-
-#### GPU backends:
-
-- `-DKokkos_ENABLE_CUDA=ON`: activate the CUDA backend
-- `-DKokkos_ENABLE_HIP=ON`: activate the HIP backend
-- `-DKokkos_ENABLE_SYCL=ON`: activate the SYCL backend (experimental)
-- `-DKokkos_ENABLE_OPENMPTARGET=ON`: activate the OpenMP target backend (experimental)
-- `-DKokkos_ENABLE_HPX=ON`: activate the HPX backend (experimental)
-
-<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> You can only select `SERIAL`, one CPU backend and one GPU backend at a time.
-
-#### CMake compiling options:
-
-| Option | Description | Default |
-| ----------- | ----------- | -----|
-| `Kokkos_ENABLE_AGGRESSIVE_VECTORIZATION` | Aggressively vectorize loops | OFF |
-| `Kokkos_ENABLE_COMPILER_WARNINGS` | Print all compiler warnings | OFF |
-| `Kokkos_ENABLE_CUDA_CONSTEXPR` | Activate experimental relaxed constexpr functions | OFF |
-| `Kokkos_ENABLE_CUDA_LAMBDA` | Activate experimental lambda features | OFF |
-| `Kokkos_ENABLE_CUDA_LDG_INTRINSIC` | Use CUDA LDG intrinsics | OFF |
-| `Kokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE` | Enable relocatable device code (RDC) for CUDA | OFF |
-| `Kokkos_ENABLE_DEBUG` | Activate extra debug features - may increase compile times | OFF |
-| `Kokkos_ENABLE_DEBUG_BOUNDS_CHECK` | Use bounds checking - will increase runtime | OFF |Ò
-| `Kokkos_ENABLE_DEBUG_DUALVIEW_MODIFY_CHECK` | Debug check on dual views | OFF |
-| `Kokkos_ENABLE_DEPRECATED_CODE` | Enable deprecated code | OFF |
-| `Kokkos_ENABLE_EXAMPLES` | Enable building examples | OFF |
-| `Kokkos_ENABLE_HIP_MULTIPLE_KERNEL_INSTANTIATIONS` | Instantiate multiple kernels at compile time - improve performance but increase compile time | OFF |
-| `Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE` | Enable relocatable device code (RDC) for HIP | OFF |
-| `Kokkos_ENABLE_LARGE_MEM_TESTS` | Perform extra large memory tests | OFF |
-| `Kokkos_ENABLE_TESTS` | Enable building tests | OFF |
-| `Kokkos_ENABLE_TUNING` | Create bindings for tuning tools | OFF |
-
-#### Third-party Libraries (TPLs)
-
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
-
-#### Architecture Optimization
-
-- `Kokkos_ARCH_NATIVE=ON/OFF`: Optimize for the local CPU architecture
-
-ARM-based architectures:
-
-| Option             | Description                           | VALUES |
-| ------------------ | ------------------------------------- | ------ |
-| `Kokkos_ARCH_A64FX` | Optimize for ARMv8.2 with SVE Support | ON/OFF |
-| `Kokkos_ARCH_ARMV80` | Optimize for ARMV80 architecture | ON/OFF |
-| `Kokkos_ARCH_ARMV81` | Optimize for ARMV81 architecture | ON/OFF |
-| `Kokkos_ARCH_ARMV8_THUNDERX` | Optimize for ARMV8_THUNDERX architecture | ON/OFF |
-| `Kokkos_ARCH_ARMV8_THUNDERX2` | Optimize for the ARMV8_THUNDERX2 architecture | ON/OFF |
-
-NVIDIA GPU architectures:
-
-| Option | Description | GPU cards | VALUES |
-| ----------- | ----------- | -----| ------ |
-| `Kokkos_ARCH_AMPERE90` | Optimize for the NVIDIA Ampere generation CC 9.0 | | ON/OFF |
-| `Kokkos_ARCH_ADA89` | Optimize for the NVIDIA Ada generation CC 8.9 | | ON/OFF |
-| `Kokkos_ARCH_AMPERE80` | Optimize for the NVIDIA Ampere generation CC 8.0 | A100 | ON/OFF |
-| `Kokkos_ARCH_AMPERE86` | Optimize for the NVIDIA Ampere generation CC 8.6 | | ON/OFF |
-| `Kokkos_ARCH_KEPLER32` | Optimize for the NVIDIA Kepler generation CC 3.2 | | ON/OFF |
-| `Kokkos_ARCH_KEPLER30` | Optimize for the NVIDIA Kepler generation CC 3.0 | | ON/OFF |
-| `Kokkos_ARCH_KEPLER35` | Optimize for the NVIDIA Kepler generation CC 3.5 | | ON/OFF |
-| `Kokkos_ARCH_KEPLER37` | Optimize for the NVIDIA Kepler generation CC 3.7 | | ON/OFF |
-| `Kokkos_ARCH_MAXWELL50` | Optimize for the NVIDIA Maxwell generation CC 5.0 | | ON/OFF |
-| `Kokkos_ARCH_MAXWELL52` | Optimize for the NVIDIA Maxwell generation CC 5.2 | | ON/OFF |
-| `Kokkos_ARCH_MAXWELL53` | Optimize for the NVIDIA Maxwell generation CC 5.3 | | ON/OFF |
-| `Kokkos_ARCH_PASCAL60` | Optimize for the NVIDIA Pascal generation CC 6.0 | | ON/OFF |
-| `Kokkos_ARCH_PASCAL61` | Optimize for the NVIDIA Pascal generation CC 6.1 | | ON/OFF |
-| `Kokkos_ARCH_TURING75` | Optimize for the NVIDIA Turing generation CC 7.5 | T4 | ON/OFF |
-| `Kokkos_ARCH_VOLTA70` | Optimize for the NVIDIA Volta generation CC 7.0 | P100 | ON/OFF |
-| `Kokkos_ARCH_VOLTA72` | Optimize for the NVIDIA Volta generation CC 7.2  | | ON/OFF |
-
-AMD CPU architectures:
-
-| Option | Description | VALUES |
-| ----------- | ----------- | -----|
-| `Kokkos_ARCH_AMDAVX` | Optimize for AMDAVX architecture | ON/OFF |
-| `Kokkos_ARCH_ZEN` | Optimize for Zen architecture | ON/OFF |
-| `Kokkos_ARCH_ZEN2` | Optimize for Zen2 architecture | ON/OFF |
-| `Kokkos_ARCH_ZEN3` | Optimize for Zen3 architecture | ON/OFF |
-
-AMD GPU architectures:
-
-| Option | Description | GPU cards |VALUES |
-| ----------- | ----------- | ----- | -----|
-| `Kokkos_ARCH_AMD_GFX906` | Optimize for AMD GPU MI50/MI60 GFX906 | MI50/MI60 | ON/OFF |
-| `Kokkos_ARCH_AMD_GFX908` | Optimize for AMD GPU MI100 GFX908 | MI100 | ON/OFF |
-| `Kokkos_ARCH_AMD_GFX90A` | Optimize for AMD GPU MI200 series GFX90A | MI200 series: MI210, MI250, MI250X | ON/OFF |
-| `Kokkos_ARCH_AMD_GFX1030` | Optimize for AMD GPU V620/W6800 GFX1030 | V620, W6800 | ON/OFF |
-| `Kokkos_ARCH_AMD_GFX1100` | Optimize for AMD GPU 7900xt GFX1100 | 7900xt | ON/OFF |
-
-Intel CPU architectures:
-
-| Option | Description | VALUES |
-| ----------- | ----------- | -----|
-| `Kokkos_ARCH_BDW` | Optimize for Intel Broadwell processor architecture | ON/OFF |
-| `Kokkos_ARCH_HSW` | Optimize for Intel Haswell processor architecture | ON/OFF |
-| `Kokkos_ARCH_KNL` | Optimize for Intel Knights Landing processor architecture | ON/OFF |
-| `Kokkos_ARCH_KNC` | Optimize for Intel Knights Corner processor architecture | ON/OFF |
-| `Kokkos_ARCH_INTEL_GEN` | Optimize for Intel GPUs, Just-In-Time compilation | ON/OFF |
-| `Kokkos_ARCH_INTEL_DG1` | Optimize for Intel Iris XeMAX GPU | ON/OFF |
-| `Kokkos_ARCH_INTEL_GEN9` | Optimize for Intel GPU Gen9 | ON/OFF |
-| `Kokkos_ARCH_INTEL_GEN11` | Optimize for Intel GPU Gen11 | ON/OFF |
-| `Kokkos_ARCH_INTEL_GEN12` | Optimize for Intel GPU Gen12 | ON/OFF |
-| `Kokkos_ARCH_SKX` | Optimize for Skylake architecture | ON/OFF |
-| `Kokkos_ARCH_SNB` | Optimize for Sandy Bridge architecture | ON/OFF |
-| `Kokkos_ARCH_SPR` | Optimize for Sapphire Rapids architecture | ON/OFF |
-| `Kokkos_ARCH_WSM` | Optimize for Westmere architecture | ON/OFF |
-
-Intel GPU architectures:
-
-| Option | Description | VALUES |
-| ----------- | ----------- | -----|
-| `Kokkos_ARCH_INTEL_XEHP` | Optimize for Intel GPU Xe-HP | ON/OFF |
-| `Kokkos_ARCH_INTEL_PVC` | Optimize for Intel GPU Ponte Vecchio/GPU Max | ON/OFF |
-
-IBM CPU architectures:
-
-| Option | Description | VALUES |
-| ----------- | ----------- | -----|
-| `Kokkos_ARCH_BGQ` | Optimize for IBM Blue Gene Q architecture | ON/OFF |
-| `Kokkos_ARCH_POWER7` | Optimize for IBM POWER7 architecture | ON/OFF |
-| `Kokkos_ARCH_POWER8` | Optimize for IBM POWER8 architecture | ON/OFF |
-| `Kokkos_ARCH_POWER9` | Optimize for IBM POWER9 architecture | ON/OFF |
-
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
-
-#### Examples for the latest architectures:
-
-For AMD MI250 GPUs with HIP and OpenMP support:
-
-```bash
-cmake . -DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_OPENMP=ON -DKokkos_ARCH_AMD_GFX90A=ON
-```
-
-For NVIDIA A100 GPUs with CUDA and OpenMP support:
-
-```bash
-cmake . -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON  -DKokkos_ENABLE_OPENMP=ON
-```
-
-For NVIDIA V100 GPUs with CUDA and OpenMP support:
-
-```bash
-cmake . -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_VOLTA70=ON  -DKokkos_ENABLE_OPENMP=ON
-```
-
-For Intel Ponte Vecchio GPUs with SYCL and OpenMP support:
-
-```bash
-cmake . -DKokkos_ENABLE_SYCL=ON -DKokkos_ARCH_INTEL_PVC=ON  -DKokkos_ENABLE_OPENMP=ON
-```
-
-<img title="Code" alt="Code" src="./images/code.png" height="20"> For more code exmaples: 
-- https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed
-- https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed_different_compiler
-
-### Spack
-
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/building.html#spack
+1. [Initialization](#initialization)
+	1. [headers:](#headers)
+	2. [Initialize and finalize Kokkos:](#initialize-and-finalize-kokkos)
+	3. [Command-line arguments](#command-line-arguments)
+	4. [Initialization by struc](#initialization-by-struc)
+2. [Memory Management](#memory-management)
+	1. [View, the multidimensional array data container](#view-the-multidimensional-array-data-container)
+		1. [Creating a View](#creating-a-view)
+		2. [Accessing Elements](#accessing-elements)
+		3. [Managing Views](#managing-views)
+	2. [Memory Layouts](#memory-layouts)
+	3. [Memory Spaces](#memory-spaces)
+		1. [Generic Memory Space](#generic-memory-space)
+		2. [CUDA-specific Memory Spaces](#cuda-specific-memory-spaces)
+		3. [HIP-specific Memory Spaces](#hip-specific-memory-spaces)
+		4. [SYCL-specific Memory Spaces](#sycl-specific-memory-spaces)
+		5. [Unified Virtual Memory or Shared Space](#unified-virtual-memory-or-shared-space)
+		6. [Scratch Memory Spaces](#scratch-memory-spaces)
+	4. [View traits](#view-traits)
+	5. [View copy](#view-copy)
+	6. [HostMirror](#hostmirror)
+	7. [DualView](#dualview)
+	8. [Subview](#subview)
+	9. [ScatterView](#scatterview)
+3. [Parallelism dispatch](#parallelism-dispatch)
+	1. [Parallel_for](#parallel_for)
+	2. [MDRange](#mdrange)
+	3. [Scratch Memory](#scratch-memory)
+	4. [Atomics](#atomics)
+4. [Hierarchical Parallelism](#hierarchical-parallelism)
+5. [Macros](#macros)
 
 ## Initialization
 
