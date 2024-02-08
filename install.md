@@ -3,19 +3,21 @@
 1. [Requirements](#requirements)
 	1. [Compiler](#compiler)
 	2. [Build system](#build-system)
-2. [Build](#build)
-	1. [Inline build](#inline-build)
-	2. [Installed package](#installed-package)
+2. [How to build Kokkos](#how-to-build-kokkos)
+	1. [As part of your application](#as-part-of-your-application)
+	2. [As an external library](#as-an-external-library)
 		1. [Configure, build and install Kokkos](#configure-build-and-install-kokkos)
-		2. [Configure your code](#configure-your-code)
+		2. [Use in your code](#use-in-your-code)
 		3. [Select options](#select-options)
-			1. [CPU backends](#cpu-backends)
+			1. [Host backends](#host-backends)
 			2. [GPU backends](#gpu-backends)
-			3. [Specific options](#specific-options)
-			4. [Architecture-specific options](#architecture-specific-options)
+			3. [GPU backends](#gpu-backends)
+			4. [GPU backends](#gpu-backends)
+			5. [Specific options](#specific-options)
+			6. [Architecture-specific options](#architecture-specific-options)
 		4. [Command examples for the latest architectures](#command-examples-for-the-latest-architectures)
 		5. [Third-party Libraries (TPLs)](#third-party-libraries-tpls)
-	3. [Spack](#spack)
+	3. [As a Spack package](#as-a-spack-package)
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
 
@@ -52,11 +54,9 @@
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/requirements.html
 
-## Build
+## How to build Kokkos
 
-### Inline build
-
-Kokkos is built as part of the application.
+### As part of your application
 
 ```cmake
 # CMakeLists.txt
@@ -73,9 +73,7 @@ target_link_libraries(
 
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_in_tree
 
-### Installed package
-
-Kokkos is built as a separate package and installed.
+### As an external library
 
 #### Configure, build and install Kokkos
 
@@ -116,13 +114,17 @@ cmake -B build \
 
 #### Select options
 
-##### CPU backends
+##### Host backends
 
 | Option                       | Backend | Notes          |
 |------------------------------|---------|----------------|
 | `-DKokkos_ENABLE_SERIAL=ON`  | Serial  | `ON`by default |
 | `-DKokkos_ENABLE_OPENMP=ON`  | OpenMP  |                |
 | `-DKokkos_ENABLE_PTHREAD=ON` | PThread |                |
+
+##### GPU backends
+
+##### GPU backends
 
 ##### GPU backends
 
@@ -223,13 +225,13 @@ cmake -B build \
 <details>
 <summary>AMD GPU architectures (HIP)</summary>
 
-| Option                      | Description                              | Associated cards     |
-|-----------------------------|------------------------------------------|----------------------|
-| `-DKokkos_ARCH_AMD_GFX906`  | Optimize for AMD GPU MI50/MI60 GFX906    | MI50/MI60            |
-| `-DKokkos_ARCH_AMD_GFX908`  | Optimize for AMD GPU MI100 GFX908        | MI100                |
-| `-DKokkos_ARCH_AMD_GFX90A`  | Optimize for AMD GPU MI200 series GFX90A | MI210, MI250, MI250X |
-| `-DKokkos_ARCH_AMD_GFX1030` | Optimize for AMD GPU V620/W6800 GFX1030  | V620, W6800          |
-| `-DKokkos_ARCH_AMD_GFX1100` | Optimize for AMD GPU 7900xt GFX1100      | 7900xt               |
+| Option                      | Description                   | Associated cards            |
+|-----------------------------|-------------------------------|-----------------------------|
+| `-DKokkos_ARCH_AMD_GFX90A`  | Optimize for AMD GFX90A GPUs  | MI210, MI250, MI250X, MI300 |
+| `-DKokkos_ARCH_AMD_GFX908`  | Optimize for AMD GFX908 GPUs  | MI100                       |
+| `-DKokkos_ARCH_AMD_GFX906`  | Optimize for AMD GFX906 GPUs  | MI50/MI60                   |
+| `-DKokkos_ARCH_AMD_GFX1100` | Optimize for AMD GFX1100 GPUs | 7900xt                      |
+| `-DKokkos_ARCH_AMD_GFX1030` | Optimize for AMD GFX1030 GPUs | V620, W6800                 |
 
 | Option                                               | Description                                                                                  |
 |------------------------------------------------------|----------------------------------------------------------------------------------------------|
@@ -252,24 +254,26 @@ cmake -B build \
 <details>
 <summary>NVIDIA GPU architectures (CUDA)</summary>
 
-| Option                    | Description                                       | Associated cards |
-|---------------------------|---------------------------------------------------|------------------|
-| `-DKokkos_ARCH_AMPERE90`  | Optimize for the NVIDIA Ampere generation CC 9.0  |                  |
-| `-DKokkos_ARCH_ADA89`     | Optimize for the NVIDIA Ada generation CC 8.9     |                  |
-| `-DKokkos_ARCH_AMPERE80`  | Optimize for the NVIDIA Ampere generation CC 8.0  | A100             |
-| `-DKokkos_ARCH_AMPERE86`  | Optimize for the NVIDIA Ampere generation CC 8.6  |                  |
-| `-DKokkos_ARCH_KEPLER32`  | Optimize for the NVIDIA Kepler generation CC 3.2  |                  |
-| `-DKokkos_ARCH_KEPLER30`  | Optimize for the NVIDIA Kepler generation CC 3.0  |                  |
-| `-DKokkos_ARCH_KEPLER35`  | Optimize for the NVIDIA Kepler generation CC 3.5  |                  |
-| `-DKokkos_ARCH_KEPLER37`  | Optimize for the NVIDIA Kepler generation CC 3.7  |                  |
-| `-DKokkos_ARCH_MAXWELL50` | Optimize for the NVIDIA Maxwell generation CC 5.0 |                  |
-| `-DKokkos_ARCH_MAXWELL52` | Optimize for the NVIDIA Maxwell generation CC 5.2 |                  |
-| `-DKokkos_ARCH_MAXWELL53` | Optimize for the NVIDIA Maxwell generation CC 5.3 |                  |
-| `-DKokkos_ARCH_PASCAL60`  | Optimize for the NVIDIA Pascal generation CC 6.0  | P100             |
-| `-DKokkos_ARCH_PASCAL61`  | Optimize for the NVIDIA Pascal generation CC 6.1  |                  |
-| `-DKokkos_ARCH_TURING75`  | Optimize for the NVIDIA Turing generation CC 7.5  | T4               |
-| `-DKokkos_ARCH_VOLTA70`   | Optimize for the NVIDIA Volta generation CC 7.0   | V100             |
-| `-DKokkos_ARCH_VOLTA72`   | Optimize for the NVIDIA Volta generation CC 7.2   |                  |
+| Option                    | Description                                       | Associated cards                                     |
+|---------------------------|---------------------------------------------------|------------------------------------------------------|
+| `-DKokkos_ARCH_AMPERE90`  | Optimize for the NVIDIA Ampere generation CC 9.0  | Hopper H200, H100                                    |
+| `-DKokkos_ARCH_ADA89`     | Optimize for the NVIDIA Ada generation CC 8.9     | GeForce RTX 40 series, RTX 6000/5000 series, Ada L4X |
+| `-DKokkos_ARCH_AMPERE86`  | Optimize for the NVIDIA Ampere generation CC 8.6  | GeForce RTX 30 series, RTX A series, Ampere A40      |
+| `-DKokkos_ARCH_AMPERE80`  | Optimize for the NVIDIA Ampere generation CC 8.0  | Ampere A100                                          |
+| `-DKokkos_ARCH_TURING75`  | Optimize for the NVIDIA Turing generation CC 7.5  | Turing T4                                            |
+| `-DKokkos_ARCH_VOLTA72`   | Optimize for the NVIDIA Volta generation CC 7.2   |                                                      |
+| `-DKokkos_ARCH_VOLTA70`   | Optimize for the NVIDIA Volta generation CC 7.0   | Volta V100                                           |
+| `-DKokkos_ARCH_PASCAL61`  | Optimize for the NVIDIA Pascal generation CC 6.1  | Pascal P40, P6, P4                                   |
+| `-DKokkos_ARCH_PASCAL60`  | Optimize for the NVIDIA Pascal generation CC 6.0  | Pascal P100                                          |
+| `-DKokkos_ARCH_MAXWELL53` | Optimize for the NVIDIA Maxwell generation CC 5.3 |                                                      |
+| `-DKokkos_ARCH_MAXWELL52` | Optimize for the NVIDIA Maxwell generation CC 5.2 | Maxwell M4, M40, M6, M60                             |
+| `-DKokkos_ARCH_MAXWELL50` | Optimize for the NVIDIA Maxwell generation CC 5.0 | Maxwell M10                                          |
+| `-DKokkos_ARCH_KEPLER37`  | Optimize for the NVIDIA Kepler generation CC 3.7  | Kepler K80                                           |
+| `-DKokkos_ARCH_KEPLER35`  | Optimize for the NVIDIA Kepler generation CC 3.5  |                                                      |
+| `-DKokkos_ARCH_KEPLER32`  | Optimize for the NVIDIA Kepler generation CC 3.2  |                                                      |
+| `-DKokkos_ARCH_KEPLER30`  | Optimize for the NVIDIA Kepler generation CC 3.0  |                                                      |
+
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See NVIDIA documentation on Compute Capability (CC): https://developer.nvidia.com/cuda-gpus
 
 | Option                                         | Description                                       |
 |------------------------------------------------|---------------------------------------------------|
@@ -329,8 +333,8 @@ cmake -B build -DKokkos_ENABLE_SYCL=ON -DKokkos_ARCH_INTEL_PVC=ON  -DKokkos_ENAB
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
 
-### Spack
+### As a Spack package
 
-Kokkos is built as a separate package and installed using Spack.
+TODO finish this part
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/building.html#spack

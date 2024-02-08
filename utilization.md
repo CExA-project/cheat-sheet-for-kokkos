@@ -40,7 +40,7 @@
 	9. [ScatterView](#scatterview)
 		1. [Create](#create)
 			1. [Scatter operation](#scatter-operation)
-2. [Parallel execution](#parallel-execution)
+2. [Parallelism patterns](#parallelism-patterns)
 	1. [For loop](#for-loop)
 		1. [Simple](#simple)
 		2. [Full](#full)
@@ -384,7 +384,7 @@ Kokkos::deep_copy(dest, src);
 ```
 
 Copies data from `src` view to `dest` view.
-The views must have the same dimensions, data type and reside in the same memory space.
+The views must have the same dimensions, data type and reside in the same memory space ([mirror views](#mirror-view) can be deep copied on different memory spaces).
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/core/view/deep_copy.html
 
@@ -642,7 +642,7 @@ Kokkos::Experimental::contribute(histogram, scatter);
 
 </details>
 
-## Parallel execution
+## Parallelism patterns
 
 ### For loop
 
@@ -658,7 +658,7 @@ Kokkos::parallel_for(
 );
 ```
 
-**Note:** By default, the scalar `numberOfElements` is equivalent to the instance `RangePolicy<>(0, numberOfElements - 1)`.
+**Note:** By default, the scalar `numberOfElements` is equivalent to the instance `RangePolicy<>(0, numberOfElements - 1)` (see [range policies](#ranges) bellow).
 
 #### Full
 
@@ -722,7 +722,7 @@ Kokkos::fence();
 Determines how the parallel execution should occur.
 
 ```cpp
-ExecutionPolicy<ExecutionSpace, Schedule, IndexType LaunchBounds, WorkTag> policy(/* ... */);
+ExecutionPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> policy(/* ... */);
 ```
 
 | Template argument | Description                                                                       |
@@ -746,7 +746,6 @@ In case of work on one-dimensional arrays.
 ```cpp
 Kokkos::RangePolicy<> policy(first, last);
 ```
-
 
 ##### Full
 
@@ -780,11 +779,11 @@ Kokkos::MDRangePolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag
 Kokkos supports hierarchical parallelism with a *league* of *teams*, using `Kokkos::TeamPolicy`.
 Parallelisation within the team depends on the specific range policy used:
 
-| Thread level        | Vector level        | Thread and vector level | Equivalent dimension |
-|---------------------|---------------------|-------------------------|----------------------|
-| `TeamThreadRange`   | `TeamVectorRange`   |                         | 2                    |
-| `TeamThreadMDRange` | `TeamVectorMDRange` | `ThreadVectorRange`     | 3                    |
-| *same*              | *same*              | `ThreadVectorMDRange`   | 4                    |
+| Thread level        | Vector level        | Thread and vector level | Adequate for loops of dimension |
+|---------------------|---------------------|-------------------------|---------------------------------|
+| `TeamThreadRange`   | `TeamVectorRange`   |                         | 2                               |
+| `TeamThreadMDRange` | `TeamVectorMDRange` | `ThreadVectorRange`     | 3                               |
+| *same*              | *same*              | `ThreadVectorMDRange`   | 4                               |
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/HierarchicalParallelism.html
 
@@ -793,7 +792,7 @@ Parallelisation within the team depends on the specific range policy used:
 ##### Simple
 
 ```cpp
-Kokkos::TeamPolicy<>(numberOfTeams, numberOfElementsWithinTeam);
+Kokkos::TeamPolicy<>(numberOfTeams, /* numberOfElementsPerTeam = */ Kokkos::AUTO);
 ```
 
 **Note:** `Kokkos::AUTO` is commonly used to let Kokkos determine the number elements per team.
@@ -801,7 +800,7 @@ Kokkos::TeamPolicy<>(numberOfTeams, numberOfElementsWithinTeam);
 ##### Full
 
 ```cpp
-Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag>(numberOfTeams, numberOfElementsWithinTeam);
+Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag>(numberOfTeams, numberOfElementsPerTeam);
 ```
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamPolicy.html
