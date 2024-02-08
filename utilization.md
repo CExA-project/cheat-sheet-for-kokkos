@@ -10,8 +10,6 @@
 3. [Memory management](#memory-management)
 	1. [View](#view)
 		1. [Creating a view](#creating-a-view)
-			1. [Simple](#simple)
-			2. [Full](#full)
 		2. [Accessing elements](#accessing-elements)
 		3. [Managing views](#managing-views)
 	2. [Memory Layout](#memory-layout)
@@ -42,22 +40,14 @@
 			1. [Scatter operation](#scatter-operation)
 2. [Parallelism patterns](#parallelism-patterns)
 	1. [For loop](#for-loop)
-		1. [Simple](#simple)
-		2. [Full](#full)
 	2. [Reduction](#reduction)
 	3. [Fences](#fences)
 3. [Execution policy](#execution-policy)
 	1. [Ranges](#ranges)
 		1. [One-dimensional range](#one-dimensional-range)
-			1. [Simple](#simple)
-			2. [Full](#full)
 		2. [Multi-dimensional](#multi-dimensional)
-			1. [Simple](#simple)
-			2. [Full](#full)
-	3. [Hierarchical parallelism](#hierarchical-parallelism)
+	2. [Hierarchical parallelism](#hierarchical-parallelism)
 		1. [Team policy](#team-policy)
-			1. [Simple](#simple)
-			2. [Full](#full)
 		2. [Hierarchy structure](#hierarchy-structure)
 			1. [Thread level or vector level](#thread-level-or-vector-level)
 			2. [Thread and vector level](#thread-and-vector-level)
@@ -127,14 +117,6 @@ Multidimensional array that abstracts data containers and provides a consistent 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html
 
 #### Creating a view
-
-##### Simple
-
-```cpp
-Kokkos::View<DataType> view("label", numberOfElements);
-```
-
-##### Full
 
 ```cpp
 Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElements);
@@ -646,22 +628,6 @@ Kokkos::Experimental::contribute(histogram, scatter);
 
 ### For loop
 
-#### Simple
-
-```cpp
-Kokkos::parallel_for(
-    "label",
-    numberOfElements,
-    KOKKOS_LAMBDA (const int i) {
-        /* ... */
-    }
-);
-```
-
-**Note:** By default, the scalar `numberOfElements` is equivalent to the instance `RangePolicy<>(0, numberOfElements - 1)` (see [range policies](#ranges) bellow).
-
-#### Full
-
 ```cpp
 Kokkos::parallel_for(
     "label",
@@ -737,36 +703,23 @@ ExecutionPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> poli
 
 ### Ranges
 
+
 #### One-dimensional range
 
 In case of work on one-dimensional arrays.
-
-##### Simple
-
-```cpp
-Kokkos::RangePolicy<> policy(first, last);
-```
-
-##### Full
 
 ```cpp
 Kokkos::RangePolicy<ExecutionSpace, Schedule, IndexType LaunchBounds, WorkTag> policy(first, last);
 ```
 
+For simple ranges that start at index 0 and use default template parameters, the execution policy can be replaced by an single integer which is the number of elements.
+
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/core/policies/RangePolicy.html
 
 #### Multi-dimensional
 
-In case of work no multi-dimensional arrays.
+In case of work on multi-dimensional arrays.
 By instance for a dimension 2:
-
-##### Simple
-
-```cpp
-Kokkos::MDRangePolicy<Kokkos::Rank<2>> policy({firstI, firstJ}, {lastI, lastJ});
-```
-
-##### Full
 
 ```cpp
 Kokkos::MDRangePolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag, Kokkos::Rank<2>> policy({firstI, firstJ}, {lastI, lastJ});
@@ -789,19 +742,11 @@ Parallelisation within the team depends on the specific range policy used:
 
 #### Team policy
 
-##### Simple
-
 ```cpp
-Kokkos::TeamPolicy<>(numberOfTeams, /* numberOfElementsPerTeam = */ Kokkos::AUTO);
+Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag>(numberOfTeams, /* numberOfElementsPerTeam = */ Kokkos::AUTO);
 ```
 
 **Note:** `Kokkos::AUTO` is commonly used to let Kokkos determine the number elements per team.
-
-##### Full
-
-```cpp
-Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag>(numberOfTeams, numberOfElementsPerTeam);
-```
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamPolicy.html
 
