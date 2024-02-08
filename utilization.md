@@ -526,14 +526,14 @@ A `subview` is a `View` that is a subset of another view that mimics the behavio
 Kokkos::View<double*> view("view3D", numberOfElement);
 Kokkos::View<double*> subviewAll = Kokkos::subview(view, Kokkos::ALL)
 Kokkos::View<double*> subviewRange = Kokkos::subview(view, Kokkos::pair(rangeFirst, rangeLast));
-Kokkos::View<double*> subviewSpecific = Kokkos::subview(view, specific);
+Kokkos::View<double*> subviewSpecific = Kokkos::subview(view, value);
 ```
 
 | Subset selection | Description                         |
 |------------------|-------------------------------------|
 | `Kokkos::ALL`    | All elements in this dimension      |
 | `Kokkos::pair`   | Range of elements in this dimension |
-| Integer value    | Specific element in this dimension  |
+| `value`          | Specific element in this dimension  |
 
 #### Create from view
 
