@@ -7,11 +7,13 @@
 | Christophe | 5                | 2          | 5          | 3              |
 | Dolorès    | 3                | 5          | 1          | 1              |
 
+Note: 1 is low, 5 is high.
+
 ## Alphonse
 
 Nuclear physicist with limited programming knowledges, he has been using Fortran for thirty years to implement mathematical and physical models.
 
-He wants to use Kokkos for his three-dimensional code that has to run on GPU.
+He has to use Kokkos for his three-dimensional code to run on GPU, and will likely hire a PhD student for this.
 
 ## Béatrice
 
@@ -30,3 +32,15 @@ He wants to transition to Kokkos to target other GPUs without having to learn th
 Undergraduate student in computer sciences, she knows GPU programming, machine learning, and various modern stacks.
 
 She wants to learn Kokkos for her six-month long internship on GPU computing.
+
+## Estéban
+
+Mid-career physicist who has worked on solvers development for fifteen years, he has a couple of years of experience in Kokkos too.
+
+He wants to rewrite an existing code from scratch using Kokkos and make it as clean and portable as possible.
+
+## Félicie
+
+System engineer who manages several clusters and helps the CI of various projects.
+
+She wants to deploy Kokkos for cluster users and for CI workflows.
