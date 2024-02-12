@@ -84,6 +84,8 @@ Kokkos::finalize();
 
 #### Command-line arguments
 
+
+
 Command-line arguments are parsed by `Kokkos::initialize` and removed from the argument list.
 
 | Argument                 | Effect                                                                                                                                              |
@@ -97,7 +99,7 @@ Command-line arguments are parsed by `Kokkos::initialize` and removed from the a
 #### Struct arguments
 
 ```cpp
-Kokkos::InitArguments args;
+Kokkos::InitializationSettings args;
 // 8 (CPU) threads per NUMA region
 args.num_threads = 8;
 // 2 (CPU) NUMA regions per process
@@ -224,58 +226,6 @@ Kokkos::View<double*, Kokkos::HostSpace> hostView("hostView", numberOfElements);
 ```
 
 </details>
-
-#### CUDA-specific memory spaces
-
-<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> These memory spaces are only available when compiling for the corresponding architecture.
-
-| Memory space                  | Description                                                                                                                         |
-|-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| `Kokkos::CudaHostPinnedSpace` | Data on the host is pinned for efficient transfer to/from GPU; allows for asynchronous data transfers between host and GPU          |
-| `Kokkos::CudaSpace`           | Default memory space for data that resides on an the GPU, accessible from the GPU but not from the host                             |
-| `Kokkos::CudaUVMSpace`        | Unified Virtual Memory (UVM) space for NVIDIA GPUs; data is accessible from both the host and the GPU, with a performance trade-off |
-
-<details>
-<summary>Examples</summary>
-
-```cpp
-Kokkos::View<double*, Kokkos::CudaHostPinnedSpace> pinnedView("pinnedView", numberOfElements);
-Kokkos::View<double*, Kokkos::CudaSpace> gpuView("gpuView", numberOfElements);
-Kokkos::View<double*, Kokkos::CudaUVMSpace> uvmView("uvmView", numberOfElements);
-```
-
-</details>
-
-#### HIP-specific memory spaces
-
-<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> These memory spaces are only available when compiling for the corresponding architecture.
-
-| Memory space                 | Description                                                                                                                      |
-|------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| `Kokkos::HIPHostPinnedSpace` | Data on the host that is pinned for efficient transfer to/from GPU; allows for asynchronous data transfers between host and GPU  |
-| `Kokkos::HIPSpace`           | Default memory space for data that resides on the GPU, accessible from the GPU but not from the host                             |
-| `Kokkos::HIPManagedSpace`    | Unified Virtual Memory (UVM) space for AMD GPUs; data is accessible from both the host and the GPU, with a performance trade-off |
-
-<details>
-<summary>Examples</summary>
-
-```cpp
-Kokkos::View<double*, Kokkos::HIPHostPinnedSpace> pinnedView("pinnedView", numberOfElements);
-Kokkos::View<double*, Kokkos::HIPSpace> gpuView("gpuView", numberOfElements);
-Kokkos::View<double*, Kokkos::HIPUVMSpace> uvmView("uvmView", numberOfElements);
-```
-
-</details>
-
-#### SYCL-specific memory spaces
-
-**Warning:** These memory spaces are only available when compiling for the corresponding architecture.
-
-| Memory space                               | Description |
-|--------------------------------------------|-------------|
-| `Kokkos::Experimental::SYCLDeviceUSMSpace` |             |
-| `Kokkos::Experimental::SYCLHostUSMSpace`   |             |
-| `Kokkos::Experimental::SYCLSharedUSMSpace` |             |
 
 #### Unified virtual memory or shared space
 
@@ -426,87 +376,6 @@ Kokkos::deepcopy(view, hostView );
 // From device to host
 Kokkos::deepcopy(hostView, view );
 ```
-
-### Dual view
-
-A `DualView` provides an embedded host and a device view that are manually synchronized.
-
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/API/containers/DualView.html
-
-#### Create
-
-```cpp
-Kokkos::DualView<double*> dualView("label", numberOfElements);
-```
-
-#### Access data
-
-##### Host view
-
-```cpp
-for (i = 0; i < numberOfElements; i++) {
-    dualView.h_view(i) = i;
-}
-dualView.modify_host();
-```
-
-After modifications on the host, data are marked as modified.
-
-##### Device view
-
-```cpp
-Kokkos::parallel_for(
-    ExecutionPolicy</* ... */>(/* ... */),
-    KOKKOS_LAMBDA (const int i) {
-        dualView.d_view(i) = i;
-    }
-);
-dualView.modify_device();
-```
-
-After modifications on the device, data are marked as modified.
-
-#### Synchronize
-
-```cpp
-// host do device
-dualView.sync_to_device();
-// device to host
-dualView.sync_to_host();
-```
-
-Synchronization ensures that the most recent data is available on the host or device before further operations.
-Copy will not take place if data are not marked as modified.
-
-<details>
-<summary>Full example</summary>
-
-```cpp
-// Create a DualView of size 10
-Kokkos::DualView<double*> a("A", 10);
-
-// Modify the device view
-Kokkos::parallel_for(
-    "initialize",
-    Kokkos::RangePolicy<>(0,10),
-    KOKKOS_LAMBDA (const int i) {
-        a.d_view(i) = i;
-    }
-);
-
-// Mark device view as modified
-a.modify_device();
-
-// Synchronize data from device to host
-a.sync_host();
-
-// Access data on the host
-for (size_t i = 0; i < a.extent(0); ++i) {
-    std::cout << a.h_view(i) << std::endl;
-}
-```
-
-</details>
 
 ### Subview
 

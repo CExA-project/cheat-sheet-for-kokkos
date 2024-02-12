@@ -11,8 +11,6 @@
 		3. [Select options](#select-options)
 			1. [Host backends](#host-backends)
 			2. [GPU backends](#gpu-backends)
-			3. [GPU backends](#gpu-backends)
-			4. [GPU backends](#gpu-backends)
 			5. [Specific options](#specific-options)
 			6. [Architecture-specific options](#architecture-specific-options)
 		4. [Command examples for the latest architectures](#command-examples-for-the-latest-architectures)
@@ -116,162 +114,134 @@ cmake -B build \
 
 ##### Host backends
 
-| Option                       | Backend | Notes          |
-|------------------------------|---------|----------------|
-| `-DKokkos_ENABLE_SERIAL=ON`  | Serial  | `ON`by default |
-| `-DKokkos_ENABLE_OPENMP=ON`  | OpenMP  |                |
-| `-DKokkos_ENABLE_PTHREAD=ON` | PThread |                |
+| Option                       | Backend | Notes           |
+|------------------------------|---------|-----------------|
+| `-DKokkos_ENABLE_SERIAL=ON`  | Serial  | `ON` by default |
+| `-DKokkos_ENABLE_OPENMP=ON`  | OpenMP  |                 |
+| `-DKokkos_ENABLE_PTHREAD=ON` | PThread |                 |
 
-##### GPU backends
+##### Device backends
 
-##### GPU backends
+| Option                            | Backend       | Notes        | Extra steps                                                                |
+|-----------------------------------|---------------|--------------|----------------------------------------------------------------------------|
+| `-DKokkos_ENABLE_CUDA=ON`         | CUDA          |              | See NVIDIA [architecture-specific options](#architecture-specific-options) |
+| `-DKokkos_ENABLE_HIP=ON`          | HIP           |              | See AMD [architecture-specific options](#architecture-specific-options)    |
+| `-DKokkos_ENABLE_SYCL=ON`         | SYCL          | Experimental | See Intel [architecture-specific options](#architecture-specific-options)  |
+| `-DKokkos_ENABLE_OPENMPTARGET=ON` | OpenMP target | Experimental |                                                                            |
+| `-DKokkos_ENABLE_HPX=ON`          | HPX           | Experimental |                                                                            |
 
-##### GPU backends
-
-| Option                            | Backend            | Notes        | Extra steps                                                                |
-|-----------------------------------|--------------------|--------------|----------------------------------------------------------------------------|
-| `-DKokkos_ENABLE_CUDA=ON`         | CUDA               |              | See NVIDIA [architecture-specific options](#architecture-specific-options) |
-| `-DKokkos_ENABLE_HIP=ON`          | HIP                |              | See AMD [architecture-specific options](#architecture-specific-options)    |
-| `-DKokkos_ENABLE_SYCL=ON`         | SYCL               | Experimental | See Intel [architecture-specific options](#architecture-specific-options)  |
-| `-DKokkos_ENABLE_OPENMPTARGET=ON` | OpenMP with target | Experimental |                                                                            |
-| `-DKokkos_ENABLE_HPX=ON`          | HPX                | Experimental |                                                                            |
-
-<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> You can only select `SERIAL`, one CPU backend and one GPU backend at a time.
+<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> You can only select `SERIAL`, plus one host backend and one device backend at a time.
 
 ##### Specific options
 
-| Option                                        | Description                                                |
-|-----------------------------------------------|------------------------------------------------------------|
-| `-DKokkos_ENABLE_AGGRESSIVE_VECTORIZATION`    | Aggressively vectorize loops                               |
-| `-DKokkos_ENABLE_COMPILER_WARNINGS`           | Print all compiler warnings                                |
-| `-DKokkos_ENABLE_DEBUG_BOUNDS_CHECK`          | Use bounds checking - will increase runtime                |
-| `-DKokkos_ENABLE_DEBUG_DUALVIEW_MODIFY_CHECK` | Debug check on dual views                                  |
-| `-DKokkos_ENABLE_DEBUG`                       | Activate extra debug features - may increase compile times |
-| `-DKokkos_ENABLE_DEPRECATED_CODE`             | Enable deprecated code                                     |
-| `-DKokkos_ENABLE_EXAMPLES`                    | Enable building examples                                   |
-| `-DKokkos_ENABLE_LARGE_MEM_TESTS`             | Perform extra large memory tests                           |
-| `-DKokkos_ENABLE_TESTS`                       | Enable building tests                                      |
-| `-DKokkos_ENABLE_TUNING`                      | Create bindings for tuning tools                           |
+| Option                                           | Description                                                |
+|--------------------------------------------------|------------------------------------------------------------|
+| `-DKokkos_ENABLE_AGGRESSIVE_VECTORIZATION=ON`    | Aggressively vectorize loops                               |
+| `-DKokkos_ENABLE_COMPILER_WARNINGS=ON`           | Print all compiler warnings                                |
+| `-DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON`          | Use bounds checking - will increase runtime                |
+| `-DKokkos_ENABLE_DEBUG_DUALVIEW_MODIFY_CHECK=ON` | Debug check on dual views                                  |
+| `-DKokkos_ENABLE_DEBUG=ON`                       | Activate extra debug features - may increase compile times |
+| `-DKokkos_ENABLE_DEPRECATED_CODE=ON`             | Enable deprecated code                                     |
+| `-DKokkos_ENABLE_EXAMPLES=ON`                    | Enable building examples                                   |
+| `-DKokkos_ENABLE_LARGE_MEM_TESTS=ON`             | Perform extra large memory tests                           |
+| `-DKokkos_ENABLE_TESTS=ON`                       | Enable building tests                                      |
+| `-DKokkos_ENABLE_TUNING=ON`                      | Create bindings for tuning tools                           |
 
 ##### Architecture-specific options
 
-<details>
-<summary>All architectures</summary>
-
-| Option                 | Description                             |
-|------------------------|-----------------------------------------|
-| `-DKokkos_ARCH_NATIVE` | Optimize for the local CPU architecture |
-
-</details>
+| Option                    | Description                              |
+|---------------------------|------------------------------------------|
+| `-DKokkos_ARCH_NATIVE=ON` | Optimize for the local host architecture |
 
 <details>
 <summary>AMD CPU architectures</summary>
 
-| Option                 | Description                      |
-|------------------------|----------------------------------|
-| `-DKokkos_ARCH_AMDAVX` | Optimize for AMDAVX architecture |
-| `-DKokkos_ARCH_ZEN`    | Optimize for Zen architecture    |
-| `-DKokkos_ARCH_ZEN2`   | Optimize for Zen2 architecture   |
-| `-DKokkos_ARCH_ZEN3`   | Optimize for Zen3 architecture   |
+| Option                    | Description                      |
+|---------------------------|----------------------------------|
+| `-DKokkos_ARCH_ZEN3=ON`   | Optimize for Zen3 architecture   |
+| `-DKokkos_ARCH_ZEN2=ON`   | Optimize for Zen2 architecture   |
+| `-DKokkos_ARCH_ZEN=ON`    | Optimize for Zen architecture    |
 
 </details>
 
 <details>
 <summary>ARM CPU architectures</summary>
 
-| Option                          | Description                                   |
-|---------------------------------|-----------------------------------------------|
-| `-DKokkos_ARCH_A64FX`           | Optimize for ARMv8.2 with SVE Support         |
-| `-DKokkos_ARCH_ARMV80`          | Optimize for ARMV80 architecture              |
-| `-DKokkos_ARCH_ARMV81`          | Optimize for ARMV81 architecture              |
-| `-DKokkos_ARCH_ARMV8_THUNDERX`  | Optimize for ARMV8_THUNDERX architecture      |
-| `-DKokkos_ARCH_ARMV8_THUNDERX2` | Optimize for the ARMV8_THUNDERX2 architecture |
-
-</details>
-
-<details>
-<summary>IBM CPU architectures</summary>
-
-| Option                 | Description                               |
-|------------------------|-------------------------------------------|
-| `-DKokkos_ARCH_BGQ`    | Optimize for IBM Blue Gene Q architecture |
-| `-DKokkos_ARCH_POWER7` | Optimize for IBM POWER7 architecture      |
-| `-DKokkos_ARCH_POWER8` | Optimize for IBM POWER8 architecture      |
-| `-DKokkos_ARCH_POWER9` | Optimize for IBM POWER9 architecture      |
+| Option                             | Description                                   |
+|------------------------------------|-----------------------------------------------|
+| `-DKokkos_ARCH_A64FX=ON`           | Optimize for ARMv8.2 with SVE Support         |
+| `-DKokkos_ARCH_ARMV81=ON`          | Optimize for ARMV81 architecture              |
+| `-DKokkos_ARCH_ARMV80=ON`          | Optimize for ARMV80 architecture              |
 
 </details>
 
 <details>
 <summary>Intel CPU architectures</summary>
 
-| Option                      | Description                                               |
-|-----------------------------|-----------------------------------------------------------|
-| `-DKokkos_ARCH_BDW`         | Optimize for Intel Broadwell processor architecture       |
-| `-DKokkos_ARCH_HSW`         | Optimize for Intel Haswell processor architecture         |
-| `-DKokkos_ARCH_KNL`         | Optimize for Intel Knights Landing processor architecture |
-| `-DKokkos_ARCH_KNC`         | Optimize for Intel Knights Corner processor architecture  |
-| `-DKokkos_ARCH_INTEL_GEN`   | Optimize for Intel GPUs, Just-In-Time compilation         |
-| `-DKokkos_ARCH_INTEL_DG1`   | Optimize for Intel Iris XeMAX GPU                         |
-| `-DKokkos_ARCH_INTEL_GEN9`  | Optimize for Intel GPU Gen9                               |
-| `-DKokkos_ARCH_INTEL_GEN11` | Optimize for Intel GPU Gen11                              |
-| `-DKokkos_ARCH_INTEL_GEN12` | Optimize for Intel GPU Gen12                              |
-| `-DKokkos_ARCH_SKX`         | Optimize for Skylake architecture                         |
-| `-DKokkos_ARCH_SNB`         | Optimize for Sandy Bridge architecture                    |
-| `-DKokkos_ARCH_SPR`         | Optimize for Sapphire Rapids architecture                 |
-| `-DKokkos_ARCH_WSM`         | Optimize for Westmere architecture                        |
+| Option                | Description                                               |
+|-----------------------|-----------------------------------------------------------|
+| `-DKokkos_ARCH_SPR=ON | Optimize for Sapphire Rapids architecture                 |
+| `-DKokkos_ARCH_SKX=ON | Optimize for Skylake architecture                         |
+| `-DKokkos_ARCH_BDW=ON | Optimize for Intel Broadwell processor architecture       |
+| `-DKokkos_ARCH_HSW=ON | Optimize for Intel Haswell processor architecture         |
+| `-DKokkos_ARCH_KNL=ON | Optimize for Intel Knights Landing processor architecture |
+| `-DKokkos_ARCH_SNB=ON | Optimize for Sandy Bridge architecture                    |
 
 </details>
 
 <details>
 <summary>AMD GPU architectures (HIP)</summary>
 
-| Option                      | Description                   | Associated cards            |
-|-----------------------------|-------------------------------|-----------------------------|
-| `-DKokkos_ARCH_AMD_GFX90A`  | Optimize for AMD GFX90A GPUs  | MI210, MI250, MI250X, MI300 |
-| `-DKokkos_ARCH_AMD_GFX908`  | Optimize for AMD GFX908 GPUs  | MI100                       |
-| `-DKokkos_ARCH_AMD_GFX906`  | Optimize for AMD GFX906 GPUs  | MI50/MI60                   |
-| `-DKokkos_ARCH_AMD_GFX1100` | Optimize for AMD GFX1100 GPUs | 7900xt                      |
-| `-DKokkos_ARCH_AMD_GFX1030` | Optimize for AMD GFX1030 GPUs | V620, W6800                 |
+| Option                         | Description                   | Associated cards     |
+|--------------------------------|-------------------------------|----------------------|
+| `-DKokkos_ARCH_AMD_GFX90A=ON`  | Optimize for AMD GFX90A GPUs  | MI210, MI250, MI250X |
+| `-DKokkos_ARCH_AMD_GFX908=ON`  | Optimize for AMD GFX908 GPUs  | MI100                |
+| `-DKokkos_ARCH_AMD_GFX906=ON`  | Optimize for AMD GFX906 GPUs  | MI50/MI60            |
+| `-DKokkos_ARCH_AMD_GFX1100=ON` | Optimize for AMD GFX1100 GPUs | 7900xt               |
+| `-DKokkos_ARCH_AMD_GFX1030=ON` | Optimize for AMD GFX1030 GPUs | V620, W6800          |
 
-| Option                                               | Description                                                                                  |
-|------------------------------------------------------|----------------------------------------------------------------------------------------------|
-| `-DKokkos_ENABLE_HIP_MULTIPLE_KERNEL_INSTANTIATIONS` | Instantiate multiple kernels at compile time - improve performance but increase compile time |
-| `-DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE`        | Enable relocatable device code (RDC) for HIP                                                 |
+| Option                                                  | Description                                                                                   |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| `-DKokkos_ENABLE_HIP_MULTIPLE_KERNEL_INSTANTIATIONS=ON` | Instantiate multiple kernels at compile time; improves performance but increases compile time |
+| `-DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON`        | Enable Relocatable Device Code (RDC) for HIP                                                  |
 
 </details>
 
 <details>
 <summary>Intel GPU architectures (SYCL)</summary>
 
-| Option                     | Description                                  |
-|----------------------------|----------------------------------------------|
-| `-DKokkos_ARCH_INTEL_GEN`  | Optimize for generic Intel GPUs              |
-| `-DKokkos_ARCH_INTEL_XEHP` | Optimize for Intel GPU Xe-HP                 |
-| `-DKokkos_ARCH_INTEL_PVC`  | Optimize for Intel GPU Ponte Vecchio/GPU Max |
+| Option                         | Description                                       |
+|--------------------------------|---------------------------------------------------|
+| `-DKokkos_ARCH_INTEL_XEHP=ON`     | Optimize for Intel GPU Xe-HP                      |
+| `-DKokkos_ARCH_INTEL_PVC=ON`      | Optimize for Intel GPU Ponte Vecchio/GPU Max      |
+| `-DKokkos_ARCH_INTEL_GEN=ON`   | Optimize for Intel GPUs, Just-In-Time compilation |
+| `-DKokkos_ARCH_INTEL_DG1=ON`   | Optimize for Intel Iris XeMAX GPU                 |
+| `-DKokkos_ARCH_INTEL_GEN12=ON` | Optimize for Intel GPU Gen12                      |
+| `-DKokkos_ARCH_INTEL_GEN11=ON` | Optimize for Intel GPU Gen11                      |
 
 </details>
 
 <details>
 <summary>NVIDIA GPU architectures (CUDA)</summary>
 
-| Option                    | Description                                       | Associated cards                                     |
-|---------------------------|---------------------------------------------------|------------------------------------------------------|
-| `-DKokkos_ARCH_AMPERE90`  | Optimize for the NVIDIA Ampere generation CC 9.0  | Hopper H200, H100                                    |
-| `-DKokkos_ARCH_ADA89`     | Optimize for the NVIDIA Ada generation CC 8.9     | GeForce RTX 40 series, RTX 6000/5000 series, Ada L4X |
-| `-DKokkos_ARCH_AMPERE86`  | Optimize for the NVIDIA Ampere generation CC 8.6  | GeForce RTX 30 series, RTX A series, Ampere A40      |
-| `-DKokkos_ARCH_AMPERE80`  | Optimize for the NVIDIA Ampere generation CC 8.0  | Ampere A100                                          |
-| `-DKokkos_ARCH_TURING75`  | Optimize for the NVIDIA Turing generation CC 7.5  | Turing T4                                            |
-| `-DKokkos_ARCH_VOLTA72`   | Optimize for the NVIDIA Volta generation CC 7.2   |                                                      |
-| `-DKokkos_ARCH_VOLTA70`   | Optimize for the NVIDIA Volta generation CC 7.0   | Volta V100                                           |
-| `-DKokkos_ARCH_PASCAL61`  | Optimize for the NVIDIA Pascal generation CC 6.1  | Pascal P40, P6, P4                                   |
-| `-DKokkos_ARCH_PASCAL60`  | Optimize for the NVIDIA Pascal generation CC 6.0  | Pascal P100                                          |
-| `-DKokkos_ARCH_MAXWELL53` | Optimize for the NVIDIA Maxwell generation CC 5.3 |                                                      |
-| `-DKokkos_ARCH_MAXWELL52` | Optimize for the NVIDIA Maxwell generation CC 5.2 | Maxwell M4, M40, M6, M60                             |
-| `-DKokkos_ARCH_MAXWELL50` | Optimize for the NVIDIA Maxwell generation CC 5.0 | Maxwell M10                                          |
-| `-DKokkos_ARCH_KEPLER37`  | Optimize for the NVIDIA Kepler generation CC 3.7  | Kepler K80                                           |
-| `-DKokkos_ARCH_KEPLER35`  | Optimize for the NVIDIA Kepler generation CC 3.5  |                                                      |
-| `-DKokkos_ARCH_KEPLER32`  | Optimize for the NVIDIA Kepler generation CC 3.2  |                                                      |
-| `-DKokkos_ARCH_KEPLER30`  | Optimize for the NVIDIA Kepler generation CC 3.0  |                                                      |
+| Option                    | Description                                  | Compute Capability | Associated cards                                     |
+|---------------------------|----------------------------------------------|--------------------|------------------------------------------------------|
+| `-DKokkos_ARCH_AMPERE90`  | Optimize for the NVIDIA Ampere architecture  | 9.0                | Hopper H200, H100                                    |
+| `-DKokkos_ARCH_ADA89`     | Optimize for the NVIDIA Ada architecture     | 8.9                | GeForce RTX 40 series, RTX 6000/5000 series, Ada L4X |
+| `-DKokkos_ARCH_AMPERE86`  | Optimize for the NVIDIA Ampere architecture  | 8.6                | GeForce RTX 30 series, RTX A series, Ampere A40      |
+| `-DKokkos_ARCH_AMPERE80`  | Optimize for the NVIDIA Ampere architecture  | 8.0                | Ampere A100                                          |
+| `-DKokkos_ARCH_TURING75`  | Optimize for the NVIDIA Turing architecture  | 7.5                | Turing T4                                            |
+| `-DKokkos_ARCH_VOLTA72`   | Optimize for the NVIDIA Volta architecture   | 7.2                |                                                      |
+| `-DKokkos_ARCH_VOLTA70`   | Optimize for the NVIDIA Volta architecture   | 7.0                | Volta V100                                           |
+| `-DKokkos_ARCH_PASCAL61`  | Optimize for the NVIDIA Pascal architecture  | 6.1                | Pascal P40, P6, P4                                   |
+| `-DKokkos_ARCH_PASCAL60`  | Optimize for the NVIDIA Pascal architecture  | 6.0                | Pascal P100                                          |
+| `-DKokkos_ARCH_MAXWELL53` | Optimize for the NVIDIA Maxwell architecture | 5.3                |                                                      |
+| `-DKokkos_ARCH_MAXWELL52` | Optimize for the NVIDIA Maxwell architecture | 5.2                | Maxwell M4, M40, M6, M60                             |
+| `-DKokkos_ARCH_MAXWELL50` | Optimize for the NVIDIA Maxwell architecture | 5.0                | Maxwell M10                                          |
+| `-DKokkos_ARCH_KEPLER37`  | Optimize for the NVIDIA Kepler architecture  | 3.7                | Kepler K80                                           |
+| `-DKokkos_ARCH_KEPLER35`  | Optimize for the NVIDIA Kepler architecture  | 3.5                |                                                      |
+| `-DKokkos_ARCH_KEPLER32`  | Optimize for the NVIDIA Kepler architecture  | 3.2                |                                                      |
+| `-DKokkos_ARCH_KEPLER30`  | Optimize for the NVIDIA Kepler architecture  | 3.0                |                                                      |
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See NVIDIA documentation on Compute Capability (CC): https://developer.nvidia.com/cuda-gpus
 
@@ -292,7 +262,7 @@ cmake -B build \
 <summary>For AMD MI250 GPUs with HIP and OpenMP support</summary>
 
 ```bash
-cmake -B build -DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_OPENMP=ON -DKokkos_ARCH_AMD_GFX90A=ON
+cmake -B build -DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_OPENMP=ON -DKokkos_ARCH_AMD_GFX90A=ON -DCMAKE_CXX_COMPILER=hipcc
 ```
 
 </details>
@@ -301,7 +271,7 @@ cmake -B build -DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_OPENMP=ON -DKokkos_ARCH_AM
 <summary>For NVIDIA A100 GPUs with CUDA and OpenMP support</summary>
 
 ```bash
-cmake -B build -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON  -DKokkos_ENABLE_OPENMP=ON
+cmake -B build -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_OPENMP=ON
 ```
 
 </details>
@@ -310,7 +280,7 @@ cmake -B build -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON  -DKokkos_ENABL
 <summary>For NVIDIA V100 GPUs with CUDA and OpenMP support</summary>
 
 ```bash
-cmake -B build -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_VOLTA70=ON  -DKokkos_ENABLE_OPENMP=ON
+cmake -B build -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_VOLTA70=ON -DKokkos_ENABLE_OPENMP=ON
 ```
 
 </details>
@@ -319,7 +289,7 @@ cmake -B build -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_VOLTA70=ON  -DKokkos_ENABLE
 <summary>For Intel Ponte Vecchio (GPU Max) GPUs with SYCL and OpenMP support</summary>
 
 ```bash
-cmake -B build -DKokkos_ENABLE_SYCL=ON -DKokkos_ARCH_INTEL_PVC=ON  -DKokkos_ENABLE_OPENMP=ON
+cmake -B build -DKokkos_ENABLE_SYCL=ON -DKokkos_ARCH_INTEL_PVC=ON -DKokkos_ENABLE_OPENMP=ON -DCMAKE_CXX_COMPILER=icpx
 ```
 
 </details>
