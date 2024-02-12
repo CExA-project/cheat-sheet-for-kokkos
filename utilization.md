@@ -542,7 +542,7 @@ Another way of getting a subview is through the appropriate `View` constructor.
 ```cpp
 Kokkos::View<double*> subviewAll(view, Kokkos::ALL)
 Kokkos::View<double*> subviewRange(view, Kokkos::pair(rangeFirst, rangeLast));
-Kokkos::View<double*> subviewSpecific(view, specific);
+Kokkos::View<double*> subviewSpecific(view, value);
 ```
 
 ### ScatterView
