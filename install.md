@@ -1,5 +1,7 @@
 # Kokkos install cheat sheet
 
+<!--#ifndef PRINT-->
+
 1. [Requirements](#requirements)
 	1. [Compiler](#compiler)
 	2. [Build system](#build-system)
@@ -23,6 +25,8 @@
 
 <img title="Doc" alt="Doc" src="./images/training.png" height="20"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_01_Introduction.pdf
 
+<!--#endif-->
+
 ## Requirements
 
 ### Compiler
@@ -43,12 +47,12 @@
 
 ### Build system
 
-| Build system | Minimum version | Note                                                                                          |
-|--------------|-----------------|-----------------------------------------------------------------------------------------------|
-| CMake        | 3.16            | Minimum requirement                                                                           |
-| CMake        | 3.18            | For Fortran linkage. This does not affect most mixed Fortran/Kokkos builds. See build issues. |
-| CMake        | 3.21.1          | For NVHPC compiler                                                                            |
-| CMake        | 3.25.2          | For LLVM Intel compiler                                                                       |
+| Build system | Minimum version | Note                                 |
+|--------------|-----------------|--------------------------------------|
+| CMake        | 3.16            | Minimum requirement                  |
+| CMake        | 3.18            | For better Fortran linkage           |
+| CMake        | 3.21.1          | For NVHPC compiler support           |
+| CMake        | 3.25.2          | For LLVM Intel compiler full support |
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/requirements.html
 
@@ -153,6 +157,10 @@ cmake -B build \
 |---------------------------|------------------------------------------|
 | `-DKokkos_ARCH_NATIVE=ON` | Optimize for the local host architecture |
 
+<!--#ifndef PRINT-->
+
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
+
 <details>
 <summary>AMD CPU architectures</summary>
 
@@ -254,45 +262,51 @@ cmake -B build \
 
 </details>
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
+<!--#endif-->
 
-#### Command examples for the latest architectures
+#### Command examples for the most common architectures
 
-<details>
-<summary>For AMD MI250 GPUs with HIP and OpenMP support</summary>
-
-```bash
-cmake -B build -DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_OPENMP=ON -DKokkos_ARCH_AMD_GFX90A=ON -DCMAKE_CXX_COMPILER=hipcc
-```
-
-</details>
-
-<details>
-<summary>For NVIDIA A100 GPUs with CUDA and OpenMP support</summary>
+##### AMD MI250 GPUs with HIP and OpenMP
 
 ```bash
-cmake -B build -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_OPENMP=ON
+cmake \
+    -B build \
+    -DKokkos_ENABLE_HIP=ON \
+    -DKokkos_ENABLE_OPENMP=ON \
+    -DKokkos_ARCH_AMD_GFX90A=ON \
+    -DCMAKE_CXX_COMPILER=hipcc
 ```
 
-</details>
-
-<details>
-<summary>For NVIDIA V100 GPUs with CUDA and OpenMP support</summary>
+##### NVIDIA A100 GPUs with CUDA and OpenMP
 
 ```bash
-cmake -B build -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_VOLTA70=ON -DKokkos_ENABLE_OPENMP=ON
+cmake \
+    -B build \
+    -DKokkos_ENABLE_CUDA=ON \
+    -DKokkos_ARCH_AMPERE80=ON \
+    -DKokkos_ENABLE_OPENMP=ON
 ```
 
-</details>
-
-<details>
-<summary>For Intel Ponte Vecchio (GPU Max) GPUs with SYCL and OpenMP support</summary>
+##### NVIDIA V100 GPUs with CUDA and OpenMP
 
 ```bash
-cmake -B build -DKokkos_ENABLE_SYCL=ON -DKokkos_ARCH_INTEL_PVC=ON -DKokkos_ENABLE_OPENMP=ON -DCMAKE_CXX_COMPILER=icpx
+cmake \
+    -B build \
+    -DKokkos_ENABLE_CUDA=ON \
+    -DKokkos_ARCH_VOLTA70=ON \
+    -DKokkos_ENABLE_OPENMP=ON
 ```
 
-</details>
+##### Intel Ponte Vecchio (GPU Max) GPUs with SYCL and OpenMP
+
+```bash
+cmake \
+    -B build \
+    -DKokkos_ENABLE_SYCL=ON \
+    -DKokkos_ARCH_INTEL_PVC=ON \
+    -DKokkos_ENABLE_OPENMP=ON \
+    -DCMAKE_CXX_COMPILER=icpx
+```
 
 <img title="Code" alt="Code" src="./images/code.png" height="20"> For more code examples:
 
