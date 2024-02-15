@@ -1,7 +1,14 @@
 #!/usr/bin/env python
+"""
+Pandoc filter to fix tables that are by default rendered with `longtable` and
+cannot be used in multicolumn environment.
+
+See:
+    https://pandoc-discuss.narkive.com/KRZgvqD0/latex-tables-using-tabular-instead-of-longtable
+    https://stackoverflow.com/a/34077289/19422971
+"""
 
 import pandocfilters as pf
-import sys
 
 def latex(s):
     return pf.RawBlock('latex', s)
@@ -24,12 +31,12 @@ def tbl_alignment(s, v, threshold=10):
                 size = 0
 
                 for index_word, word in enumerate(col[0]['c']):
-                    if word['t'] == "Str":
+                    if word and "c" in word:
                         size += len(word['c'])
 
                 col_sizes[index] = max(col_sizes[index], size)
 
-    # make the column big if its size is over threshold
+    # mark the column as big if its size is over threshold
     aligments = []
     for index, e in enumerate(s):
 
@@ -49,28 +56,17 @@ def tbl_alignment(s, v, threshold=10):
 
     return ''.join(aligments)
 
-    # # make last column larger
-    # aligments = []
-    # for i, e in enumerate(s):
-    #     if i == len(s) - 1:
-    #         aligments.append("X")
-    #         continue
-    #
-    #     aligments.append(aligns[e['t']])
-    #
-    # return ''.join(aligments)
-
 def tbl_headers(s):
     result = s[0][0]['c'][:]
     # Build the columns. Note how the every column value is bold.
-    # We are still missing "\textbf{" for the first column
+    # We are still missing "\tblhead{" for the first column
     # and a "}" for the last column.
     for i in range(1, len(s)):
         result.append(inlatex(r'} & \tblhead{'))
         result.extend(s[i][0]['c'])
-    # Don't forget to close the last column's "\textbf{" before newline
+    # Don't forget to close the last column's "\tblhead{" before newline
     result.append(inlatex(r'} \\ \midrule'))
-    # Put the missing "\textbf{" in front of the list
+    # Put the missing "\tblhead{" in front of the list
     result.insert(0, inlatex(r'\tblhead{'))
     return pf.Para(result)
 
