@@ -10,14 +10,18 @@
 	2. [As an external library](#as-an-external-library)
 		1. [Configure, build and install Kokkos](#configure-build-and-install-kokkos)
 		2. [Use in your code](#use-in-your-code)
-		3. [Select options](#select-options)
-			1. [Host backends](#host-backends)
-			2. [GPU backends](#gpu-backends)
-			5. [Specific options](#specific-options)
-			6. [Architecture-specific options](#architecture-specific-options)
-		4. [Command examples for the latest architectures](#command-examples-for-the-latest-architectures)
-		5. [Third-party Libraries (TPLs)](#third-party-libraries-tpls)
 	3. [As a Spack package](#as-a-spack-package)
+3. [Kokkos compile options](#kokkos-compile-options)
+	1. [Host backends](#host-backends)
+	2. [Device backends](#device-backends)
+	3. [Specific options](#specific-options)
+	4. [Architecture-specific options](#architecture-specific-options)
+	5. [Third-party Libraries (TPLs)](#third-party-libraries-tpls)
+	6. [Examples for the most common architectures](#examples-for-the-most-common-architectures)
+		1. [AMD MI250 GPUs with HIP and OpenMP](#amd-mi250-gpus-with-hip-and-openmp)
+		2. [NVIDIA A100 GPUs with CUDA and OpenMP](#nvidia-a100-gpus-with-cuda-and-openmp)
+		3. [NVIDIA V100 GPUs with CUDA and OpenMP](#nvidia-v100-gpus-with-cuda-and-openmp)
+		4. [Intel Ponte Vecchio (GPU Max) GPUs with SYCL and OpenMP](#intel-ponte-vecchio-gpu-max-gpus-with-sycl-and-openmp)
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
 
@@ -299,6 +303,12 @@ See [architecture-specific options](#architecture-specific-options).
 
 <!--#endif-->
 
+<!--#ifndef PRINT-->
+### Third-party Libraries (TPLs)
+
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
+<!--#endif-->
+
 ### Examples for the most common architectures
 
 #### AMD MI250 GPUs with HIP and OpenMP
@@ -353,10 +363,4 @@ cmake \
 
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed_different_compiler
-<!--#endif-->
-
-<!--#ifndef PRINT-->
-#### Third-party Libraries (TPLs)
-
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
 <!--#endif-->
