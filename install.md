@@ -1,6 +1,6 @@
-# Kokkos install cheat sheet
-
 <!--#ifndef PRINT-->
+
+# Kokkos install cheat sheet
 
 1. [Requirements](#requirements)
 	1. [Compiler](#compiler)
@@ -31,38 +31,38 @@
 
 ### Compiler
 
-| Compiler  | Minimum version | Note     |
+| Compiler  | Minimum version | Notes    |
 |-----------|-----------------|----------|
-| GCC       | 5.3.0           |          |
-| Clang     | 4.0.0           |          |
+| Clang     | 20.1            | For ARM  |
 | Clang     | 10.0.0          | For CUDA |
-| ARM Clang | 20.1            |          |
-| Intel     | 17.0.1          |          |
-| NVCC      | 9.2.88          |          |
-| PGI/NVHPC | 21.5            |          |
-| ROCM      | 4.5             |          |
-| MSVC      | 19.29           |          |
-| IBM XL    | 16.1.1          |          |
+| Clang     | 4.0.0           |          |
 | Fujitsu   | 4.5.0           |          |
+| GCC       | 5.3.0           |          |
+| IBM XL    | 16.1.1          |          |
+| Intel     | 17.0.1          |          |
+| MSVC      | 19.29           |          |
+| NVCC      | 9.2.88          |          |
+| NVHPC/PGI | 21.5            |          |
+| ROCM      | 4.5             |          |
 
 ### Build system
 
-| Build system | Minimum version | Note                                 |
+| Build system | Minimum version | Notes                                |
 |--------------|-----------------|--------------------------------------|
-| CMake        | 3.16            | Minimum requirement                  |
-| CMake        | 3.18            | For better Fortran linkage           |
-| CMake        | 3.21.1          | For NVHPC compiler support           |
 | CMake        | 3.25.2          | For LLVM Intel compiler full support |
+| CMake        | 3.21.1          | For NVHPC compiler support           |
+| CMake        | 3.18            | For better Fortran linking           |
+| CMake        | 3.16            | Minimum requirement                  |
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/requirements.html
+<!--#endif-->
 
 ## How to build Kokkos
 
 ### As part of your application
 
 ```cmake
-# CMakeLists.txt
-
 add_subdirectory(path/to/kokkos)
 target_link_libraries(
     my-lib
@@ -71,9 +71,18 @@ target_link_libraries(
 )
 ```
 
+```sh
+cd path/to/your/code
+cmake -B build \
+    -DCMAKE_CXX_COMPILER=<your C++ compiler> \
+    <Kokkos compile options>
+```
+
+<!--#ifndef PRINT-->
 <img title="Code" alt="Code" src="./images/code.png" height="20"> Code example:
 
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_in_tree
+<!--#endif-->
 
 ### As an external library
 
@@ -84,18 +93,18 @@ cd path/to/kokkos
 cmake -B build \
     -DCMAKE_CXX_COMPILER=<your C++ compiler> \
     -DCMAKE_INSTALL_PREFIX=path/to/kokkos/install \
-    <other options discussed below>
+    <Kokkos compile options>
 cmake --build build
 cmake --install build
 ```
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/building.html
+<!--#endif-->
 
 #### Use in your code
 
 ```cmake
-# CMakeLists.txt
-
 find_package(Kokkos REQUIRED)
 target_link_libraries(
     my-lib
@@ -108,50 +117,76 @@ target_link_libraries(
 cd path/to/your/code
 cmake -B build \
     -DCMAKE_CXX_COMPILER=<your C++ compiler> \
-    -DCMAKE_PREFIX_PATH=path/to/kokkos/install \
-    <other options discussed below>
+    -DCMAKE_PREFIX_PATH=path/to/kokkos/install
 ```
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://cmake.org/cmake/help/latest/guide/tutorial/index.html
+<!--#endif-->
 
-#### Select options
+### As a Spack package
 
-##### Host backends
+TODO finish this part
 
-| Option                       | Backend | Notes           |
-|------------------------------|---------|-----------------|
-| `-DKokkos_ENABLE_SERIAL=ON`  | Serial  | `ON` by default |
-| `-DKokkos_ENABLE_OPENMP=ON`  | OpenMP  |                 |
-| `-DKokkos_ENABLE_PTHREAD=ON` | PThread |                 |
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/building.html#spack
+<!--#endif-->
 
-##### Device backends
+## Kokkos compile options
 
-| Option                            | Backend       | Notes        | Extra steps                                                                |
-|-----------------------------------|---------------|--------------|----------------------------------------------------------------------------|
-| `-DKokkos_ENABLE_CUDA=ON`         | CUDA          |              | See NVIDIA [architecture-specific options](#architecture-specific-options) |
-| `-DKokkos_ENABLE_HIP=ON`          | HIP           |              | See AMD [architecture-specific options](#architecture-specific-options)    |
-| `-DKokkos_ENABLE_SYCL=ON`         | SYCL          | Experimental | See Intel [architecture-specific options](#architecture-specific-options)  |
-| `-DKokkos_ENABLE_OPENMPTARGET=ON` | OpenMP target | Experimental |                                                                            |
-| `-DKokkos_ENABLE_HPX=ON`          | HPX           | Experimental |                                                                            |
+### Host backends
 
-<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> You can only select `SERIAL`, plus one host backend and one device backend at a time.
+| Option                       | Backend |
+|------------------------------|---------|
+| `-DKokkos_ENABLE_SERIAL=ON`  | Serial  |
+| `-DKokkos_ENABLE_OPENMP=ON`  | OpenMP  |
+| `-DKokkos_ENABLE_PTHREAD=ON` | PThread |
 
-##### Specific options
+<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> The serial backend is enabled by default.
 
-| Option                                           | Description                                                |
-|--------------------------------------------------|------------------------------------------------------------|
-| `-DKokkos_ENABLE_AGGRESSIVE_VECTORIZATION=ON`    | Aggressively vectorize loops                               |
-| `-DKokkos_ENABLE_COMPILER_WARNINGS=ON`           | Print all compiler warnings                                |
-| `-DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON`          | Use bounds checking - will increase runtime                |
-| `-DKokkos_ENABLE_DEBUG_DUALVIEW_MODIFY_CHECK=ON` | Debug check on dual views                                  |
-| `-DKokkos_ENABLE_DEBUG=ON`                       | Activate extra debug features - may increase compile times |
-| `-DKokkos_ENABLE_DEPRECATED_CODE=ON`             | Enable deprecated code                                     |
-| `-DKokkos_ENABLE_EXAMPLES=ON`                    | Enable building examples                                   |
-| `-DKokkos_ENABLE_LARGE_MEM_TESTS=ON`             | Perform extra large memory tests                           |
-| `-DKokkos_ENABLE_TESTS=ON`                       | Enable building tests                                      |
-| `-DKokkos_ENABLE_TUNING=ON`                      | Create bindings for tuning tools                           |
+### Device backends
 
-##### Architecture-specific options
+| Option                            | Backend       | Notes        |
+|-----------------------------------|---------------|--------------|
+| `-DKokkos_ENABLE_CUDA=ON`         | CUDA          |              |
+| `-DKokkos_ENABLE_HIP=ON`          | HIP           |              |
+| `-DKokkos_ENABLE_SYCL=ON`         | SYCL          | Experimental |
+| `-DKokkos_ENABLE_OPENMPTARGET=ON` | OpenMP target | Experimental |
+| `-DKokkos_ENABLE_HPX=ON`          | HPX           | Experimental |
+
+<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> You can only select the serial backend, plus another host backend and one device backend at a time.
+
+<!--#ifndef PRINT-->
+See [architecture-specific options](#architecture-specific-options).
+<!--#endif-->
+
+### Specific options
+
+| Option                          | Description                                               |
+|---------------------------------|-----------------------------------------------------------|
+| `-DKokkos_ENABLE_BENCHMARKS=ON` | Enable building benchmarks                                |
+| `-DKokkos_ENABLE_DEBUG=ON`      | Activate extra debug features, may increase compile times |
+| `-DKokkos_ENABLE_EXAMPLES=ON`   | Enable building examples                                  |
+| `-DKokkos_ENABLE_TESTS=ON`      | Enable building tests                                     |
+| `-DKokkos_ENABLE_TUNING=ON`     | Create bindings for tuning tools                          |
+
+<!--#ifndef PRINT-->
+<details>
+<summary>Extra options</summary>
+
+| Option                                           | Description                                |
+|--------------------------------------------------|--------------------------------------------|
+| `-DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON`          | Use bounds checking, will increase runtime |
+| `-DKokkos_ENABLE_AGGRESSIVE_VECTORIZATION=ON`    | Aggressively vectorize loops               |
+| `-DKokkos_ENABLE_COMPILER_WARNINGS=ON`           | Print all compiler warnings                |
+| `-DKokkos_ENABLE_DEBUG_DUALVIEW_MODIFY_CHECK=ON` | Debug check on dual views                  |
+| `-DKokkos_ENABLE_DEPRECATED_CODE=ON`             | Enable deprecated code                     |
+| `-DKokkos_ENABLE_LARGE_MEM_TESTS=ON`             | Perform extra large memory tests           |
+
+</details>
+<!--#endif-->
+
+### Architecture-specific options
 
 | Option                    | Description                              |
 |---------------------------|------------------------------------------|
@@ -210,7 +245,7 @@ cmake -B build \
 
 | Option                                                  | Description                                                                                   |
 |---------------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| `-DKokkos_ENABLE_HIP_MULTIPLE_KERNEL_INSTANTIATIONS=ON` | Instantiate multiple kernels at compile time; improves performance but increases compile time |
+| `-DKokkos_ENABLE_HIP_MULTIPLE_KERNEL_INSTANTIATIONS=ON` | Instantiate multiple kernels at compile time, improves performance but increases compile time |
 | `-DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON`        | Enable Relocatable Device Code (RDC) for HIP                                                  |
 
 </details>
@@ -220,8 +255,8 @@ cmake -B build \
 
 | Option                         | Description                                       |
 |--------------------------------|---------------------------------------------------|
-| `-DKokkos_ARCH_INTEL_XEHP=ON`     | Optimize for Intel GPU Xe-HP                      |
-| `-DKokkos_ARCH_INTEL_PVC=ON`      | Optimize for Intel GPU Ponte Vecchio/GPU Max      |
+| `-DKokkos_ARCH_INTEL_XEHP=ON`  | Optimize for Intel GPU Xe-HP                      |
+| `-DKokkos_ARCH_INTEL_PVC=ON`   | Optimize for Intel GPU Ponte Vecchio/GPU Max      |
 | `-DKokkos_ARCH_INTEL_GEN=ON`   | Optimize for Intel GPUs, Just-In-Time compilation |
 | `-DKokkos_ARCH_INTEL_DG1=ON`   | Optimize for Intel Iris XeMAX GPU                 |
 | `-DKokkos_ARCH_INTEL_GEN12=ON` | Optimize for Intel GPU Gen12                      |
@@ -264,61 +299,64 @@ cmake -B build \
 
 <!--#endif-->
 
-#### Command examples for the most common architectures
+### Examples for the most common architectures
 
-##### AMD MI250 GPUs with HIP and OpenMP
+#### AMD MI250 GPUs with HIP and OpenMP
 
 ```bash
 cmake \
     -B build \
+    -DCMAKE_CXX_COMPILER=hipcc \
+    -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_HIP=ON \
-    -DKokkos_ENABLE_OPENMP=ON \
     -DKokkos_ARCH_AMD_GFX90A=ON \
-    -DCMAKE_CXX_COMPILER=hipcc
+    -DKokkos_ENABLE_OPENMP=ON
 ```
 
-##### NVIDIA A100 GPUs with CUDA and OpenMP
+#### NVIDIA A100 GPUs with CUDA and OpenMP
 
 ```bash
 cmake \
     -B build \
+    -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_CUDA=ON \
     -DKokkos_ARCH_AMPERE80=ON \
     -DKokkos_ENABLE_OPENMP=ON
 ```
 
-##### NVIDIA V100 GPUs with CUDA and OpenMP
+#### NVIDIA V100 GPUs with CUDA and OpenMP
 
 ```bash
 cmake \
     -B build \
+    -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_CUDA=ON \
     -DKokkos_ARCH_VOLTA70=ON \
     -DKokkos_ENABLE_OPENMP=ON
 ```
 
-##### Intel Ponte Vecchio (GPU Max) GPUs with SYCL and OpenMP
+#### Intel Ponte Vecchio (GPU Max) GPUs with SYCL and OpenMP
 
 ```bash
 cmake \
     -B build \
+    -DCMAKE_CXX_COMPILER=icpx \
+    -DCMAKE_CXX_FLAGS="-fp-model=precise" \
+    -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_SYCL=ON \
     -DKokkos_ARCH_INTEL_PVC=ON \
-    -DKokkos_ENABLE_OPENMP=ON \
-    -DCMAKE_CXX_COMPILER=icpx
+    -DKokkos_ENABLE_OPENMP=ON
 ```
 
+<!--#ifndef PRINT-->
 <img title="Code" alt="Code" src="./images/code.png" height="20"> For more code examples:
 
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed_different_compiler
+<!--#endif-->
 
+<!--#ifndef PRINT-->
 #### Third-party Libraries (TPLs)
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
-
-### As a Spack package
-
-TODO finish this part
-
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/building.html#spack
+<!--#endif-->
