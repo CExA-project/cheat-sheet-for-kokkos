@@ -39,15 +39,16 @@ def tbl_alignment(s, v, threshold=10):
 
                 col_sizes[index] = max(col_sizes[index], size)
 
-    # mark the column as big if its size is over threshold
+    # mark a left column as big if its size is over threshold
     aligments = []
     for index, e in enumerate(s):
+        align = aligns[e["t"]]
 
-        if col_sizes[index] >= threshold:
+        if align == "l" and col_sizes[index] >= threshold:
             aligments.append("X")
             continue
 
-        aligments.append(aligns[e["t"]])
+        aligments.append(align)
 
     # if there are no big columns, make the first left one big
     if "X" not in aligments:
