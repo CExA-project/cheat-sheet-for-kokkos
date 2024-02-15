@@ -17,11 +17,11 @@
 		5. [Third-party Libraries (TPLs)](#third-party-libraries-tpls)
 	3. [As a Spack package](#as-a-spack-package)
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/building.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/building.html
 
-<img title="Doc" alt="Doc" src="./images/training.png" height="20"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_01_Introduction.pdf
+<img title="Doc" alt="Doc" src="./images/tutorial_txt.svg" height="25"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_01_Introduction.pdf
 
 ## Requirements
 
@@ -50,7 +50,7 @@
 | CMake        | 3.21.1          | For NVHPC compiler                                                                            |
 | CMake        | 3.25.2          | For LLVM Intel compiler                                                                       |
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/requirements.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/requirements.html
 
 ## How to build Kokkos
 
@@ -67,7 +67,7 @@ target_link_libraries(
 )
 ```
 
-<img title="Code" alt="Code" src="./images/code.png" height="20"> Code example:
+<img title="Code" alt="Code" src="./images/code_txt.svg" height="25"> Code example:
 
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_in_tree
 
@@ -85,7 +85,7 @@ cmake --build build
 cmake --install build
 ```
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/building.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/building.html
 
 #### Use in your code
 
@@ -108,7 +108,7 @@ cmake -B build \
     <other options discussed below>
 ```
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://cmake.org/cmake/help/latest/guide/tutorial/index.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/guide/tutorial/index.html
 
 #### Select options
 
@@ -130,7 +130,7 @@ cmake -B build \
 | `-DKokkos_ENABLE_OPENMPTARGET=ON` | OpenMP target | Experimental |                                                                            |
 | `-DKokkos_ENABLE_HPX=ON`          | HPX           | Experimental |                                                                            |
 
-<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> You can only select `SERIAL`, plus one host backend and one device backend at a time.
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> You can only select `SERIAL`, plus one host backend and one device backend at a time.
 
 ##### Specific options
 
@@ -243,7 +243,7 @@ cmake -B build \
 | `-DKokkos_ARCH_KEPLER32`  | Optimize for the NVIDIA Kepler architecture  | 3.2                |                                                      |
 | `-DKokkos_ARCH_KEPLER30`  | Optimize for the NVIDIA Kepler architecture  | 3.0                |                                                      |
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See NVIDIA documentation on Compute Capability (CC): https://developer.nvidia.com/cuda-gpus
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> See NVIDIA documentation on Compute Capability (CC): https://developer.nvidia.com/cuda-gpus
 
 | Option                                         | Description                                       |
 |------------------------------------------------|---------------------------------------------------|
@@ -254,7 +254,7 @@ cmake -B build \
 
 </details>
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
 
 #### Command examples for the latest architectures
 
@@ -294,17 +294,17 @@ cmake -B build -DKokkos_ENABLE_SYCL=ON -DKokkos_ARCH_INTEL_PVC=ON -DKokkos_ENABL
 
 </details>
 
-<img title="Code" alt="Code" src="./images/code.png" height="20"> For more code examples:
+<img title="Code" alt="Code" src="./images/code_txt.svg" height="25"> For more code examples:
 
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed_different_compiler
 
 #### Third-party Libraries (TPLs)
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
 
 ### As a Spack package
 
 TODO finish this part
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/building.html#spack
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> See https://kokkos.org/kokkos-core-wiki/building.html#spack
