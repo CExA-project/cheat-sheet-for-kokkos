@@ -7,8 +7,9 @@ Then the documents are converted to LaTeX sources, which can be compiled as PDF 
 ## Requirements
 
 - GPP (General Pre-Processor);
-- Python; and
-- PDFLatex (from at least `texlive-latex-extra`).
+- Pandoc;
+- PDFLatex (from at least `texlive-latex-extra`); and
+- Python.
 
 ## Install dependencies
 
@@ -17,6 +18,12 @@ Install Python dependencies with Pip:
 
 ```sh
 pip install -r requirements.txt
+```
+
+Or, without using a virtual environment:
+
+```sh
+pip install --user -r requirements.txt
 ```
 
 ## Generate LaTeX files
