@@ -8,7 +8,7 @@ Then the documents are converted to LaTeX sources, which can be compiled as PDF 
 
 - GPP (General Pre-Processor);
 - Python; and
-- PDFLatex.
+- PDFLatex (from at least `texlive-latex-extra`).
 
 ## Install dependencies
 

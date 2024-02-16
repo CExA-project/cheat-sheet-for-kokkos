@@ -63,7 +63,7 @@ def tbl_alignment(s, v, threshold=10):
 
 def tbl_headers(s):
     result = s[0][0]["c"][:]
-    # Build the columns. Note how the every column value is bold.
+    # Build the columns. Note how the every column value is altered.
     # We are still missing "\tblhead{" for the first column
     # and a "}" for the last column.
     for i in range(1, len(s)):
@@ -83,7 +83,8 @@ def tbl_contents(s):
         for col in row:
             if col:
                 para.extend(col[0]["c"])
-                para.append(inlatex(" & "))
+
+            para.append(inlatex(" & "))
         result.extend(para)
         result[-1] = inlatex(r" \\" "\n")
     return pf.Para(result)

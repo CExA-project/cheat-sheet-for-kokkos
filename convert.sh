@@ -31,7 +31,10 @@ convert () {
         "$input_file" \
          | \
     pandoc \
-        --template "templates/print.tex" \
+        --defaults "configs/print.yaml" \
+        --include-in-header "styles/header/print.tex" \
+        --include-before-body "styles/before_body/print.tex" \
+        --include-after-body "styles/after_body/print.tex" \
         --filter "filters/print.py" \
         --output "$output_file"
 }

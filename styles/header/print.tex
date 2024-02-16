@@ -1,0 +1,168 @@
+% custom header
+
+\usepackage[left=0.5cm, right=0.5cm, top=0.00cm, bottom=2.00cm, includehead]{geometry}
+\usepackage{multicol}
+\usepackage{mdframed}
+\usepackage{fancyhdr}
+\usepackage{calc}
+\usepackage[nobottomtitles*]{titlesec}
+\usepackage{tabularx}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{fvextra}
+
+\definecolor{kokkos}{RGB}{30, 120, 152}
+
+\colorlet{main}{kokkos!80}
+\colorlet{lightmain}{kokkos!30}
+\colorlet{lightgray}{gray!20}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+% headers and footers
+
+\setlength{\headheight}{2cm}
+
+\fancypagestyle{kokkos}{%
+    \renewcommand{\headrulewidth}{0pt}%
+    \renewcommand{\footrulewidth}{0pt}%
+    \fancyhf{}%
+    \fancyhead{%
+        % Add the title and the page
+        \setlength{\fboxsep}{0pt}
+        \colorbox{main}{%
+            \parbox[b][\headheight][c]{0.5\headheight}{%
+                \includegraphics[
+                    height=\headheight,
+                ]{images/kokkos_wire.pdf}
+            }%
+            \parbox[b][\headheight][c]{\headwidth}{%
+                {\Huge\bfseries{}\href{https://kokkos.org/kokkos-core-wiki}{Kokkos installation cheat sheet}}%
+                {\Large\bfseries\color{lightmain}\ :: page \thepage}%
+            }%
+        }%
+    }%
+    \fancyhead[R]{%
+        % Add the version
+        \parbox[b][\headheight][t]{\headheight}{%
+            \vspace{0.5em}%
+            \raggedleft%
+            {v0.0.0}%
+            \phantom{\hspace{0.5em}}%
+        }%
+    }%
+}
+
+\newlength{\oddmarginwidth}
+\setlength{\oddmarginwidth}{1in+\hoffset+\oddsidemargin}
+\newlength{\evenmarginwidth}
+\setlength{\evenmarginwidth}{\evensidemargin+1in}
+\fancyhfoffset[LO,RE]{\oddmarginwidth}
+\fancyhfoffset[LE,RO]{\evenmarginwidth}
+
+\pagestyle{kokkos}
+
+% sections
+
+\titleformat{\subsection}[display]
+    {\Large\bfseries}
+    {}
+    {0pt}
+    {\subsectionstyle}
+
+\titleformat{\subsubsection}[display]
+    {\large\bfseries}
+    {}
+    {0pt}
+    {\subsubsectionstyle}
+    [\subsubsectionstyleextra]
+
+\titleformat{\paragraph}[display]
+    {\normalsize\bfseries}
+    {}
+    {0pt}
+    {\paragraphstyle}
+
+\titleformat{\subparagraph}[display]
+    {\small\bfseries}
+    {}
+    {0pt}
+    {\subparagraphstyle}
+
+\newcommand{\subsectionstyle}[1]{%
+    \colorbox{main}{\parbox{\dimexpr\linewidth-2\fboxsep}{\strut#1}}%
+}
+
+\newcommand{\subsubsectionstyle}[1]{%
+    % The sub sub section name has a small left margin, which only affects the
+    % first line if the name spawns on multi lines; this is inelegant but I
+    % haven't found a better way for now
+    \hspace{\fboxsep}\strut#1
+}
+
+\newcommand{\subsubsectionstyleextra}{%
+    {\color{main}\titlerule}%
+}
+
+\newcommand{\paragraphstyle}[1]{%
+    #1%
+}
+
+\newcommand{\subparagraphstyle}[1]{%
+    {\color{gray}#1}%
+}
+
+% tables
+
+\newcommand{\toprule}{%
+    \rowcolor{lightmain}
+}
+\newcommand{\midrule}{%
+}
+\newcommand{\bottomrule}{%
+}
+
+\newcommand{\tblhead}[1]{#1}
+
+\renewcommand{\arraystretch}{1.25}
+
+\AtBeginEnvironment{tabularx}{%
+    \rowcolors*{2}{lightgray}{}%
+}
+
+% code block
+
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+    breaklines,
+    breakanywhere,
+    commandchars=\\\{\}
+}
+
+\renewenvironment{Shaded}{%
+   \vspace{0.5em}
+   \begin{mdframed}[
+       backgroundcolor=lightgray,
+       hidealllines=true,
+       nobreak=true,
+       font=\scriptsize,
+   ]
+}{%
+   \end{mdframed}
+}
+
+\renewcommand{\CommentTok}[1]{{\color{gray}\textit{#1}}}
+\renewcommand{\ConstantTok}[1]{{\color{gray}#1}}
+\renewcommand{\KeywordTok}[1]{{\color{kokkos}\textbf{#1}}}
+\renewcommand{\FunctionTok}[1]{{\color{kokkos}#1}}
+\renewcommand{\StringTok}[1]{{\color{kokkos}#1}}
+\renewcommand{\OtherTok}[1]{{\color{main}#1}}
+
+% code inline
+
+\let\oldtexttt\texttt
+\renewcommand{\texttt}[1]{{\scriptsize\oldtexttt{#1}}}
+
+% widows and orphans
+
+\widowpenalty10000
+\clubpenalty10000

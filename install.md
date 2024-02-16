@@ -92,7 +92,7 @@ cmake -B build \
 
 #### Configure, build and install Kokkos
 
-```bash
+```sh
 cd path/to/kokkos
 cmake -B build \
     -DCMAKE_CXX_COMPILER=<your C++ compiler> \
@@ -313,7 +313,7 @@ See [architecture-specific options](#architecture-specific-options).
 
 #### AMD MI250 GPUs with HIP and OpenMP
 
-```bash
+```sh
 cmake \
     -B build \
     -DCMAKE_CXX_COMPILER=hipcc \
@@ -325,7 +325,7 @@ cmake \
 
 #### NVIDIA A100 GPUs with CUDA and OpenMP
 
-```bash
+```sh
 cmake \
     -B build \
     -DCMAKE_BUILD_TYPE=Release \
@@ -336,7 +336,7 @@ cmake \
 
 #### NVIDIA V100 GPUs with CUDA and OpenMP
 
-```bash
+```sh
 cmake \
     -B build \
     -DCMAKE_BUILD_TYPE=Release \
@@ -347,7 +347,7 @@ cmake \
 
 #### Intel Ponte Vecchio (GPU Max) GPUs with SYCL and OpenMP
 
-```bash
+```sh
 cmake \
     -B build \
     -DCMAKE_CXX_COMPILER=icpx \
