@@ -9,21 +9,32 @@ Then the documents are converted to LaTeX sources, which can be compiled as PDF 
 - GPP (General Pre-Processor);
 - Pandoc;
 - PDFLatex (from at least `texlive-latex-extra`); and
-- Python.
+- Python 3.
 
 ## Install dependencies
 
-Note that it is worth to create a virtual environment for the project.
+Note that it is worth to create a [virtual environment](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/) for the project:
+
+```sh
+python3 -m venv .venv
+```
+
+which you can reactivate later with:
+
+```sh
+source .venv/bin/activate
+```
+
 Install Python dependencies with Pip:
 
 ```sh
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 Or, without using a virtual environment:
 
 ```sh
-pip install --user -r requirements.txt
+pip3 install --user -r requirements.txt
 ```
 
 ## Generate LaTeX files
