@@ -16,6 +16,12 @@ convert () {
     local input_file="$1"
     local output_file="$2"
 
+    if ! [[ -f "$input_file" ]]
+    then
+        echo "Not such file $input_file"
+        return 1
+    fi
+
     gpp \
         -U \
             "$GPP_USERMODE_START" \
