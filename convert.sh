@@ -45,6 +45,22 @@ convert () {
         --output "$output_file"
 }
 
+patch_modifs () {
+    local file="$1"
+
+    version="$(cat VERSION)"
+    patchfile="patches/print/$version"
+
+    if [[ ! -f "$patchfile" ]]
+    then
+        echo "No patch to apply for $version"
+        return
+    fi
+
+    echo "Apply patch for $version"
+    patch --forward <"$patchfile"
+}
+
 usage () {
     cat <<EOF
 convert.sh [-h] FILE
@@ -90,6 +106,7 @@ main () {
     output_file="${input_file%.*}.tex"
 
     convert "$input_file" "$output_file"
+    patch_modifs "$output_file"
 
     echo "Converted to $output_file"
 }
