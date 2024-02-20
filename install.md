@@ -16,14 +16,16 @@
 	2. [Device backends](#device-backends)
 	3. [Specific options](#specific-options)
 	4. [Architecture-specific options](#architecture-specific-options)
-		1. [AMD CPU architectures](#amd-cpu-architectures)
-		2. [ARM CPU architectures](#arm-cpu-architectures)
-		3. [Intel CPU architectures](#intel-cpu-architectures)
-		4. [AMD GPU architectures (HIP)](#amd-gpu-architectures-hip)
-		5. [Intel GPU architectures (SYCL)](#intel-gpu-architectures-sycl)
-		6. [NVIDIA GPU architectures (CUDA)](#nvidia-gpu-architectures-cuda)
-	5. [Third-party Libraries (TPLs)](#third-party-libraries-tpls)
-	6. [Examples for the most common architectures](#examples-for-the-most-common-architectures)
+		1. [Host architectures](#host-architectures)
+			1. [AMD CPU architectures](#amd-cpu-architectures)
+			2. [ARM CPU architectures](#arm-cpu-architectures)
+			3. [Intel CPU architectures](#intel-cpu-architectures)
+		2. [Device architectures](#device-architectures)
+			1. [AMD GPU architectures (HIP)](#amd-gpu-architectures-hip)
+			2. [Intel GPU architectures (SYCL)](#intel-gpu-architectures-sycl)
+			3. [NVIDIA GPU architectures (CUDA)](#nvidia-gpu-architectures-cuda)
+	3. [Third-party Libraries (TPLs)](#third-party-libraries-tpls)
+	4. [Examples for the most common architectures](#examples-for-the-most-common-architectures)
 		1. [AMD MI250 GPU with HIP and OpenMP](#amd-mi250-gpu-with-hip-and-openmp)
 		2. [NVIDIA A100 GPU with CUDA and OpenMP](#nvidia-a100-gpu-with-cuda-and-openmp)
 		3. [NVIDIA V100 GPU with CUDA and OpenMP](#nvidia-v100-gpu-with-cuda-and-openmp)
@@ -168,7 +170,6 @@ TODO finish this part
 <img title="Warning" alt="Warning" src="./images/warning.png" height="15"> You can only select the serial backend, plus another host backend and one device backend at a time.
 
 See [architecture-specific options](#architecture-specific-options).
-GPU architecture is auto-detected.
 
 ### Specific options
 
@@ -194,9 +195,15 @@ GPU architecture is auto-detected.
 | `-DKokkos_ENABLE_LARGE_MEM_TESTS=ON`             | Perform extra large memory tests           |
 
 </details>
+
+<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
 <!--#endif-->
 
 ### Architecture-specific options
+
+#### Host architectures
+
+Host options are used for controlling optimization and are optional.
 
 | Option                    | Architecture |
 |---------------------------|--------------|
@@ -204,12 +211,10 @@ GPU architecture is auto-detected.
 
 <!--#ifndef PRINT-->
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
-
 <details>
 <summary>
 
-#### AMD CPU architectures
+##### AMD CPU architectures
 
 </summary>
 
@@ -224,7 +229,7 @@ GPU architecture is auto-detected.
 <details>
 <summary>
 
-#### ARM CPU architectures
+##### ARM CPU architectures
 
 </summary>
 
@@ -239,7 +244,7 @@ GPU architecture is auto-detected.
 <details>
 <summary>
 
-#### Intel CPU architectures
+##### Intel CPU architectures
 
 </summary>
 
@@ -256,10 +261,15 @@ GPU architecture is auto-detected.
 
 <!--#endif-->
 
+#### Device architectures
+
+Device options are mandatory.
+They can be deduced from the device if present at compile time.
+
 <details>
 <summary>
 
-#### AMD GPU architectures (HIP)
+##### AMD GPU architectures (HIP)
 
 </summary>
 
@@ -285,7 +295,7 @@ GPU architecture is auto-detected.
 <details>
 <summary>
 
-#### Intel GPU architectures (SYCL)
+##### Intel GPU architectures (SYCL)
 
 </summary>
 
@@ -303,7 +313,7 @@ GPU architecture is auto-detected.
 <details>
 <summary>
 
-#### NVIDIA GPU architectures (CUDA)
+##### NVIDIA GPU architectures (CUDA)
 
 </summary>
 
