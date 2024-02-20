@@ -2,7 +2,7 @@
 
 ## Pre-processor
 
-Since Markdown does not have branching controls, we use pre-processor instructions, that are parsed by GPP (General Pre-Processor).
+Since Markdown does not have branching controls, we use pre-processor instructions, that are parsed by [GPP (Generic Preprocessor)](https://logological.org/gpp).
 These instructions have the similar syntax as the C pre-processor ones, but are encapsulated within Markdown comments, so that the un-pre-processed file remains a valid Markdown file:
 
 ```md
