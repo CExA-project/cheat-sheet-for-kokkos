@@ -134,6 +134,8 @@
 
 % code block
 
+\newcommand\codesize\scriptsize
+
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
     breaklines,
     breakanywhere,
@@ -146,7 +148,7 @@
        backgroundcolor=lightgray,
        hidealllines=true,
        nobreak=true,
-       font=\scriptsize,
+       font=\codesize,
    ]
 }{%
    \end{mdframed}
@@ -163,7 +165,7 @@
 % code inline
 
 \let\oldtexttt\texttt
-\renewcommand{\texttt}[1]{{\scriptsize\oldtexttt{#1}}}
+\renewcommand{\texttt}[1]{{\codesize\oldtexttt{#1}}}
 
 % widows and orphans
 

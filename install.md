@@ -50,8 +50,8 @@
 | Clang         | 8.0.0           | For CPU  |
 | GCC           | 8.2.0           |          |
 | Intel Classic | 19.0.5          |          |
-| Intel LLVM    | 2021.1.1        | For CPU  |
 | Intel LLVM    | 2022.0.0        | For SYCL |
+| Intel LLVM    | 2021.1.1        | For CPU  |
 | MSVC          | 19.29           |          |
 | NVCC          | 11.0            |          |
 | NVHPC/PGI     | 22.3            |          |
