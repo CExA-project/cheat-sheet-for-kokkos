@@ -16,12 +16,18 @@
 	2. [Device backends](#device-backends)
 	3. [Specific options](#specific-options)
 	4. [Architecture-specific options](#architecture-specific-options)
+		1. [AMD CPU architectures](#amd-cpu-architectures)
+		2. [ARM CPU architectures](#arm-cpu-architectures)
+		3. [Intel CPU architectures](#intel-cpu-architectures)
+		4. [AMD GPU architectures (HIP)](#amd-gpu-architectures-hip)
+		5. [Intel GPU architectures (SYCL)](#intel-gpu-architectures-sycl)
+		6. [NVIDIA GPU architectures (CUDA)](#nvidia-gpu-architectures-cuda)
 	5. [Third-party Libraries (TPLs)](#third-party-libraries-tpls)
 	6. [Examples for the most common architectures](#examples-for-the-most-common-architectures)
-		1. [AMD MI250 GPUs with HIP and OpenMP](#amd-mi250-gpus-with-hip-and-openmp)
-		2. [NVIDIA A100 GPUs with CUDA and OpenMP](#nvidia-a100-gpus-with-cuda-and-openmp)
-		3. [NVIDIA V100 GPUs with CUDA and OpenMP](#nvidia-v100-gpus-with-cuda-and-openmp)
-		4. [Intel Ponte Vecchio (GPU Max) GPUs with SYCL and OpenMP](#intel-ponte-vecchio-gpu-max-gpus-with-sycl-and-openmp)
+		1. [AMD MI250 GPU with HIP and OpenMP](#amd-mi250-gpu-with-hip-and-openmp)
+		2. [NVIDIA A100 GPU with CUDA and OpenMP](#nvidia-a100-gpu-with-cuda-and-openmp)
+		3. [NVIDIA V100 GPU with CUDA and OpenMP](#nvidia-v100-gpu-with-cuda-and-openmp)
+		4. [Intel GPU Max/Ponte Vecchio GPU with SYCL and OpenMP](#intel-gpu-maxponte-vecchio-gpu-with-sycl-and-openmp)
 
 <img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
 
@@ -161,9 +167,8 @@ TODO finish this part
 
 <img title="Warning" alt="Warning" src="./images/warning.png" height="15"> You can only select the serial backend, plus another host backend and one device backend at a time.
 
-<!--#ifndef PRINT-->
 See [architecture-specific options](#architecture-specific-options).
-<!--#endif-->
+GPU architecture is auto-detected.
 
 ### Specific options
 
