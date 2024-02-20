@@ -19,7 +19,7 @@ Note that it is worth to create a [virtual environment](https://packaging.python
 python3 -m venv .venv
 ```
 
-which you can reactivate later with:
+which you can activate with:
 
 ```sh
 source .venv/bin/activate
