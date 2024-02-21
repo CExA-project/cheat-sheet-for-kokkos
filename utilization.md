@@ -62,7 +62,6 @@
   - [Macros](#macros)
 
 
-
 ## Initialization
 
 ### Headers
