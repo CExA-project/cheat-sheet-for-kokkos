@@ -4,7 +4,7 @@ FROM $BASE
 # system dependencies
 ARG ADDITIONAL_PACKAGES
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
         gpp \
         pandoc \
         python3 \
