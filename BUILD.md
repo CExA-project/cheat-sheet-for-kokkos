@@ -44,7 +44,7 @@ pip3 install --user -r requirements.txt
 A docker image containing all dependencies (minus LaTeX) is available:
 
 ```sh
-docker build .
+docker build -t kokkos_cheat_sheet .
 ```
 
 ## Generate LaTeX files
