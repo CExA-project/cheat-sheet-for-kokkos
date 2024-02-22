@@ -6,6 +6,8 @@
 | Béatrice   | 4                | 4          | 3          | 2              |
 | Christophe | 5                | 2          | 5          | 3              |
 | Dolorès    | 3                | 5          | 1          | 1              |
+| Estéban    | 4                | 3          | 4          | 3              |
+| Félicie    | 5                | 3          | 4          | 2              |
 
 Note: 1 is low, 5 is high.
 
