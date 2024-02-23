@@ -1,8 +1,6 @@
-ARG BASE=ubuntu:22.04
-FROM $BASE
+FROM ubuntu:22.04
 
 # system dependencies
-ARG ADDITIONAL_PACKAGES
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         gpp \
@@ -10,7 +8,6 @@ RUN apt-get update && \
         python3 \
         python-is-python3 \
         python3-pip \
-        $ADDITIONAL_PACKAGES \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
