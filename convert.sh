@@ -55,13 +55,13 @@ patch_modifs () {
 
     if [[ ! -f "$patchfile" ]]
     then
-        echo "No patch to apply for $version"
+        echo "No patch to apply for v$version"
         return
     fi
 
     patch --quiet --forward <"$patchfile"
 
-    echo "Applied patch for $version"
+    echo "Applied patch for v$version"
 }
 
 usage () {
