@@ -15,7 +15,7 @@ Note: 1 is low, 5 is high.
 
 Nuclear physicist with limited programming knowledges, he has been using Fortran for thirty years to implement mathematical and physical models.
 
-He has to use Kokkos for his three-dimensional code to run on GPU, and will likely hire a PhD student for this.
+He has to use Kokkos for his three-dimensional code to run on GPU, and will likely hire some help for this task.
 
 ## Béatrice
 
