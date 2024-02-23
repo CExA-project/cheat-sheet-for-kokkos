@@ -38,7 +38,7 @@ For now, the `PRINT` macro is used for print mode.
 
 Patches are used to save specific adjustments in the final document that cannot be present in the source Markdown file.
 Namely, such changes include manual page breaks, abbreviations, etc.
-Large modification, however, such as removal of an entire section, are better handled by the pre-processor discussed above.
+Large modification, however, such as the removal of an entire section, are better handled by the pre-processor discussed above.
 
 A patch is associated with a version number `x.y.z`, and is stored under `patches/<mode>/x.y.z` (with `<mode>` being `print` for print mode).
 If a patch file exists with the same name as the current version number (stored in `VERSION`), then the patch is automatically applied when calling `convert.sh`.
@@ -47,8 +47,9 @@ The creation of the patch uses the following workflow:
 
 ```sh
 echo 9.9.9 >VERSION
-./convert.sh install.md
-cp install.tex install_ref.tex
+./generate_patch.sh <file.md> start
 # edit instal.tex and perform specific adjustments
-diff -Naur install_ref.tex install.tex >patches/print/9.9.9
+./generate_patch.sh <file.md> end
 ```
+
+Any consecutive call to `generate_patch.sh` will cumulate the modifications.
