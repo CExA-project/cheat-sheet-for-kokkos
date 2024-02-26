@@ -54,10 +54,10 @@ Call the `convert.sh` script which pre-processes the input Markdown file and con
 ```sh
 ./convert.sh <file.md>
 # or
-sudo docker run -v $PWD:/work --user $UID:$GID docker_cheat_sheet ./convert.sh <file.md>
+docker run --rm -v $PWD:/work docker_cheat_sheet ./convert.sh <file.md>
 ```
 
-Note that the `--user $UID:$GID` is required to produce a file with your ownership.
+Note that an additional `--user $UID:$GID` can be required to produce a file with your ownership on some systems.
 
 ## Build PDF document
 
