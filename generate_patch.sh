@@ -35,7 +35,10 @@ end_patch () {
     local version="$(cat VERSION)"
     mkdir -p "patches/print"
 
-    # generate diff (never fails)
+    # generate diff
+    # Note: The diff command has a non 0 return value if there is an actual
+    # difference between the two files. Consequently, the call is marked to
+    # never fail.
     diff -au "$output_file_ref" "$output_file" >"patches/print/$version" || true
 
     # remove reference file
