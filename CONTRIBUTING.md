@@ -33,3 +33,23 @@ gpp <file.md> -DPRINT
 ```
 
 For now, the `PRINT` macro is used for print mode.
+
+## Patching
+
+Patches are used to keep specific adjustments in the final document that cannot be present in the source Markdown file.
+Namely, such changes include manual page breaks, abbreviations, etc.
+Large modification, however, such as the removal of an entire section, are better handled by the pre-processor discussed above.
+
+A patch is associated with a version number `x.y.z`, and is stored under `patches/<mode>/x.y.z` (with `<mode>` being `print` for print mode).
+If a patch file exists with the same name as the current version number (stored in `VERSION`), then the patch is automatically applied when calling `convert.sh`.
+
+The creation of the patch uses the following workflow:
+
+```sh
+echo 9.9.9 >VERSION
+./generate_patch.sh <file.md> start
+# edit <file.tex> and perform specific adjustments
+./generate_patch.sh <file.md> end
+```
+
+Any consecutive call to `generate_patch.sh` will cumulate the modifications.

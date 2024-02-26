@@ -43,6 +43,25 @@ convert () {
         --include-after-body "styles/after_body/print.tex" \
         --filter "filters/print.py" \
         --output "$output_file"
+
+    echo "Converted to $output_file"
+}
+
+patch_modifs () {
+    local file="$1"
+
+    version="$(cat VERSION)"
+    patchfile="patches/print/$version"
+
+    if [[ ! -f "$patchfile" ]]
+    then
+        echo "No patch to apply for v$version"
+        return
+    fi
+
+    patch --quiet --forward <"$patchfile"
+
+    echo "Applied patch for v$version"
 }
 
 usage () {
@@ -59,6 +78,11 @@ Optional arguments:
     -h
         Show this help message and exit.
 EOF
+}
+
+get_out_file () {
+    local input_file="$1"
+    echo "${input_file%.*}.tex"
 }
 
 main () {
@@ -86,12 +110,11 @@ main () {
         return 1
     fi
 
-    input_file=$1
-    output_file="${input_file%.*}.tex"
+    local input_file="$1"
+    local output_file="$(get_out_file $input_file)"
 
     convert "$input_file" "$output_file"
-
-    echo "Converted to $output_file"
+    patch_modifs "$output_file"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
