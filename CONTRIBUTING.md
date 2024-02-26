@@ -36,7 +36,7 @@ For now, the `PRINT` macro is used for print mode.
 
 ## Patching
 
-Patches are used to save specific adjustments in the final document that cannot be present in the source Markdown file.
+Patches are used to keep specific adjustments in the final document that cannot be present in the source Markdown file.
 Namely, such changes include manual page breaks, abbreviations, etc.
 Large modification, however, such as the removal of an entire section, are better handled by the pre-processor discussed above.
 
@@ -48,7 +48,7 @@ The creation of the patch uses the following workflow:
 ```sh
 echo 9.9.9 >VERSION
 ./generate_patch.sh <file.md> start
-# edit instal.tex and perform specific adjustments
+# edit <file.tex> and perform specific adjustments
 ./generate_patch.sh <file.md> end
 ```
 
