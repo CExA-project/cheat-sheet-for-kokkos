@@ -129,7 +129,7 @@ target_link_libraries(
 cd path/to/your/code
 cmake -B build \
     -DCMAKE_CXX_COMPILER=<your C++ compiler> \
-    -DCMAKE_PREFIX_PATH=path/to/kokkos/install
+    -DKokkos_ROOT=path/to/kokkos/install
 ```
 
 <!--#ifndef PRINT-->
