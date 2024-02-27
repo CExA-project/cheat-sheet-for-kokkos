@@ -1,3 +1,5 @@
+<!--#ifndef PRINT-->
+
 # Kokkos utilization cheat sheet
 
 <img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Only for Kokkos 4.2 and more, for older verison look at the doc.
@@ -65,6 +67,7 @@
     - [Manage parallel environment](#manage-parallel-environment)
   - [Macros](#macros)
 
+<!--#endif-->
 
 ## Initialization
 
@@ -85,8 +88,6 @@ Kokkos::finalize();
 ```
 
 #### Command-line arguments
-
-
 
 Command-line arguments are parsed by `Kokkos::initialize` and removed from the argument list.
 
@@ -118,7 +119,9 @@ Kokkos::initialize(args);
 
 Multidimensional array that abstracts data containers and provides a consistent interface for data access across different memory spaces, it is used on both host and device.
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html
+<!--#endif-->
 
 #### Creating a view
 
@@ -133,6 +136,7 @@ Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numb
 | `MemorySpace`     | [Memory space](#memory-space) where the view is allocated, defaults to the memory space of the execution space                                                                                                                                                                                               |
 | `MemoryTraits`    | [Memory trait](#memory-trait) of the view                                                                                                                                                                                                                                                                    |
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#constructors
 
 <details>
@@ -153,6 +157,7 @@ Kokkos::View<double**[25]> view3D("view3D", 50, 42, 25);
 ```
 
 </details>
+<!--#endif-->
 
 #### Accessing elements
 
@@ -164,7 +169,9 @@ for (int i = 0; i < 10; i++) {
 }
 ```
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#data-access-functions
+<!--#endif-->
 
 #### Managing views
 
@@ -178,7 +185,9 @@ for (int i = 0; i < 10; i++) {
 | `realloc()` | Reallocates a view to have the new dimensions; can grow or shrink, and will not preserve content                      |
 | `data()`    | Returns a pointer to the underlying data                                                                              |
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#data-layout-dimensions-strides
+<!--#endif-->
 
 ### Memory Layout
 
@@ -193,6 +202,7 @@ Layout Determines the mapping of indices into the underlying 1D memory storage:
 If no layouts are specified, the most efficient one for the memory space is used.
 For performance, memory access patterns must result in caching on a CPU and coalescing on a GPU.
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#data-layout-dimensions-strides
 
 <details>
@@ -204,13 +214,16 @@ Kokkos::View<double**, Kokkos::LayoutRight> view2D("view2D", 50, 50);
 ```
 
 </details>
+<!--#endif-->
 
 ### Memory space
 
 Abstraction to represent the “where” and the “how” the memory allocation and access takes place in Kokkos.
 Most code should be written to the generic concept of a memory space rather than any specific instance.
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/memory_spaces.html
+<!--#endif-->
 
 #### Generic memory space
 
@@ -220,6 +233,7 @@ Most code should be written to the generic concept of a memory space rather than
 | `Kokkos::DefaultHostExecutionSpace::memory_space` | Default memory space of the default host execution space; same as `Kokkos::DefaultExecutionSpace::memory_space` if the code is compiled for CPU only |
 | `Kokkos::HostSpace`                               | Default memory space for data that resides on the host, accessible from the host but not directly from the GPU                                       |
 
+<!--#ifndef PRINT-->
 <details>
 <summary>Example</summary>
 
@@ -228,6 +242,7 @@ Kokkos::View<double*, Kokkos::HostSpace> hostView("hostView", numberOfElements);
 ```
 
 </details>
+<!--#endif-->
 
 #### Unified virtual memory or shared space
 
@@ -235,6 +250,7 @@ Kokkos::View<double*, Kokkos::HostSpace> hostView("hostView", numberOfElements);
 |-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `Kokkos::SharedSpace` | Data that can be accessed by any enabled execution space using the UVM concept; the movement is done automatically by the driver at the moment of access, performance depends on hardware and driver support |
 
+<!--#ifndef PRINT-->
 <details>
 <summary>Example</summary>
 
@@ -243,6 +259,7 @@ Kokkos::View<double*, Kokkos::SharedSpace> sharedView("sharedView", numberOfElem
 ```
 
 </details>
+<!--#endif-->
 
 #### Scratch memory space
 
@@ -250,6 +267,7 @@ Kokkos::View<double*, Kokkos::SharedSpace> sharedView("sharedView", numberOfElem
 |------------------------------|---------------------------------------------------------------------------------------------------------------------------|
 | `Kokkos::ScratchMemorySpace` | Temporary data within parallel constructs which is allocated per thread or per team of threads and is not visible outside |
 
+<!--#ifndef PRINT-->
 <details>
 <summary>Example</summary>
 
@@ -264,6 +282,7 @@ Kokkos::parallel_for(
 ```
 
 </details>
+<!--#endif-->
 
 ### Memory trait
 
@@ -276,6 +295,7 @@ Kokkos::parallel_for(
 
 Memory traits can be combined using the `Kokkos::MemoryTraits<>` class and `|`.
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/View.html#access-traits
 
 <details>
@@ -307,6 +327,7 @@ Kokkos::View<double*,  Kokkos::CudaSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged
 ```
 
 </details>
+<!--#endif-->
 
 ### View copy
 
@@ -320,6 +341,7 @@ Kokkos::deep_copy(dest, src);
 Copies data from `src` view to `dest` view.
 The views must have the same dimensions, data type and reside in the same memory space ([mirror views](#mirror-view) can be deep copied on different memory spaces).
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/deep_copy.html
 
 <img title="Code" alt="Code" src="./images/code_txt.svg" height="25">
@@ -340,17 +362,20 @@ Kokkos::deep_copy(view2, view1);
 ```
 
 </details>
+<!--#endif-->
 
 ### Mirror view
 
 A `HostMirror` view is allocated in the host memory space as a mirror of a device view.
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/create_mirror.html
 
 <img title="Code" alt="Code" src="./images/code_txt.svg" height="25">
 
 - [Kokkos example - simple memoryspace](https://github.com/kokkos/kokkos/blob/master/example/tutorial/04_simple_memoryspaces/simple_memoryspaces.cpp)
 - [Kokkos Tutorials - Exercise 3](https://github.com/kokkos/kokkos-tutorials/blob/main/Exercises/03/Solution/exercise_3_solution.cpp)
+<!--#endif-->
 
 #### Create and allocate
 
@@ -388,9 +413,11 @@ A `subview` is a `View` that is a subset of another view that mimics the behavio
 
 <img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Every subview is also a view. This means that you may take a subview of a subview.
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/subview.html
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Subviews.html
+<!--#endif-->
 
 #### Create
 
@@ -427,6 +454,7 @@ Scatter operations potentially write to the same memory location from multiple t
 
 <img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Need `#include<Kokkos_ScatterView.hpp>`
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/containers/ScatterView.html
 
 <img title="Training" alt="Training" src="./images/tutorial_txt.svg" height="25"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_03_MDRangeMoreViews.pdf
@@ -434,6 +462,7 @@ Scatter operations potentially write to the same memory location from multiple t
 <img title="Code" alt="Code" src="./images/code_txt.svg" height="25"> 
 
 - [Kokkos Tutorials - ScatterView](https://github.com/kokkos/kokkos-tutorials/tree/main/Exercises/scatter_view)
+<!--#endif-->
 
 #### Create
 
@@ -459,6 +488,7 @@ ScatterView<DataType, Operation, ExecutionSpace, Layout, Contribution> scatter(v
 | `Kokkos::Experimental::ScatterMin`  | Take the minimum of the contributions |
 | `Kokkos::Experimental::ScatterMax`  | Take the maximum of the contributions |
 
+<!--#ifndef PRINT-->
 <details>
 <summary>Full example</summary>
 
@@ -495,6 +525,7 @@ Kokkos::Experimental::contribute(histogram, scatter);
 ```
 
 </details>
+<!--#endif-->
 
 ## Parallelism patterns
 
@@ -541,9 +572,11 @@ The reducer class can be omitted for `Kokkos::Sum`.
 | `Kokkos::Prod`      | `*`                   | Product                                    |
 | `Kokkos::Sum`       | `+`                   | Sum                                        |
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/parallel-dispatch/parallel_reduce.html
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/builtin_reducers.html
+<!--#endif-->
 
 ### Fences
 
@@ -553,7 +586,9 @@ Wait for any asynchronous operation that was running before this command to fini
 Kokkos::fence();
 ```
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/parallel-dispatch/fence.html
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25">  https://kokkos.org/kokkos-core-wiki/API/core/parallel-dispatch/fence.html
+<!--#endif-->
 
 ## Execution policy
 
@@ -571,7 +606,9 @@ ExecutionPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> poli
 | `LaunchBounds`    | Hints for CUDA and HIP launch bounds                                              |
 | `WorkTag`         | Empty tag class to call the functor                                               |
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/Execution-Policies.html
+<!--#endif-->
 
 ### Execution space
 
@@ -587,7 +624,6 @@ Execution spaces is where the parallel region is executed. It is recommended to 
 
 ### Ranges
 
-
 #### One-dimensional range
 
 In case of work on one-dimensional arrays.
@@ -598,7 +634,9 @@ Kokkos::RangePolicy<ExecutionSpace, Schedule, IndexType LaunchBounds, WorkTag> p
 
 For simple ranges that start at index 0 and use default template parameters, the execution policy can be replaced by an single integer which is the number of elements.
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/RangePolicy.html
+<!--#endif-->
 
 #### Multi-dimensional
 
@@ -609,7 +647,9 @@ By instance for a dimension 2:
 Kokkos::MDRangePolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag, Kokkos::Rank<2>> policy({firstI, firstJ}, {lastI, lastJ});
 ```
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/MDRangePolicy.html
+<!--#endif-->
 
 ### Hierarchical parallelism
 
@@ -622,7 +662,9 @@ Parallelisation within the team depends on the specific range policy used:
 | `TeamThreadMDRange` | `TeamVectorMDRange` | `ThreadVectorRange`     | 3                               |
 | *same*              | *same*              | `ThreadVectorMDRange`   | 4                               |
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/HierarchicalParallelism.html
+<!--#endif-->
 
 #### Team policy
 
@@ -630,9 +672,11 @@ Parallelisation within the team depends on the specific range policy used:
 Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag>(numberOfTeams, /* numberOfElementsPerTeam = */ Kokkos::AUTO);
 ```
 
-**Note:** `Kokkos::AUTO` is commonly used to let Kokkos determine the number elements per team.
+`Kokkos::AUTO` is commonly used to let Kokkos determine the number elements per team.
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamPolicy.html
+<!--#endif-->
 
 #### Hierarchy structure
 
@@ -688,9 +732,11 @@ Kokkos::TeamThreadRange(teamMember, firstJ, lastJ);
 Kokkos::TeamVectorRange(teamMember, firstJ, lastJ);
 ```
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamThreadRange.html
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamVectorRange.html
+<!--#endif-->
 
 ##### Multi-dimensional team thread range or team vector range
 
@@ -699,9 +745,11 @@ Kokkos::TeamThreadMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy<>::member_type>(te
 Kokkos::TeamVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy<>::member_type>(teamMember, numberOfElementsJ, numberOfElementsK);
 ```
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamThreadMDRange.html
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamVectorMDRange.html
+<!--#endif-->
 
 ##### One-dimensional team thread vector range
 
@@ -709,7 +757,9 @@ Kokkos::TeamVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy<>::member_type>(te
 Kokkos::ThreadVectorRange(teamMember, firstK, lastK);
 ```
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/ThreadVectorRange.html
+<!--#endif-->
 
 ##### Multi-dimensional team thread vector range
 
@@ -717,7 +767,9 @@ Kokkos::ThreadVectorRange(teamMember, firstK, lastK);
 Kokkos::ThreadVectorMDRange<Kokkos::Rank<2>>(teamMember, numberOfElementsK, numberOfElementsL);
 ```
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/ThreadVectorMDRange.html
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25">  https://kokkos.org/kokkos-core-wiki/API/core/policies/ThreadVectorMDRange.html
+<!--#endif-->
 
 ## Scratch memory
 
@@ -725,7 +777,9 @@ Each Kokkos team has access to a scratch pad, only accessible by its threads.
 This memory has the lifetime of the team.
 This optimization is useful when all members of a team interact with the same data multiple times, and takes advantage of GPU low-latency scratch memories and CPU caches.
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/HierarchicalParallelism.html#team-scratch-pad-memory
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25">  https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/HierarchicalParallelism.html#team-scratch-pad-memory
+<!--#endif-->
 
 ### Scratch memory space
 
@@ -768,10 +822,12 @@ Kokkos::parallel_for(
 ## Atomics
 
 Atomics are used when multiple threads simultaneously update the same data element.
-
+  
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Atomic-Operations.html
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/atomics.html
+<!--#endif-->
 
 ### Atomic operations
 
@@ -787,6 +843,7 @@ Atomics are used when multiple threads simultaneously update the same data eleme
 | `Kokkos::atomic_or`        | `\|=`                                |
 | `Kokkos::atomic_sub`       | `-=`                                 |
 
+<!--#ifndef PRINT-->
 <details>
 <summary>Example</summary>
 
@@ -802,6 +859,7 @@ Kokkos::parallel_for(
 ```
 
 </details>
+<!--#endif-->
 
 ### Atomic exchanges
 
@@ -810,6 +868,7 @@ Kokkos::parallel_for(
 | `Kokkos::atomic_exchange`                | Assign destination to new value and return old value                   |
 | `Kokkos::atomic_compare_exchange_strong` | Assign destination to new value if old value equals a comparison value |
 
+<!--#ifndef PRINT-->
 <details>
 <summary>Example</summary>
 
@@ -827,6 +886,7 @@ bool success = atomic_compare_exchange_strong(&destination, comparison, new);
 ```
 
 </details>
+<!--#endif-->
 
 ## Mathematics
 
