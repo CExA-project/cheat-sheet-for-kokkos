@@ -1,0 +1,20 @@
+--- .install.tex	2024-02-27 11:55:02.064764045 +0100
++++ install.tex	2024-02-27 11:55:34.036897856 +0100
+@@ -476,7 +476,7 @@
+ \begin{tabularx}{\linewidth}{llX}
+ \toprule
+ 
+-\tblhead{Option} & \tblhead{Architecture} & \tblhead{Associated
++\tblhead{Option} & \tblhead{Arch.} & \tblhead{Associated
+ cards} \\ \midrule
+ 
+ \texttt{-DKokkos\_ARCH\_AMD\_GFX90A=ON} & GFX90A & MI210, MI250,
+@@ -515,7 +515,7 @@
+ \begin{tabularx}{\linewidth}{lllX}
+ \toprule
+ 
+-\tblhead{Option} & \tblhead{Architecture} & \tblhead{CC} & \tblhead{Associated
++\tblhead{Option} & \tblhead{Arch.} & \tblhead{CC} & \tblhead{Associated
+ cards} \\ \midrule
+ 
+ \texttt{-DKokkos\_ARCH\_AMPERE90=ON} & Hopper & 9.0 & H200, H100 \\
