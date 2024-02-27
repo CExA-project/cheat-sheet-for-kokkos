@@ -66,6 +66,8 @@
     - [Timer](#timer)
     - [Manage parallel environment](#manage-parallel-environment)
   - [Macros](#macros)
+    - [Essential macros](#essential-macros)
+    - [Extra macros](#extra-macros)
 
 <!--#endif-->
 
@@ -614,7 +616,7 @@ ExecutionPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> poli
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/execution_spaces.html
 
-Execution spaces is where the parallel region is executed. It is recommended to use the following wrapper execution spaces:
+Execution spaces are where and how the parallel region is executed (Host or Device and the choice of the corresponding programming model).
 
 | Spaces | Description                                                                       |
 |-------------------|-----------------------------------------------------------------------------------|
@@ -914,7 +916,7 @@ Consistent overload set that is available on host and device that follows practi
 
 ### Complex numbers
 
-`Kokkos::complex` is a complex number class that provides a consistent interface across all execution spaces.
+`Kokkos::complex` is a portable complex number implementation.
 
 | Methods  | Description|
 |------------------------------------------|------------------------------------------------------------------------|
@@ -958,11 +960,18 @@ Consistent overload set that is available on host and device that follows practi
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/Macros.html
 
+### Essential macros
+
 | Macros                                | Description                                                            |
 |------------------------------------------|------------------------------------------------------------------------|
-| `KOKKOS_VERSION`                         | The Kokkos version; `KOKKOS_VERSION % 100` is the patch level, `KOKKOS_VERSION / 100 % 100` is the minor version, and `KOKKOS_VERSION / 10000` is the major version. |
 | `KOKKOS_LAMBDA`                          | To build a Kokkos lambda                                               |
 | `KOKKOS_FUNCTION`                        | Specify that a method can be used in a Kokkos parallel construct        |
 | `KOKKOS_INLINE_FUNCTION`                 | Specify that a method can be used in a Kokkos parallel construct with the inline attribute |
+
+### Extra macros
+
+| Macros                                | Description                                                            |
+|------------------------------------------|------------------------------------------------------------------------|
+| `KOKKOS_VERSION`                         | The Kokkos version; `KOKKOS_VERSION % 100` is the patch level, `KOKKOS_VERSION / 100 % 100` is the minor version, and `KOKKOS_VERSION / 10000` is the major version. |
 | `KOKKOS_ENABLE_*`                        | with `*` being one of the available general setting, execution space, backend option, C++ version or third-party libraries. It defines if the specified option is enabled. [See complete list online](https://kokkos.org/kokkos-core-wiki/API/core/Macros.html) |
 | `KOKKOS_ARCH_*` | with `*` being one of the available architecture options defines if the specified architecture option is enabled. [See complete list online](https://kokkos.org/kokkos-core-wiki/API/core/Macros.html) |
