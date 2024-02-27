@@ -59,6 +59,10 @@
     - [Math functions](#math-functions)
     - [Complex numbers](#complex-numbers)
   - [Utilities](#utilities)
+    - [Code interruption](#code-interruption)
+    - [Print inside a kernel](#print-inside-a-kernel)
+    - [Timer](#timer)
+    - [Manage parallel environment](#manage-parallel-environment)
   - [Macros](#macros)
 
 
@@ -579,21 +583,7 @@ Execution spaces is where the parallel region is executed. It is recommended to 
 |-------------------|-----------------------------------------------------------------------------------|
 | `Kokkos::DefaultExecutionSpace`  | Default execution space, if Kokkos is compiled with both a Host and a Device backend, it will be the device space |
 | `Kokkos::DefaultHostExecutionSpace`  | Default host execution space, if Kokkos is compiled with both a Host and a Device backend, it will be the host space |
-
-It is not recommended but still possible to use the following execution spaces:
-
-| Spaces | Description                                                                       |
-|-------------------|-----------------------------------------------------------------------------------|
 | `Kokkos::Serial`  | Serial execution space, for debugging and testing purposes |
-| `Kokkos::OpenMP`  | OpenMP execution space, for multi-threading on CPU |
-| `Kokkos::Cuda`  | For execution on CUDA devices |
-| `Kokkos::HIP`  | For execution on devices supported by HIP |
-| `Kokkos::Experimental::SYCL`  | For execution on devices supported by SYCL |
-| `Kokkos::HPX`  | HPX execution space, for distributed parallelism |
-| `Kokkos::OpenMPTarget`  | OpenMP target execution space, for execution on OpenMP offload devices |
-
-
-
 
 ### Ranges
 
@@ -842,26 +832,23 @@ bool success = atomic_compare_exchange_strong(&destination, comparison, new);
 
 ### Math functions
 
-Kokkos’ goal is to provide a consistent overload set that is available on host and device and that follows practice from the C++ numerics library. It is recommended to use the `Kokkos` namespace for mathematical operations since it provides a consistent interface across all execution spaces.
+Consistent overload set that is available on host and device that follows practice from the C++ numerics library.
 
-- Basic operations: `abs`, `fabs`, `fmod`, `remainder`, `fma`, `fmax`, `fmin`, `fdim`, `nan`
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Should be used on device prefixed by `Kokkos::`
 
-- Exponential functions: `exp`, `exp2`, `expm1`, `log`, `log2`, `log10`, `log1p`
+| Function type | List of available functions                                                                    |
+|-------------------|-----------------------------------------------------------------------------------|
+| Basic operations  | `abs`, `fabs`, `fmod`, `remainder`, `fma`, `fmax`, `fmin`, `fdim`, `nan` |
+| Exponential       | `exp`, `exp2`, `expm1`, `log`, `log2`, `log10`, `log1p` |
+| Power             | `pow`, `sqrt`, `cbrt`, `hypot` |
+| Trigonometric     | `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2` |
+| Hyperbolic        | `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh` |
+| Error and gamma   | `erf`, `erfc`, `tgamma`, `lgamma` |
+| Nearest    | `ceil`, `floor`, `trunc`, `round`, `nearbyint` |
+| Floating point manipulation | `logb`, `nextafter`, `copysign` |
+| Classification and comparison | `isfinite`, `isinf`, `isnan`, `signbit` |
 
-- Power functions: `pow`, `sqrt`, `cbrt`, `hypot`
-
-
-- Trigonometric functions: `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`
-
-- Hyperbolic functions: `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh`
-
-- Error and gamma functions: `erf`, `erfc`, `tgamma`, `lgamma`
-
-- Nearest integer floating point operations: `ceil`, `floor`, `trunc`, `round`, `nearbyint`
-
-- Floating point manipulation functions: `logb`, `nextafter`, `copysign`
-
-- Classification and comparison: `isfinite`, `isinf`, `isnan`, `signbit`
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> The `Kokkos` namespace is not a complete replacement for the C++ numerics library, and some functions are not available.
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/numerics/mathematical-functions.html?highlight=math
 
@@ -871,8 +858,9 @@ Kokkos’ goal is to provide a consistent overload set that is available on host
 
 | Methods  | Description|
 |------------------------------------------|------------------------------------------------------------------------|
-| `real()`                                 | Returns the real part of the complex number                            |
-| `imag()`                                 | Returns the imaginary part of the complex number     |
+| `Kokkos::complex<double> complexValue(realPart, imagPart)` | Constructor |
+| `real()`                                 | Returns or set the real part of the complex number                            |
+| `imag()`                                 | Returns or set the imaginary part of the complex number     |
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/utilities/complex.html?highlight=complex
 
@@ -880,9 +868,15 @@ Kokkos’ goal is to provide a consistent overload set that is available on host
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/Utilities.html
 
+### Code interruption
+
 - `Kokkos::abort(const char *const msg)`: function that can be used to terminate the execution of a Kokkos program.
 
+### Print inside a kernel
+
 - `Kokkos::printf(const char* format, Args... args);`: Prints the data specified in format and args... to stdout. The behavior is analogous to `std::printf`, but the return type is void to ensure a consistent behavior across backends.
+
+### Timer
 
 - `kokkos::timer`: A simple timer class that can be used to measure the time taken by a block of code.
 
@@ -892,11 +886,13 @@ Kokkos’ goal is to provide a consistent overload set that is available on host
 | `timer::seconds()`                       | Returns the time in seconds since the timer was constructed or the last reset                |
 | `timer::reset()`                         | Resets the timer to zero                                               |
 
-- `Kokkos::device_id()`: Returns the device id of the current device.
+### Manage parallel environment
 
-- `Kokkos::num_devices()`: Returns the number of devices available to the current execution space.
-
-- `Kokkos::num_threads`: Returns the number of threads in the current team.
+| Functions                                | Description                                                            |
+|------------------------------------------|------------------------------------------------------------------------|
+| `Kokkos::device_id()`                    | Returns the device id of the current device                            |
+| `Kokkos::num_devices()`                  | Returns the number of devices available to the current execution space |
+| `Kokkos::num_threads`                    | Returns the number of threads in the current team                      |
 
 ## Macros
 
