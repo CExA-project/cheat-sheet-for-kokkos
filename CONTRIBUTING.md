@@ -1,5 +1,18 @@
 # Contributing
 
+## Versioning
+
+The cheat sheet version is a combination of the Kokkos version and the timestamp when doing a release:
+
+```
+4.2.0.20240226
+^ ^ ^ ^
+| | | + Cheat sheet generation date in the form YYYYMMDD
+| | +-- Kokkos patch version
+| +---- Kokkos minor version
++------ Kokkos major version
+```
+
 ## Pre-processor
 
 Since Markdown does not have branching controls, we use pre-processor instructions, that are parsed by [GPP (Generic Preprocessor)](https://logological.org/gpp).
@@ -40,7 +53,7 @@ Patches are used to keep specific adjustments in the final document that cannot 
 Namely, such changes include manual page breaks, abbreviations, etc.
 Large modification, however, such as the removal of an entire section, are better handled by the pre-processor discussed above.
 
-A patch is associated with a version number `x.y.z`, and is stored under `patches/<mode>/x.y.z` (with `<mode>` being `print` for print mode).
+A patch is associated with a version number `x.y.z.kkkk`, and is stored under `patches/<mode>/x.y.z.kkkk` (with `<mode>` being `print` for print mode).
 If a patch file exists with the same name as the current version number (stored in `VERSION`), then the patch is automatically applied when calling `convert.sh`.
 
 The creation of the patch uses the following workflow:
