@@ -59,7 +59,7 @@ patch_modifs () {
         return
     fi
 
-    patch --quiet --forward <"$patchfile"
+    patch --quiet --forward --reject-file - <"$patchfile" || true
 
     echo "Applied patch for v$version"
 }
