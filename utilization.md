@@ -973,5 +973,8 @@ Consistent overload set that is available on host and device that follows practi
 | Macros                                | Description                                                            |
 |------------------------------------------|------------------------------------------------------------------------|
 | `KOKKOS_VERSION`                         | The Kokkos version; `KOKKOS_VERSION % 100` is the patch level, `KOKKOS_VERSION / 100 % 100` is the minor version, and `KOKKOS_VERSION / 10000` is the major version. |
+| `KOKKOS_VERSION_MAJOR`                   | The major version                                             |
+| `KOKKOS_VERSION_MINOR`                   | The minor version                                             |
+| `KOKKOS_VERSION_PATCH`                   | The patch level                                               |
 | `KOKKOS_ENABLE_*`                        | with `*` being one of the available general setting, execution space, backend option, C++ version or third-party libraries. It defines if the specified option is enabled. [See complete list online](https://kokkos.org/kokkos-core-wiki/API/core/Macros.html) |
 | `KOKKOS_ARCH_*` | with `*` being one of the available architecture options defines if the specified architecture option is enabled. [See complete list online](https://kokkos.org/kokkos-core-wiki/API/core/Macros.html) |
