@@ -31,11 +31,11 @@
 		3. [NVIDIA V100 GPU with CUDA and OpenMP](#nvidia-v100-gpu-with-cuda-and-openmp)
 		4. [Intel GPU Max/Ponte Vecchio GPU with SYCL and OpenMP](#intel-gpu-maxponte-vecchio-gpu-with-sycl-and-openmp)
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/building.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/building.html
 
-<img title="Doc" alt="Doc" src="./images/training.png" height="20"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_01_Introduction.pdf
+<img title="Doc" alt="Doc" src="./images/tutorial_txt.svg" height="25"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_01_Introduction.pdf
 
 <!--#endif-->
 
@@ -66,8 +66,9 @@
 | CMake        | 3.18            | For better Fortran linking  |
 | CMake        | 3.16            |                             |
 
+
 <!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/requirements.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/requirements.html
 <!--#endif-->
 
 ## How to build Kokkos
@@ -91,7 +92,7 @@ cmake -B build \
 ```
 
 <!--#ifndef PRINT-->
-<img title="Code" alt="Code" src="./images/code.png" height="20"> Code example:
+<img title="Code" alt="Code" src="./images/code_txt.svg" height="25"> Code example:
 
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_in_tree
 <!--#endif-->
@@ -111,7 +112,7 @@ cmake --install build
 ```
 
 <!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://kokkos.org/kokkos-core-wiki/building.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/building.html
 <!--#endif-->
 
 #### Use in your code
@@ -133,7 +134,7 @@ cmake -B build \
 ```
 
 <!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> https://cmake.org/cmake/help/latest/guide/tutorial/index.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/guide/tutorial/index.html
 <!--#endif-->
 
 <!--#ifndef PRINT-->
@@ -142,9 +143,9 @@ cmake -B build \
 
 TODO finish this part
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/building.html#spack
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> See https://kokkos.org/kokkos-core-wiki/building.html#spack
 
-<!--#endif-->
+<!--#endif
 
 ## Kokkos compile options
 
@@ -156,7 +157,7 @@ TODO finish this part
 | `-DKokkos_ENABLE_OPENMP=ON`  | OpenMP  |
 | `-DKokkos_ENABLE_PTHREAD=ON` | PThread |
 
-<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> The serial backend is enabled by default.
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> The serial backend is enabled by default.
 
 ### Device backends
 
@@ -167,7 +168,7 @@ TODO finish this part
 | `-DKokkos_ENABLE_SYCL=ON`         | SYCL          | Experimental |
 | `-DKokkos_ENABLE_OPENMPTARGET=ON` | OpenMP target | Experimental |
 
-<img title="Warning" alt="Warning" src="./images/warning.png" height="15"> You can only select the serial backend, plus another host backend and one device backend at a time.
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> You can only select the serial backend, plus another host backend and one device backend at a time.
 
 See [architecture-specific options](#architecture-specific-options).
 
@@ -196,7 +197,7 @@ See [architecture-specific options](#architecture-specific-options).
 
 </details>
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
 <!--#endif-->
 
 ### Architecture-specific options
@@ -338,7 +339,7 @@ They can be deduced from the device if present at compile time.
 
 <!--#ifndef PRINT-->
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See NVIDIA documentation on Compute Capability (CC): https://developer.nvidia.com/cuda-gpus
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> See NVIDIA documentation on Compute Capability (CC): https://developer.nvidia.com/cuda-gpus
 
 | Option                                         | Description                                       |
 |------------------------------------------------|---------------------------------------------------|
@@ -351,10 +352,11 @@ They can be deduced from the device if present at compile time.
 
 </details>
 
+
 <!--#ifndef PRINT-->
 ### Third-party Libraries (TPLs)
 
-<img title="Doc" alt="Doc" src="./images/documentation.png" height="20"> See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25">  See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
 <!--#endif-->
 
 ### Examples for the most common architectures
@@ -407,7 +409,7 @@ cmake \
 ```
 
 <!--#ifndef PRINT-->
-<img title="Code" alt="Code" src="./images/code.png" height="20"> For more code examples:
+<img title="Code" alt="Code" src="./images/code_txt.svg" height="25"> For more code examples:
 
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_installed_different_compiler
