@@ -10,6 +10,9 @@ See:
 
 import pandocfilters as pf
 
+THRESHOLD_NORMAL = 15
+THRESHOLD_CODE = 20
+
 
 def latex(s):
     return pf.RawBlock("latex", s)
@@ -19,32 +22,54 @@ def inlatex(s):
     return pf.RawInline("latex", s)
 
 
-def tbl_alignment(s, v, threshold=10):
+def has_one_single_code(cell):
+    if not cell["c"]:
+        return False
+
+    if len(cell["c"]) > 1:
+        return False
+
+    if cell["c"][0].get("t") == "Code":
+        return True
+
+    return False
+
+def has_long_line(cell, threshold=THRESHOLD_NORMAL):
+    size = 0
+
+    for index_word, word in enumerate(cell["c"]):
+        if word and "c" in word:
+            size += len(word["c"])
+
+    return size >= threshold
+
+def tbl_alignment(s, h, v):
     aligns = {
         "AlignDefault": "l",
         "AlignLeft": "l",
         "AlignCenter": "c",
         "AlignRight": "r",
     }
-    # compute the maximum size of each column
-    col_sizes = [0] * len(s)
-    for row in v:
-        for index, col in enumerate(row):
+    # detect columns with one single line of code
+    one_single_code_cols = [False] * len(s)
+    for row in [h] + v:
+        for index_col, col in enumerate(row):
             if col:
-                size = 0
+                one_single_code_cols[index_col] |= has_one_single_code(col[0])
 
-                for index_word, word in enumerate(col[0]["c"]):
-                    if word and "c" in word:
-                        size += len(word["c"])
-
-                col_sizes[index] = max(col_sizes[index], size)
+    # detect columns with long line
+    long_line_cols = [False] * len(s)
+    for row in [h] + v:
+        for index_col, col in enumerate(row):
+            if col:
+                long_line_cols[index_col] |= has_long_line(col[0], threshold=THRESHOLD_CODE if one_single_code_cols[index_col] else THRESHOLD_NORMAL)
 
     # mark a left column as big if its size is over threshold
     aligments = []
-    for index, e in enumerate(s):
+    for index_col, e in enumerate(s):
         align = aligns[e["t"]]
 
-        if align == "l" and col_sizes[index] >= threshold:
+        if align == "l" and long_line_cols[index_col]:
             aligments.append("X")
             continue
 
@@ -82,7 +107,14 @@ def tbl_contents(s):
         para = []
         for col in row:
             if col:
-                para.extend(col[0]["c"])
+                content = col[0]["c"]
+
+                # un-escape pipe for code within a table
+                for word in content:
+                    if word["t"] == "Code" and "t" in word:
+                        word["c"] = [term.replace(r"\|", "|") if type(term) is str else term for term in word["c"]]
+
+                para.extend(content)
 
             para.append(inlatex(" & "))
         result.extend(para)
@@ -94,7 +126,7 @@ def do_filter(k, v, f, m):
     if k == "Table":
         return [
             latex(
-                r"\begin{tabularx}{\linewidth}{%s}" % tbl_alignment(v[1], v[4]) + "\n"
+                r"\begin{tabularx}{\linewidth}{%s}" % tbl_alignment(v[1], v[3], v[4]) + "\n"
                 r"\toprule"
             ),
             tbl_headers(v[3]),
