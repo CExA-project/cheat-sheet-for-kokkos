@@ -76,13 +76,13 @@
 
 <!--#endif-->
 
-## Initialization
-
-### Header
+## Header
 
 ```cpp
 #include <Kokkos_Core.hpp>
 ```
+
+## Initialization
 
 ### Initialize and finalize
 
@@ -113,11 +113,11 @@ int main(int argc, char* argv[]) {
 
 Where and how a parallel region is executed.
 
-| Execution space                     | With device backend | Without device backend |
-|-------------------------------------|---------------------|------------------------|
-| `Kokkos::DefaultExecutionSpace`     | Device space        | Host space             |
-| `Kokkos::DefaultHostExecutionSpace` | Host space          | Host space             |
-| `Kokkos::Serial`                    | Host space          | Host space             |
+| Execution space                     | Device backend | Host backend |
+|-------------------------------------|----------------|--------------|
+| `Kokkos::DefaultExecutionSpace`     | On device      | On host      |
+| `Kokkos::DefaultHostExecutionSpace` | On host        | On host      |
+| `Kokkos::Serial`                    | On host        | On host      |
 
 `Kokkos::Serial` is used for debug purpose only.
 
@@ -135,15 +135,15 @@ Where and how data is stored.
 
 #### Generic memory spaces
 
-| Memory space                                      | With device backend | Without device backend |
-|---------------------------------------------------|---------------------|------------------------|
-| `Kokkos::DefaultExecutionSpace::memory_space`     | Device space        | Host space             |
-| `Kokkos::DefaultHostExecutionSpace::memory_space` | Host space          | Host space             |
+| Memory space                                      | Device backend | Host backend |
+|---------------------------------------------------|----------------|--------------|
+| `Kokkos::DefaultExecutionSpace::memory_space`     | On device      | On host      |
+| `Kokkos::DefaultHostExecutionSpace::memory_space` | On host        | On host      |
 
 #### Specific memory spaces
 
 | Memory space                 | Description                                                                                                                                                         |
-|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `Kokkos::HostSpace`          | Accessible from the host but not directly from the device                                                                                                           |
 | `Kokkos::SharedSpace`        | Accessible by the host and the device; the movement is done automatically by the driver at the moment of access, performance depends on hardware and driver support |
 | `Kokkos::ScratchMemorySpace` | Accessible by the team or thread that created it and nothing else; used for temporary data within parallel constructs                                               |
@@ -188,12 +188,12 @@ Multidimensional array that abstracts data containers and provides a consistent 
 Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElements);
 ```
 
-| Template argument | Description                                                                                                                                                                                                                                                                                              |
-|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Template argument | Description                                                                                                                                                                                                                                                                                                  |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `DataType`        | Fundamental scalar type of the view and its dimensionality; syntax is `ScalarType*[]` where the number of `*` denotes the number of runtime length dimensions (dynamic allocation) and the number of `[]` defines the compile time dimensions (static allocation); runtime dimensions must come first |
-| `LayoutType`      | How data are stored, see [memory layouts](#memory-layouts)                                                                                                                                                                                                                                               |
-| `MemorySpace`     | Where data are stored, see [memory spaces](#memory-spaces)                                                                                                                                                                                                                                               |
-| `MemoryTraits`    | How data are accessed, see [memory traits](#memory-traits)                                                                                                                                                                                                                                               |
+| `LayoutType`      | See [memory layouts](#memory-layouts)                                                                                                                                                                                                                                                                        |
+| `MemorySpace`     | See [memory spaces](#memory-spaces)                                                                                                                                                                                                                                                                          |
+| `MemoryTraits`    | See [memory traits](#memory-traits)                                                                                                                                                                                                                                                                          |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#constructors
@@ -218,24 +218,11 @@ Kokkos::View<double**[25]> view3D("view3D", 50, 42, 25);
 </details>
 <!--#endif-->
 
-#### Accessing elements
-
-```cpp
-for (int i = 0; i < 10; i++) {
-    for (int j = 0; j < 50; ++j) {
-        view(i, j) = i + j;
-    }
-}
-```
-
-<!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#data-access-functions
-<!--#endif-->
-
 #### Managing views
 
 | Method      | Description                                                                                                           |
 |-------------|-----------------------------------------------------------------------------------------------------------------------|
+| `(i, j...)` | Returns and sets the value                                                                                            |
 | `size()`    | Returns the total number of elements in the view                                                                      |
 | `rank()`    | Returns the number of dimensions                                                                                      |
 | `extent()`  | Returns the number of elements in each dimension                                                                      |
@@ -245,6 +232,8 @@ for (int i = 0; i < 10; i++) {
 | `data()`    | Returns a pointer to the underlying data                                                                              |
 
 <!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#data-access-functions
+
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#data-layout-dimensions-strides
 <!--#endif-->
 
@@ -259,7 +248,7 @@ Determines the mapping of indices into the underlying 1D memory storage.
 | `Kokkos::LayoutStride` | Strides can be arbitrary for each dimension                                                                 |     |
 
 If no layouts are specified, the most efficient one for the memory space is used.
-In order to get performance, memory access patterns must result in caching on a CPU and coalescing on a GPU.
+Memory caching on CPU and coalescing on GPU gives the best performance.
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#data-layout-dimensions-strides
@@ -277,12 +266,12 @@ Kokkos::View<double**, Kokkos::LayoutRight> view2D("view2D", 50, 50);
 
 ### Memory trait
 
-| Memory trait           | Description                                                                                                                                                       |
-|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Kokkos::Unmanaged`    | The view will not be reference counted; the allocation has to be provided to the constructor                                                                      |
-| `Kokkos::Atomic`       | All accesses to the view will use atomic operations                                                                                                               |
+| Memory trait           | Description                                                                                                                                                        |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Kokkos::Unmanaged`    | The view will not be reference counted; the allocation has to be provided to the constructor                                                                       |
+| `Kokkos::Atomic`       | All accesses to the view will use atomic operations                                                                                                                |
 | `Kokkos::RandomAccess` | Hint that the view is used in a random access manner; if the view is also `const` this will trigger special load operations on GPUs (e.g. texture memory on CUDA) |
-| `Kokkos::Restrict`     | There is no aliasing of the view by other data structures in the current scope                                                                                    |
+| `Kokkos::Restrict`     | There is no aliasing of the view by other data structures in the current scope                                                                                     |
 
 Memory traits are combined within a `Kokkos::MemoryTraits<>` with the `|` (pipe) operator.
 
@@ -381,7 +370,7 @@ Create a host mirror view of a device view and always allocate data.
 auto hostView = Kokkos::create_mirror_view(view);
 ```
 
-Create a host mirror view of a device view, but only allocate data if the source viewis not in the host space.
+Create a host mirror view of a device view, but only allocate data if the source view is not in the host space.
 
 #### Create, conditionally allocate and conditionnaly synchronize
 ```cpp
@@ -392,21 +381,14 @@ Create a mirror view on `ExecutionSpace::memory_space` of a view, but only alloc
 
 #### Synchronize
 
-```cpp
-// From host to device
-Kokkos::deep_copy(view, hostView);
-
-// From device to host
-Kokkos::deep_copy(hostView, view);
-```
+See [deep copy](#deep-copy).
 
 ### Subview
 
-A view that is a subset of another view, which mimics the behavior of languages like Python or Fortran.
+A view that is a subset of another view, similarly to languages such as Python or Fortran.
+It is possible to has a subview of a subview.
 
 <img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> A subview has the same reference count as its parent view, so the parent view won’t be deallocated before all subviews go away.
-
-<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Every subview is also a view. This means that you may take a subview of a subview.
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/subview.html
@@ -428,9 +410,8 @@ auto subview = Kokkos::subview(view, Kokkos::ALL, Kokkos::pair(rangeFirst, range
 
 ### Scatter view
 
-View extension that wraps an existing view in order to efficiently perform scatter operations.
-Scatter operations potentially write to the same memory location from multiple threads.
-`ScatterView` provides a mechanism to efficiently handle this situation by using atomics or grid duplication to update the underlying view.
+View extension that wraps an existing view in order to perform scatter operations.
+As this may result to race conditions, `ScatterView` uses atomics or grid duplication.
 
 <img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> This feature is experimental
 
@@ -454,26 +435,44 @@ Scatter operations potentially write to the same memory location from multiple t
 #### Create
 
 ```cpp
-ScatterView<DataType, Operation, ExecutionSpace, Layout, Contribution> scatter(view);
+ScatterView<DataType, Operation, ExecutionSpace, Layout, Contribution> scatter(targetView);
 ```
 
-| Template argument | Description                                                                                                                                                   |
-|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `DataType`        | Scalar type of the view and its dimensionality                                                                                                    |
-| `Operation`       | Operation to perform when scattering, see [scatter operation](#scatter-operation); default to `Kokkos::Experimental::ScatterSum`                                                     |
-| `ExecutionSpace`  | Where the view is allocated, see [execution spaces](#executiondspaces); default to `Kokkos::DefaultExecutionSpace`                                                                         |
-| `Layout`          | How data are stored, see [layouts](#memory-layouts) |
-| `Duplication`     | Whether to duplicate the grid or not; default to `Kokkos::Experimental::ScatterDuplicated`, other option is `Kokkos::Experimental::ScatterNonDuplicated` |
+| Template argument | Description                                                                                                                                                |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `DataType`        | Scalar type of the view and its dimensionality                                                                                                             |
+| `Operation`       | See [scatter operation](#scatter-operation); defaults to `Kokkos::Experimental::ScatterSum`                                                                |
+| `ExecutionSpace`  | See [execution spaces](#executiondspaces); defaults to `Kokkos::DefaultExecutionSpace`                                                                     |
+| `Layout`          | See [layouts](#memory-layouts)                                                                                                                             |
+| `Duplication`     | Whether to duplicate the grid or not; defaults to `Kokkos::Experimental::ScatterDuplicated`, other option is `Kokkos::Experimental::ScatterNonDuplicated` |
 | `Contribution`    | Whether to contribute to use atomics; defaults to `Kokkos::Experimental::ScatterAtomic`, other option is `Kokkos::Experimental::ScatterNonAtomic`     |
 
-##### Scatter operation
+#### Scatter operation
 
-| Operation                           | Description                           |
-|-------------------------------------|---------------------------------------|
-| `Kokkos::Experimental::ScatterSum`  | Sum the contributions                 |
-| `Kokkos::Experimental::ScatterProd` | Multiply the contributions            |
-| `Kokkos::Experimental::ScatterMin`  | Take the minimum of the contributions |
-| `Kokkos::Experimental::ScatterMax`  | Take the maximum of the contributions |
+| Operation                           | Description   |
+|-------------------------------------|---------------|
+| `Kokkos::Experimental::ScatterSum`  | Sum           |
+| `Kokkos::Experimental::ScatterProd` | Product       |
+| `Kokkos::Experimental::ScatterMin`  | Minimum value |
+| `Kokkos::Experimental::ScatterMax`  | Maximum value |
+
+#### Scatter
+
+```cpp
+auto access = scatter.access();
+```
+
+#### Compute
+
+```cpp
+access(index) += value;
+```
+
+#### Gather
+
+```cpp
+Kokkos::Experimental::contribute(targetView, scatter);
+```
 
 <!--#ifndef PRINT-->
 <details>
@@ -599,13 +598,13 @@ Determines how the parallel execution should occur.
 ExecutionPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> policy(/* ... */);
 ```
 
-| Template argument | Description                                                                       |
-|-------------------|-----------------------------------------------------------------------------------|
-| `ExecutionSpace`  | Where the parallel region is executed, see [execution spaces](#execution-spaces); default to `Kokkos::DefaultExecutionSpace` |
-| `Schedule`        | How to schedule work items; default to machine and backend specifics              |
-| `IndexType`       | Integer type to be used for the index; default to `int64_t`                       |
-| `LaunchBounds`    | Hints for CUDA and HIP launch bounds                                              |
-| `WorkTag`         | Empty tag class to call the functor                                               |
+| Template argument | Description                                                                            |
+|-------------------|----------------------------------------------------------------------------------------|
+| `ExecutionSpace`  | See [execution spaces](#execution-spaces); defaults to `Kokkos::DefaultExecutionSpace` |
+| `Schedule`        | How to schedule work items; defaults to machine and backend specifics                  |
+| `IndexType`       | Integer type to be used for the index; defaults to `int64_t`                           |
+| `LaunchBounds`    | Hints for CUDA and HIP launch bounds                                                   |
+| `WorkTag`         | Empty tag class to call the functor                                                    |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/Execution-Policies.html
@@ -616,9 +615,7 @@ ExecutionPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> poli
 #### One-dimensional range
 
 ```cpp
-Kokkos::RangePolicy<ExecutionSpace, Schedule, IndexType LaunchBounds, WorkTag> policy(
-    first, last
-);
+Kokkos::RangePolicy<ExecutionSpace, Schedule, IndexType LaunchBounds, WorkTag> policy(first, last);
 ```
 
 If the ranges starts at index 0 and uses default template parameters, the entire execution policy can be replaced by an single integer which is the number of elements.
@@ -889,17 +886,17 @@ Note that not all functions are available.
 
 <img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Should be used on device prefixed by `Kokkos::`
 
-| Function type                 | List of available functions                                              |
-|-------------------------------|--------------------------------------------------------------------------|
-| Basic operations              | `abs`, `fabs`, `fmod`, `remainder`, `fma`, `fmax`, `fmin`, `fdim`, `nan` |
-| Exponential                   | `exp`, `exp2`, `expm1`, `log`, `log2`, `log10`, `log1p`                  |
-| Power                         | `pow`, `sqrt`, `cbrt`, `hypot`                                           |
-| Trigonometric                 | `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`                     |
-| Hyperbolic                    | `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh`                        |
-| Error and gamma               | `erf`, `erfc`, `tgamma`, `lgamma`                                        |
-| Nearest                       | `ceil`, `floor`, `trunc`, `round`, `nearbyint`                           |
-| Floating point manipulation   | `logb`, `nextafter`, `copysign`                                          |
-| Classification and comparison | `isfinite`, `isinf`, `isnan`, `signbit`                                  |
+| Function type    | List of available functions                                              |
+|------------------|--------------------------------------------------------------------------|
+| Basic operations | `abs`, `fabs`, `fmod`, `remainder`, `fma`, `fmax`, `fmin`, `fdim`, `nan` |
+| Exponential      | `exp`, `exp2`, `expm1`, `log`, `log2`, `log10`, `log1p`                  |
+| Power            | `pow`, `sqrt`, `cbrt`, `hypot`                                           |
+| Trigonometric    | `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`                     |
+| Hyperbolic       | `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh`                        |
+| Error and gamma  | `erf`, `erfc`, `tgamma`, `lgamma`                                        |
+| Nearest          | `ceil`, `floor`, `trunc`, `round`, `nearbyint`                           |
+| Floating point   | `logb`, `nextafter`, `copysign`                                          |
+| Comparisons      | `isfinite`, `isinf`, `isnan`, `signbit`                                  |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/numerics/mathematical-functions.html?highlight=math
@@ -915,10 +912,10 @@ Kokkos::complex<double> complex(realPart, imagPart);
 
 #### Manage
 
-| Methods  | Description                                             |
-|----------|---------------------------------------------------------|
-| `real()` | Returns or set the real part of the complex number      |
-| `imag()` | Returns or set the imaginary part of the complex number |
+| Methods  | Description                        |
+|----------|------------------------------------|
+| `real()` | Returns or sets the real part      |
+| `imag()` | Returns or sets the imaginary part |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/utilities/complex.html
@@ -932,20 +929,20 @@ Kokkos::complex<double> complex(realPart, imagPart);
 
 ### Code interruption
 
+Terminate the execution of a Kokkos program.
+
 ```cpp
 Kokkos::abort("message");
 ```
 
-Terminate the execution of a Kokkos program.
-
 ### Print inside a kernel
+
+Prints text to standard output.
+The behavior is analogous to C++23 `std::print`; the return type is `void` to ensure a consistent behavior across backends.
 
 ```cpp
 Kokkos::printf("format string", arg1, arg2);
 ```
-
-Prints text to standard output.
-The behavior is analogous to C++23 `std::print`; the return type is `void` to ensure a consistent behavior across backends.
 
 ### Timer
 
@@ -959,10 +956,10 @@ Kokkos::timer timer();
 
 #### Manage
 
-| Methods     | Description                                                                   |
-|-------------|-------------------------------------------------------------------------------|
-| `seconds()` | Returns the time in seconds since the timer was constructed or the last reset |
-| `reset()`   | Resets the timer to zero                                                      |
+| Methods     | Description                                                  |
+|-------------|--------------------------------------------------------------|
+| `seconds()` | Returns the time in seconds since construction or last reset |
+| `reset()`   | Resets the timer to zero                                     |
 
 ### Manage parallel environment
 
