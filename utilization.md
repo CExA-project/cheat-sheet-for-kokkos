@@ -266,14 +266,16 @@ Kokkos::View<double**, Kokkos::LayoutRight> view2D("view2D", 50, 50);
 
 ### Memory trait
 
-| Memory trait           | Description                                                                                                                                                        |
-|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Kokkos::Unmanaged`    | The view will not be reference counted; the allocation has to be provided to the constructor                                                                       |
-| `Kokkos::Atomic`       | All accesses to the view will use atomic operations                                                                                                                |
-| `Kokkos::RandomAccess` | Hint that the view is used in a random access manner; if the view is also `const` this will trigger special load operations on GPUs (e.g. texture memory on CUDA) |
-| `Kokkos::Restrict`     | There is no aliasing of the view by other data structures in the current scope                                                                                     |
+Memory traits are indicated with `Kokkos::MemoryTraits<>`.
 
-Memory traits are combined within a `Kokkos::MemoryTraits<>` with the `|` (pipe) operator.
+| Memory trait           | Description                                                                                                                                                       |
+|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Kokkos::Unmanaged`    | The view will not be reference counted; the allocation has to be provided to the constructor                                                                      |
+| `Kokkos::Atomic`       | All accesses to the view will use atomic operations                                                                                                               |
+| `Kokkos::RandomAccess` | Hint that the view is used in a random access manner; if the view is also `const` this will trigger special load operations on GPUs (e.g. texture memory on CUDA) |
+| `Kokkos::Restrict`     | There is no aliasing of the view by other data structures in the current scope                                                                                    |
+
+Several memory traits are combined with the `|` (pipe) operator.
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/View.html#access-traits
@@ -284,15 +286,15 @@ Memory traits are combined within a `Kokkos::MemoryTraits<>` with the `|` (pipe)
 ```cpp
 // Unmanaged view on CPU
 double* data = new double[numberOfElements];
-Kokkos::View<double*, Kokkos::Unmanaged> unmanagedView(data, numberOfElements);
+Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Unmanaged>> unmanagedView(data, numberOfElements);
 
 // Unmanaged view on GPU using CUDA
 double* data;
 cudaMalloc(&data, numberOfElements * sizeof(double));
-Kokkos::View<double*, Kokkos::Unmanaged, Kokkos::CudaSpace> unmanagedView(data, numberOfElements);
+Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Unmanaged>, Kokkos::CudaSpace> unmanagedView(data, numberOfElements);
 
 // Atomic view
-Kokkos::View<double*, Kokkos::Atomic> atomicView("atomicView", numberOfElements);
+Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>> atomicView("atomicView", numberOfElements);
 
 // Random access with constant data
 // first, allocate non constant view
@@ -303,7 +305,7 @@ Kokkos::View<const int*, Kokkos::MemoryTraits<Kokkos::RandomAccess>> randomAcces
 // Unmanaged, atomic, random access view on GPU using CUDA
 double* data;
 cudaMalloc(&data, numberOfElements* sizeof(double));
-Kokkos::View<double*,  Kokkos::CudaSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged | Kokkos::Atomic | Kokkos::RandomAccess>> unmanagedView(data, numberOfElements);
+Kokkos::View<const double*,  Kokkos::CudaSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged | Kokkos::Atomic | Kokkos::RandomAccess>> unmanagedView(data, numberOfElements);
 ```
 
 </details>
@@ -951,7 +953,7 @@ A simple timer class that can be used to measure the time taken by a block of co
 #### Create
 
 ```cpp
-Kokkos::timer timer();
+Kokkos::Timer timer;
 ```
 
 #### Manage
