@@ -164,13 +164,23 @@
    \end{mdframed}
 }
 
-\renewcommand{\CommentTok}[1]{{\color{gray}\textit{#1}}}
-\renewcommand{\ConstantTok}[1]{{\color{gray}#1}}
-\renewcommand{\KeywordTok}[1]{{\color{kokkos}\textbf{#1}}}
-\renewcommand{\FunctionTok}[1]{{\color{kokkos}#1}}
-\renewcommand{\BuiltInTok}[1]{{\color{kokkos}#1}}
-\renewcommand{\StringTok}[1]{{\color{kokkos}#1}}
-\renewcommand{\OtherTok}[1]{{\color{main}#1}}
+\colorlet{codemain}{kokkos}
+\colorlet{codelightmain}{kokkos!60}
+\colorlet{codegray}{gray}
+
+\renewcommand{\AttributeTok}[1]{{\color{codelightmain}#1}}
+\renewcommand{\BuiltInTok}[1]{{\color{codemain}#1}}
+\renewcommand{\CommentTok}[1]{{\color{codegray}\textit{#1}}}
+\renewcommand{\CommentVarTok}[1]{{\color{codegray}\textit{#1}}}
+\renewcommand{\ConstantTok}[1]{{\color{codegray}#1}}
+\renewcommand{\ControlFlowTok}[1]{{\color{codemain}#1}}
+\renewcommand{\DataTypeTok}[1]{{\color{codemain}#1}}
+\renewcommand{\DecValTok}[1]{{\color{codelightmain}#1}}
+\renewcommand{\FunctionTok}[1]{{\color{codemain}#1}}
+\renewcommand{\KeywordTok}[1]{{\color{codemain}\textbf{#1}}}
+\renewcommand{\OtherTok}[1]{{\color{codelightmain}#1}}
+\renewcommand{\PreprocessorTok}[1]{{\color{codegray}#1}}
+\renewcommand{\StringTok}[1]{{\color{codemain}#1}}
 
 % code inline
 
