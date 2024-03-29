@@ -145,7 +145,7 @@ TODO finish this part
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> See https://kokkos.org/kokkos-core-wiki/building.html#spack
 
-<!--#endif
+<!--#endif-->
 
 ## Kokkos compile options
 
