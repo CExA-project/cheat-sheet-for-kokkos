@@ -262,12 +262,12 @@ Kokkos::View<double**, Kokkos::LayoutRight> view2D("view2D", 50, 50);
 
 Memory traits are indicated with `Kokkos::MemoryTraits<>` and are combined with the `|` (pipe) operator.
 
-| Memory trait           | Description                                                                                                                                 |
-|------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Kokkos::Unmanaged`    | The allocation has to be managed manuall                                                                                                    |
-| `Kokkos::Atomic`       | All accesses to the view are atomic                                                                                                         |
+| Memory trait           | Description                                                                                                                               |
+|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| `Kokkos::Unmanaged`    | The allocation has to be managed manually                                                                                                 |
+| `Kokkos::Atomic`       | All accesses to the view are atomic                                                                                                       |
 | `Kokkos::RandomAccess` | Hint that the view is used in a random access manner; if the view is also `const` this may trigger more efficient load operations on GPUs |
-| `Kokkos::Restrict`     | There is no aliasing of the view by other data structures in the current scope                                                              |
+| `Kokkos::Restrict`     | There is no aliasing of the view by other data structures in the current scope                                                            |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/View.html#access-traits
