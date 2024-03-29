@@ -8,11 +8,12 @@ title: Kokkos utilisation cheat sheet
 
 <img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Only for Kokkos 4.2 and more, for older verison look at the doc.
 
-1. [Header](#header)
-2. [Initialization](#initialization)
+1. [title: Kokkos utilisation cheat sheet](#title-kokkos-utilisation-cheat-sheet)
+2. [Header](#header)
+3. [Initialization](#initialization)
 	1. [Initialize and finalize](#initialize-and-finalize)
 	2. [Scope guard](#scope-guard)
-3. [Kokkos concepts](#kokkos-concepts)
+4. [Kokkos concepts](#kokkos-concepts)
 	1. [Execution spaces](#execution-spaces)
 	2. [Memory spaces](#memory-spaces)
 		1. [Generic memory spaces](#generic-memory-spaces)
@@ -20,8 +21,7 @@ title: Kokkos utilisation cheat sheet
 3. [Memory management](#memory-management)
 	1. [View](#view)
 		1. [Creating a view](#creating-a-view)
-		2. [Accessing elements](#accessing-elements)
-		3. [Managing views](#managing-views)
+		2. [Managing views](#managing-views)
 	2. [Memory Layouts](#memory-layouts)
 	3. [Memory trait](#memory-trait)
 	4. [Deep copy](#deep-copy)
@@ -32,30 +32,32 @@ title: Kokkos utilisation cheat sheet
 		4. [Synchronize](#synchronize)
 	6. [Subview](#subview)
 		1. [Create](#create)
-	7. [ScatterView](#scatterview)
+	7. [Scatter view](#scatter-view)
 		1. [Specific header](#specific-header)
 		2. [Create](#create)
-			1. [Scatter operation](#scatter-operation)
-3. [Parallelism patterns](#parallelism-patterns)
+		3. [Scatter operation](#scatter-operation)
+		4. [Scatter](#scatter)
+		5. [Compute](#compute)
+		6. [Gather](#gather)
+8. [Parallelism patterns](#parallelism-patterns)
 	1. [For loop](#for-loop)
 	2. [Reduction](#reduction)
 	3. [Fences](#fences)
 		1. [Global fence](#global-fence)
 		2. [Execution space fence](#execution-space-fence)
+		3. [Team barrier](#team-barrier)
 4. [Execution policy](#execution-policy)
 	1. [Ranges](#ranges)
 		1. [One-dimensional range](#one-dimensional-range)
 		2. [Multi-dimensional](#multi-dimensional)
 	2. [Hierarchical parallelism](#hierarchical-parallelism)
 		1. [Team policy](#team-policy)
-		2. [Hierarchy structure](#hierarchy-structure)
-			1. [Thread level or vector level](#thread-level-or-vector-level)
-			2. [Thread and vector level](#thread-and-vector-level)
-		3. [Range policy](#range-policy)
-			1. [One-dimensional team thread range or team vector range](#one-dimensional-team-thread-range-or-team-vector-range)
-			2. [Multi-dimensional team thread range or team vector range](#multi-dimensional-team-thread-range-or-team-vector-range)
-			3. [One-dimensional team thread vector range](#one-dimensional-team-thread-vector-range)
-			4. [Multi-dimensional team thread vector range](#multi-dimensional-team-thread-vector-range)
+		2. [Team vector level](#team-vector-level)
+			1. [One-dimensional range](#one-dimensional-range)
+			2. [Multi-dimensional range](#multi-dimensional-range)
+		3. [Team thread vector level](#team-thread-vector-level)
+			1. [One-dimensional range](#one-dimensional-range)
+			2. [Multi-dimensional range](#multi-dimensional-range)
 4. [Scratch memory](#scratch-memory)
 	1. [Scratch memory space](#scratch-memory-space)
 	2. [Create and populate](#create-and-populate)
@@ -165,7 +167,7 @@ Kokkos::View<double*, Kokkos::SharedSpace> sharedView("sharedView", numberOfElem
 
 // Scratch memory space
 Kokkos::parallel_for(
-    Kokkos::TeamPolicy<>(numberOfTeams, numberOfElementsPerTeam),
+    Kokkos::TeamPolicy<>(leagueSize, teamSize),
     KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& team) {
         // Allocate scratch memory for each team
         Kokkos::View<double*, Kokkos::ScratchMemorySpace> scratchView(team.team_scratch(1), scratchSize);
@@ -192,12 +194,12 @@ Multidimensional array that abstracts data containers and provides a consistent 
 Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElements);
 ```
 
-| Template argument | Description                                                                                                                                                                                                                                                                                                  |
-|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `DataType`        | Fundamental scalar type of the view and its dimensionality; syntax is `ScalarType*[]` where the number of `*` denotes the number of runtime length dimensions (dynamic allocation) and the number of `[]` defines the compile time dimensions (static allocation); runtime dimensions must come first |
-| `LayoutType`      | See [memory layouts](#memory-layouts)                                                                                                                                                                                                                                                                        |
-| `MemorySpace`     | See [memory spaces](#memory-spaces)                                                                                                                                                                                                                                                                          |
-| `MemoryTraits`    | See [memory traits](#memory-traits)                                                                                                                                                                                                                                                                          |
+| Template argument | Description                                                                                                                                                                                                                                                                                               |
+|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `DataType`        | Fundamental scalar type of the view and its dimensionality; syntax is `ScalarType*[]` where the number of `*` denotes the number of runtime length dimensions (dynamic allocation) and the number of `[]` defines the compile time dimensions (static allocation); runtime dimensions come first |
+| `LayoutType`      | See [memory layouts](#memory-layouts)                                                                                                                                                                                                                                                                     |
+| `MemorySpace`     | See [memory spaces](#memory-spaces)                                                                                                                                                                                                                                                                       |
+| `MemoryTraits`    | See [memory traits](#memory-traits)                                                                                                                                                                                                                                                                       |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#constructors
@@ -547,7 +549,6 @@ Kokkos::parallel_reduce(
 ```
 
 With `Kokkos::ReducerConcept` being one of the following.
-The reducer class can be omitted for `Kokkos::Sum`.
 
 | Reducer             | Operation             | Description                                |
 |---------------------|-----------------------|--------------------------------------------|
@@ -564,6 +565,8 @@ The reducer class can be omitted for `Kokkos::Sum`.
 | `Kokkos::Prod`      | `*`                   | Product                                    |
 | `Kokkos::Sum`       | `+`                   | Sum                                        |
 
+The reducer class can be omitted for `Kokkos::Sum`.
+
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/parallel-dispatch/parallel_reduce.html
 
@@ -574,7 +577,7 @@ The reducer class can be omitted for `Kokkos::Sum`.
 
 #### Global fence
 
-Wait for any asynchronous operation that was running before this command to finish.
+Wait for any prior asynchronous operation to finish.
 
 ```cpp
 Kokkos::fence();
@@ -586,10 +589,18 @@ Kokkos::fence();
 
 #### Execution space fence
 
-Wait for any asynchronous operation of a specific execution space that was running before this command to finish.
+Wait for any prior asynchronous operation of a specific execution space to finish.
 
 ```cpp
 ExecutionSpace().fence();
+```
+
+#### Team barrier
+
+Wait for all prior threads within a `Kokkos::TeamPolicy` (see [team policy](#team-policy)) to finish.
+
+```cpp
+Kokkos::TeamPolicy::member_type().team_barrier();
 ```
 
 <!--#ifndef PRINT-->
@@ -645,13 +656,13 @@ Kokkos::MDRangePolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag
 ### Hierarchical parallelism
 
 Kokkos supports hierarchical parallelism with a *league* of *teams*, using `Kokkos::TeamPolicy`.
-Parallelisation within the team depends on the specific range policy used:
+Up to 3 levers of hierarchy are supported:
 
-| Thread level        | Vector level        | Both levels           | Adequate for loops of dimension |
-|---------------------|---------------------|-----------------------|---------------------------------|
-| `TeamThreadRange`   | `TeamVectorRange`   |                       | 2                               |
-| `TeamThreadMDRange` | `TeamVectorMDRange` | `ThreadVectorRange`   | 3                               |
-| *same*              | *same*              | `ThreadVectorMDRange` | 4                               |
+| Kokkos | CPU         | GPU          |
+|--------|-------------|--------------|
+| Team   | Core        | Core cluster |
+| Thread | Thread      | ???          |
+| Vector | Vector lane | Thread       |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/HierarchicalParallelism.html
@@ -660,18 +671,26 @@ Parallelisation within the team depends on the specific range policy used:
 #### Team policy
 
 ```cpp
-Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> policy(numberOfTeams, /* numberOfElementsPerTeam = */ Kokkos::AUTO);
+Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> policy(leagueSize, /* teamSize = */ Kokkos::AUTO);
 ```
 
-`Kokkos::AUTO` is commonly used to let Kokkos determine the number elements per team.
+`Kokkos::AUTO` is commonly used to let Kokkos determine the team size.
+A kernel running in a team policy has a `Kokkos::TeamPolicy::member_type` argument:
+
+| Method        | Description                          |
+|---------------|--------------------------------------|
+| league_size() | Number of teams in the league        |
+| league_rank() | Index of the team withing the league |
+| team_size()   | Number of threads in the team        |
+| team_rank()   | Index of the thread within the team  |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamPolicy.html
 <!--#endif-->
 
-#### Hierarchy structure
+#### Team vector level
 
-##### Thread level or vector level
+This exposes a 2-level hierarchy.
 
 ```cpp
 Kokkos::parallel_for(
@@ -681,7 +700,7 @@ Kokkos::parallel_for(
         const int i = teamMember.team_rank();
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(teamMember, firstJ, lastJ),
+            Kokkos::TeamVectorRange(teamMember, firstJ, lastJ),
             [=] (const int j) {
                 /* ... */
             }
@@ -690,7 +709,31 @@ Kokkos::parallel_for(
 );
 ```
 
-##### Thread and vector level
+##### One-dimensional range
+
+```cpp
+Kokkos::TeamVectorRange range(teamMember, firstJ, lastJ);
+```
+
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamVectorRange.html
+<!--#endif-->
+
+##### Multi-dimensional range
+
+By instance for dimension 2:
+
+```cpp
+Kokkos::TeamVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy::member_type> range(teamMember, numberOfElementsJ, numberOfElementsK);
+```
+
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamVectorMDRange.html
+<!--#endif-->
+
+#### Team thread vector level
+
+This exposes a 3-level hierarchy.
 
 ```cpp
 Kokkos::parallel_for(
@@ -714,55 +757,31 @@ Kokkos::parallel_for(
 );
 ```
 
-#### Range policy
-
-##### One-dimensional team thread range or team vector range
+##### One-dimensional range
 
 ```cpp
 Kokkos::TeamThreadRange range(teamMember, firstJ, lastJ);
-Kokkos::TeamVectorRange range(teamMember, firstJ, lastJ);
+Kokkos::ThreadVectorRange range(teamMember, firstK, lastK);
 ```
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamThreadRange.html
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamVectorRange.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/ThreadVectorRange.html
 <!--#endif-->
 
-##### Multi-dimensional team thread range or team vector range
+##### Multi-dimensional range
 
 By instance for dimension 2:
 
 ```cpp
-Kokkos::TeamThreadMDRange<Kokkos::Rank<2>> range(teamMember, numberOfElementsJ, numberOfElementsK);
-Kokkos::TeamVectorMDRange<Kokkos::Rank<2>> range(teamMember, numberOfElementsJ, numberOfElementsK);
+Kokkos::TeamThreadMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy::member_type> range(teamMember, numberOfElementsJ, numberOfElementsK);
+Kokkos::ThreadVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy::member_type> range(teamMember, numberOfElementsL, numberOfElementsM);
 ```
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamThreadMDRange.html
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamVectorMDRange.html
-<!--#endif-->
-
-##### One-dimensional team thread vector range
-
-```cpp
-Kokkos::ThreadVectorRange range(teamMember, firstK, lastK);
-```
-
-<!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/ThreadVectorRange.html
-<!--#endif-->
-
-##### Multi-dimensional team thread vector range
-
-By instance for dimension 2:
-
-```cpp
-Kokkos::ThreadVectorMDRange<Kokkos::Rank<2>> range(teamMember, numberOfElementsK, numberOfElementsL);
-```
-
-<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25">  https://kokkos.org/kokkos-core-wiki/API/core/policies/ThreadVectorMDRange.html
 <!--#endif-->
 
@@ -778,10 +797,10 @@ This optimization is useful when all members of a team interact with the same da
 
 ### Scratch memory space
 
-| Space level | Memory size                 | Access speed |
-|-------------|-----------------------------|--------------|
-| 0           | Limited (tens of kilobytes) | Fast         |
-| 1           | Larger (few gigabytes)      | Medium       |
+| Level | Memory size                 | Access speed |
+|-------|-----------------------------|--------------|
+| 0     | Limited (tens of kilobytes) | Fast         |
+| 1     | Larger (few gigabytes)      | Slow         |
 
 ### Create and populate
 
@@ -793,13 +812,14 @@ using ScratchPadView = View<double*, ExecutionSpace::scratch_memory_space, Memor
 size_t bytes = ScratchPadView::shmem_size(vectorSize);
 
 Kokkos::parallel_for(
-    Kokkos::TeamPolicy<ExecutionSpace>(numberOfTeams, numberOfElementsPerTeam).set_scratch_size(spaceLevel, Kokkos::PerTeam(bytes)),
-    KOKKOS_LAMBDA (const member_type &teamMember) {
+    Kokkos::TeamPolicy<ExecutionSpace>(leagueSize, teamSize).set_scratch_size(spaceLevel, Kokkos::PerTeam(bytes)),
+    KOKKOS_LAMBDA (const Kokkos::TeamPolicy::member_type& teamMember) {
         const int i = teamMember.team_rank();
 
         // Create a view for the scratch pad
         ScratchPadView scratch(teamMember.team_scratch(spaceLevel), vectorSize);
 
+        // Initialize it
         Kokkoss::parallel_for(
             Kokkos::ThreadVectorRange(teamMember, vectorSize),
             [=] (const int j) {
@@ -807,6 +827,7 @@ Kokkos::parallel_for(
             }
         );
 
+        // Synchronize
         teamMember.team_barrier();
 
         /* ... */
@@ -890,7 +911,7 @@ bool success = atomic_compare_exchange_strong(&destination, comparison, new);
 Consistent overload set that is available on host and device that follows practice from the C++ numerics library.
 Note that not all functions are available.
 
-<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Should be used on device prefixed by `Kokkos::`
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Should be used prefixed by `Kokkos::`.
 
 | Function type    | List of available functions                                              |
 |------------------|--------------------------------------------------------------------------|
@@ -918,7 +939,7 @@ Kokkos::complex<double> complex(realPart, imagPart);
 
 #### Manage
 
-| Methods  | Description                        |
+| Method   | Description                        |
 |----------|------------------------------------|
 | `real()` | Returns or sets the real part      |
 | `imag()` | Returns or sets the imaginary part |
@@ -944,7 +965,7 @@ Kokkos::abort("message");
 ### Print inside a kernel
 
 Prints text to standard output.
-The behavior is analogous to C++23 `std::print`; the return type is `void` to ensure a consistent behavior across backends.
+The behavior is analogous to `std::printf`.
 
 ```cpp
 Kokkos::printf("format string", arg1, arg2);
@@ -962,18 +983,17 @@ Kokkos::Timer timer;
 
 #### Manage
 
-| Methods     | Description                                                  |
+| Method      | Description                                                  |
 |-------------|--------------------------------------------------------------|
 | `seconds()` | Returns the time in seconds since construction or last reset |
 | `reset()`   | Resets the timer to zero                                     |
 
 ### Manage parallel environment
 
-| Functions               | Description                                                            |
+| Function                | Description                                                            |
 |-------------------------|------------------------------------------------------------------------|
 | `Kokkos::device_id()`   | Returns the device ID of the current device                            |
 | `Kokkos::num_devices()` | Returns the number of devices available to the current execution space |
-| `Kokkos::num_threads()` | Returns the number of threads in the current team                      |
 
 ## Macros
 
@@ -983,15 +1003,14 @@ Kokkos::Timer timer;
 
 ### Essential macros
 
-| Macros                   | Description                                                                     |
-|--------------------------|---------------------------------------------------------------------------------|
-| `KOKKOS_LAMBDA`          | Replaces capture argument for lambdas                                           |
-| `KOKKOS_FUNCTION`        | The method can be used in a Kokkos parallel construct                           |
-| `KOKKOS_INLINE_FUNCTION` | The method can be used in a Kokkos parallel construct with the inline attribute |
+| Macro                    | Description                            |
+|--------------------------|----------------------------------------|
+| `KOKKOS_LAMBDA`          | Replaces capture argument for lambdas  |
+| `KOKKOS_INLINE_FUNCTION` | Replaces capture argument for functors |
 
 ### Extra macros
 
-| Macros                 | Description                                                                           |
+| Macro                  | Description                                                                           |
 |------------------------|---------------------------------------------------------------------------------------|
 | `KOKKOS_VERSION`       | Kokkos full version                                                                   |
 | `KOKKOS_VERSION_MAJOR` | Kokkos major version                                                                  |
