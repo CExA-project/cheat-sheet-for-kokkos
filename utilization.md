@@ -1,3 +1,7 @@
+---
+title: Kokkos utilisation cheat sheet
+---
+
 <!--#ifndef PRINT-->
 
 # Kokkos utilization cheat sheet

@@ -1,3 +1,7 @@
+---
+title: Kokkos installation cheat sheet
+---
+
 <!--#ifndef PRINT-->
 
 # Kokkos install cheat sheet

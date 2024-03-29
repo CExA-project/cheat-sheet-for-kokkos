@@ -20,6 +20,16 @@
 
 \renewcommand{\familydefault}{\sfdefault}
 
+% reset maketitle
+
+\renewcommand\maketitle{}
+
+% title
+
+\makeatletter
+\def\gettitle{\@title}
+\makeatother
+
 % headers and footers
 
 \setlength{\headheight}{2cm}
@@ -39,7 +49,7 @@
                 ]{images/kokkos_wire.pdf}
             }%
             \parbox[b][\headheight][c]{\headwidth}{%
-                {\Huge\bfseries{}\href{https://kokkos.org/kokkos-core-wiki}{Kokkos installation cheat sheet}}%
+                {\Huge\bfseries{}\href{https://kokkos.org/kokkos-core-wiki}{\gettitle}}%
                 {\Large\bfseries\color{lightmain}\ :: page \thepage}%
             }%
         }%
