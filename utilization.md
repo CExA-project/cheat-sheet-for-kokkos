@@ -22,22 +22,24 @@ title: Kokkos utilisation cheat sheet
 	1. [View](#view)
 		1. [Create](#create)
 		2. [Manage](#manage)
-	2. [Memory Layouts](#memory-layouts)
-	3. [Memory trait](#memory-trait)
-	4. [Deep copy](#deep-copy)
-	5. [Mirror view](#mirror-view)
+				1. [Resize and preserve content](#resize-and-preserve-content)
+				2. [Reallocate and do not preserve content](#reallocate-and-do-not-preserve-content)
+	3. [Memory Layouts](#memory-layouts)
+	4. [Memory trait](#memory-trait)
+	5. [Deep copy](#deep-copy)
+	6. [Mirror view](#mirror-view)
 		1. [Always create and allocate](#always-create-and-allocate)
 		2. [Create and allocate if source view is not in host space](#create-and-allocate-if-source-view-is-not-in-host-space)
 		3. [Create, allocate and synchronize if source view is not in same space as destination view](#create-allocate-and-synchronize-if-source-view-is-not-in-same-space-as-destination-view)
-	6. [Subview](#subview)
-	7. [Scatter view (experimental)](#scatter-view-experimental)
+	7. [Subview](#subview)
+	8. [Scatter view (experimental)](#scatter-view-experimental)
 		1. [Specific header](#specific-header)
 		2. [Create](#create)
 		3. [Scatter operation](#scatter-operation)
 		4. [Scatter](#scatter)
 		5. [Compute](#compute)
 		6. [Gather](#gather)
-8. [Parallelism patterns](#parallelism-patterns)
+9. [Parallelism patterns](#parallelism-patterns)
 	1. [For loop](#for-loop)
 	2. [Reduction](#reduction)
 	3. [Fences](#fences)
@@ -225,13 +227,31 @@ Kokkos::View<double**[25]> view3D("view3D", 50, 42, 25);
 | `layout()`    | Returns the layout of the view                                                                                        |
 | `extent(dim)` | Returns the number of elements in the desired dimension                                                               |
 | `data()`      | Returns a pointer to the underlying data                                                                              |
-| `resize()`    | Reallocates a view to have the new dimensions; can grow or shrink, and will preserve content of the common subextents |
-| `realloc()`   | Reallocates a view to have the new dimensions; can grow or shrink, and will not preserve content                      |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#data-access-functions
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#data-layout-dimensions-strides
+<!--#endif-->
+
+###### Resize and preserve content
+
+```cpp
+Kokkos::resize(view, n0, n1...);
+```
+
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/resize.html
+<!--#endif-->
+
+###### Reallocate and do not preserve content
+
+```cpp
+Kokkos::realloc(view, n0, n1...);
+```
+
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/realloc.html
 <!--#endif-->
 
 ### Memory Layouts
