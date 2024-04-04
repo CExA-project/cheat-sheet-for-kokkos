@@ -48,20 +48,19 @@ convert () {
 }
 
 patch_modifs () {
-    local file="$1"
+    local output_file_diff="$1"
 
-    version="$(cat VERSION)"
-    patchfile="patches/print/$version"
+    patchfile="patches/print/$output_file_diff"
 
     if [[ ! -f "$patchfile" ]]
     then
-        echo "No patch to apply for v$version"
+        echo "No patch to apply"
         return
     fi
 
     patch --quiet --forward --reject-file - <"$patchfile" || true
 
-    echo "Applied patch for v$version"
+    echo "Applied patch from $output_file_diff"
 }
 
 usage () {
@@ -83,6 +82,11 @@ EOF
 get_out_file () {
     local input_file="$1"
     echo "${input_file%.*}.tex"
+}
+
+get_out_file_diff () {
+    local output_file="$1"
+    echo "$output_file.diff"
 }
 
 main () {
@@ -112,9 +116,10 @@ main () {
 
     local input_file="$1"
     local output_file="$(get_out_file $input_file)"
+    local output_file_diff="$(get_out_file_diff $output_file)"
 
     convert "$input_file" "$output_file"
-    patch_modifs "$output_file"
+    patch_modifs "$output_file_diff"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
