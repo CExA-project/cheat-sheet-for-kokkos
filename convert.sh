@@ -58,6 +58,11 @@ patch_modifs () {
         return
     fi
 
+    # patch
+    # Note: If there are parts of the patch that cannot be applied, the patch
+    # command returns non-0 and stores them in a specific reject file. First,
+    # the call is marked to never fail, and second, this reject file is
+    # discarded.
     patch --quiet --forward --reject-file - <"$patchfile" || true
 
     echo "Applied patch from $output_file_diff"

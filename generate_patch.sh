@@ -37,9 +37,8 @@ end_patch () {
     mkdir -p "patches/print"
 
     # generate diff
-    # Note: The diff command has a non 0 return value if there is an actual
-    # difference between the two files. Consequently, the call is marked to
-    # never fail.
+    # Note: If there is an actual difference between the two files, the diff
+    # command returns non-0. Consequently, the call is marked to never fail.
     diff -au "$output_file_ref" "$output_file" >"patches/print/$output_file_diff" || true
 
     # remove reference file
