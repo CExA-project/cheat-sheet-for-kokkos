@@ -28,7 +28,7 @@ title: Kokkos utilisation cheat sheet
 	4. [Memory trait](#memory-trait)
 	5. [Deep copy](#deep-copy)
 	6. [Mirror view](#mirror-view)
-		1. [Always create and allocate](#always-create-and-allocate)
+		1. [Create and always allocate](#create-and-always-allocate)
 		2. [Create and allocate if source view is not in host space](#create-and-allocate-if-source-view-is-not-in-host-space)
 		3. [Create, allocate and synchronize if source view is not in same space as destination view](#create-allocate-and-synchronize-if-source-view-is-not-in-same-space-as-destination-view)
 	7. [Subview](#subview)
@@ -262,7 +262,7 @@ Kokkos::realloc(view, n0, n1...);
 | `Kokkos::LayoutLeft`   | Strides increase from the left most to the right most dimension, also known as column-major or Fortran-like | GPU |
 | `Kokkos::LayoutStride` | Strides can be arbitrary for each dimension                                                                 |     |
 
-By default, the most efficient layout for the current memory space is used.
+By default, a layout suited for loops on the high frequency index is used.
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#data-layout-dimensions-strides
@@ -369,7 +369,7 @@ Kokkos::deep_copy(view2, view1);
 - [Kokkos Tutorials - Exercise 3](https://github.com/kokkos/kokkos-tutorials/blob/main/Exercises/03/Solution/exercise_3_solution.cpp)
 <!--#endif-->
 
-#### Always create and allocate
+#### Create and always allocate
 
 ```cpp
 auto hostView = Kokkos::create_mirror(view);
@@ -389,9 +389,9 @@ auto hostView = Kokkos::create_mirror_view_and_copy(ExecutionSpace(), view);
 
 ### Subview
 
-<!--#ifndef PRINT-->
-<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> A subview has the same reference count as its parent view, so the parent view won’t be deallocated before all subviews go away.
+A subview has the same reference count as its parent view, so the parent view won't be deallocated before all subviews go away.
 
+<!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/subview.html
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Subviews.html
@@ -750,7 +750,7 @@ Each team has access to a scratch memory pad, which has the team's lifetime, and
 | Level | Memory size                 | Access speed |
 |-------|-----------------------------|--------------|
 | 0     | Limited (tens of kilobytes) | Fast         |
-| 1     | Larger (few gigabytes)      | Slow         |
+| 1     | Larger (few gigabytes)      | Medium       |
 
 ### Create and populate
 
