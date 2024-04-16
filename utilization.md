@@ -12,7 +12,6 @@ title: Kokkos utilisation cheat sheet
 2. [Header](#header)
 3. [Initialization](#initialization)
 	1. [Initialize and finalize](#initialize-and-finalize)
-	2. [Scope guard](#scope-guard)
 4. [Kokkos concepts](#kokkos-concepts)
 	1. [Execution spaces](#execution-spaces)
 	2. [Memory spaces](#memory-spaces)
@@ -102,15 +101,16 @@ int main(int argc, char* argv[]) {
 }
 ```
 
-### Scope guard
-
-```cpp
-int main(int argc, char* argv[]) {
-    Kokkos::ScopeGuard kokkos();
-    /* ... */
-    return 0;
-}
-```
+<!-- commented before this feature is tested -->
+<!-- ### Scope guard -->
+<!--  -->
+<!-- ```cpp -->
+<!-- int main(int argc, char* argv[]) { -->
+<!--     Kokkos::ScopeGuard kokkos(); -->
+<!--     /* ... */ -->
+<!--     return 0; -->
+<!-- } -->
+<!-- ``` -->
 
 ## Kokkos concepts
 
