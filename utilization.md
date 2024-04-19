@@ -147,7 +147,7 @@ int main(int argc, char* argv[]) {
 |------------------------------|------------------------------------------------------------------------------|
 | `Kokkos::HostSpace`          | Accessible by the host but not directly by the device                        |
 | `Kokkos::SharedSpace`        | Accessible by the host and the device; synchronization managed by the driver |
-| `Kokkos::ScratchMemorySpace` | Accessible by the team that created it and nothing else                      |
+| `Kokkos::ScratchMemorySpace` | Accessible by the team or the thread that created it and nothing else        |
 
 <!--#ifndef PRINT-->
 <details>
@@ -219,14 +219,14 @@ Kokkos::View<double**[25]> view3D("view3D", 50, 42, 25);
 
 #### Manage
 
-| Method        | Description                                                                                                           |
-|---------------|-----------------------------------------------------------------------------------------------------------------------|
-| `(i, j...)`   | Returns and sets the value                                                                                            |
-| `size()`      | Returns the total number of elements in the view                                                                      |
-| `rank()`      | Returns the number of dimensions                                                                                      |
-| `layout()`    | Returns the layout of the view                                                                                        |
-| `extent(dim)` | Returns the number of elements in the desired dimension                                                               |
-| `data()`      | Returns a pointer to the underlying data                                                                              |
+| Method        | Description                                               |
+|---------------|-----------------------------------------------------------|
+| `(i, j...)`   | Returns and sets the value at index `i`, `j`, etc.        |
+| `size()`      | Returns the total number of elements in the view          |
+| `rank()`      | Returns the number of dimensions                          |
+| `layout()`    | Returns the layout of the view                            |
+| `extent(dim)` | Returns the number of elements in the requested dimension |
+| `data()`      | Returns a pointer to the underlying data                  |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#data-access-functions
