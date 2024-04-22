@@ -13,18 +13,20 @@ start_patch () {
     local input_file="$1"
     local output_file="$2"
     local output_file_ref="$3"
+    local output_file_diff="$4"
 
     # convert once and save a reference "raw" file (i.e. without current patches)
     convert "$input_file" "$output_file"
     cp "$output_file" "$output_file_ref"
 
-    patch_modifs "$output_file"
+    patch_modifs "$output_file_diff"
 }
 
 end_patch () {
     local input_file="$1"
     local output_file="$2"
     local output_file_ref="$3"
+    local output_file_diff="$4"
 
     if [[ ! -f "$output_file_ref" ]]
     then
@@ -32,14 +34,12 @@ end_patch () {
         return 1
     fi
 
-    local version="$(cat VERSION)"
     mkdir -p "patches/print"
 
     # generate diff
-    # Note: The diff command has a non 0 return value if there is an actual
-    # difference between the two files. Consequently, the call is marked to
-    # never fail.
-    diff -au "$output_file_ref" "$output_file" >"patches/print/$version" || true
+    # Note: If there is an actual difference between the two files, the diff
+    # command returns non-0. Consequently, the call is marked to never fail.
+    diff -au "$output_file_ref" "$output_file" >"patches/print/$output_file_diff" || true
 
     # remove reference file
     rm --force "$output_file_ref"
@@ -95,6 +95,7 @@ main () {
     local input_file="$1"
     local output_file="$(get_out_file $input_file)"
     local output_file_ref="$(get_out_file_ref $output_file)"
+    local output_file_diff="$(get_out_file_diff $output_file)"
 
     if [[ -z "${2+_}" ]]
     then
@@ -107,13 +108,13 @@ main () {
 
     case $mode in
         "start")
-            start_patch "$input_file" "$output_file" "$output_file_ref"
+            start_patch "$input_file" "$output_file" "$output_file_ref" "$output_file_diff"
             echo "You can modify $output_file for final edits"
             return 0
             ;;
 
         "end")
-            end_patch "$input_file" "$output_file" "$output_file_ref"
+            end_patch "$input_file" "$output_file" "$output_file_ref" "$output_file_diff"
             echo "Patch generated"
             return 0
             ;;

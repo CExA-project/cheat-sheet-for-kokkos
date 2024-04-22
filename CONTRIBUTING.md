@@ -53,13 +53,12 @@ Patches are used to keep specific adjustments in the final document that cannot 
 Namely, such changes include manual page breaks, abbreviations, etc.
 Large modification, however, such as the removal of an entire section, are better handled by the pre-processor discussed above.
 
-A patch is associated with a version number `x.y.z.kkkk`, and is stored under `patches/<mode>/x.y.z.kkkk` (with `<mode>` being `print` for print mode).
-If a patch file exists with the same name as the current version number (stored in `VERSION`), then the patch is automatically applied when calling `convert.sh`.
+A patch is associated with a converted file in the form `name.ext.diff`, and is stored under `patches/<mode>/name.ext.diff` (with `<mode>` being `print` for print mode).
+If a patch file exists with the same name, then the patch is automatically applied when calling `convert.sh`.
 
 The creation of the patch uses the following workflow:
 
 ```sh
-echo 9.9.9 >VERSION
 ./generate_patch.sh <file.md> start
 # edit <file.tex> and perform specific adjustments
 ./generate_patch.sh <file.md> end
