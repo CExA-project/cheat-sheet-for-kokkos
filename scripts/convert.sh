@@ -12,6 +12,13 @@ GPP_USERMODE_CHARACTER_UNSTACK=')'
 GPP_USERMODE_NUMBER='#'
 GPP_USERMODE_QUOTE=''
 
+# Path of the script directory
+# https://stackoverflow.com/a/246128
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+# Path of the project directory
+PROJECT_DIR=$(dirname "$SCRIPT_DIR")
+
 convert () {
     local input_file="$1"
     local output_file="$2"
@@ -37,12 +44,12 @@ convert () {
         "$input_file" \
          | \
     pandoc \
-        --defaults "configs/print.yaml" \
-        --include-in-header "styles/header/print.tex" \
-        --include-before-body "styles/before_body/print.tex" \
-        --include-after-body "styles/after_body/print.tex" \
-        --filter "filters/print.py" \
-        --output "$output_file"
+        --defaults "$PROJECT_DIR/configs/print.yaml" \
+        --include-in-header "$PROJECT_DIR/styles/header/print.tex" \
+        --include-before-body "$PROJECT_DIR/styles/before_body/print.tex" \
+        --include-after-body "$PROJECT_DIR/styles/after_body/print.tex" \
+        --filter "$PROJECT_DIR/filters/print.py" \
+        --output "$PWD/$output_file"
 
     echo "Converted to $output_file"
 }
@@ -50,7 +57,7 @@ convert () {
 patch_modifs () {
     local output_file_diff="$1"
 
-    patchfile="patches/print/$output_file_diff"
+    patchfile="$PROJECT_DIR/patches/print/$output_file_diff"
 
     if [[ ! -f "$patchfile" ]]
     then
@@ -63,7 +70,7 @@ patch_modifs () {
     # command returns non-0 and stores them in a specific reject file. First,
     # the call is marked to never fail, and second, this reject file is
     # discarded.
-    patch --quiet --forward --reject-file - <"$patchfile" || true
+    patch --quiet --forward --reject-file - --no-backup-if-mismatch <"$patchfile" || true
 
     echo "Applied patch from $output_file_diff"
 }
@@ -86,12 +93,12 @@ EOF
 
 get_out_file () {
     local input_file="$1"
-    echo "${input_file%.*}.tex"
+    echo "$(basename ${input_file%.*}.tex)"
 }
 
 get_out_file_diff () {
     local output_file="$1"
-    echo "$output_file.diff"
+    echo "$(basename $output_file.diff)"
 }
 
 main () {
