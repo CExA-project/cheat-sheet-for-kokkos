@@ -120,9 +120,6 @@ int main(int argc, char* argv[]) {
 |-------------------------------------|----------------|--------------|
 | `Kokkos::DefaultExecutionSpace`     | On device      | On host      |
 | `Kokkos::DefaultHostExecutionSpace` | On host        | On host      |
-| `Kokkos::Serial`                    | On host        | On host      |
-
-`Kokkos::Serial` is used for debug purpose only.
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/execution_spaces.html
