@@ -2,7 +2,14 @@
 
 set -eu
 
-source convert.sh
+# Path of the script directory
+# https://stackoverflow.com/a/246128
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+# Path of the project directory
+PROJECT_DIR=$(dirname "$SCRIPT_DIR")
+
+source "$SCRIPT_DIR/convert.sh"
 
 get_out_file_ref () {
     local output_file="$1"
@@ -30,16 +37,17 @@ end_patch () {
 
     if [[ ! -f "$output_file_ref" ]]
     then
-        echo "Please call \"generate_patch.sh $input_file start\" first!"
+        relative_path=$(realpath --relative-to "$PWD" "$SCRIPT_DIR")
+        echo "Please call \"$relative_path/generate_patch.sh $input_file start\" first!"
         return 1
     fi
 
-    mkdir -p "patches/print"
+    mkdir -p "$PROJECT_DIR/patches/print"
 
     # generate diff
     # Note: If there is an actual difference between the two files, the diff
     # command returns non-0. Consequently, the call is marked to never fail.
-    diff -au "$output_file_ref" "$output_file" >"patches/print/$output_file_diff" || true
+    diff -au "$output_file_ref" "$output_file" >"$PROJECT_DIR/patches/print/$output_file_diff" || true
 
     # remove reference file
     rm --force "$output_file_ref"

@@ -54,14 +54,14 @@ Namely, such changes include manual page breaks, abbreviations, etc.
 Large modification, however, such as the removal of an entire section, are better handled by the pre-processor discussed above.
 
 A patch is associated with a converted file in the form `name.ext.diff`, and is stored under `patches/<mode>/name.ext.diff` (with `<mode>` being `print` for print mode).
-If a patch file exists with the same name, then the patch is automatically applied when calling `convert.sh`.
+If a patch file exists with the same name, then the patch is automatically applied when calling `scripts/convert.sh`.
 
 The creation of the patch uses the following workflow:
 
 ```sh
-./generate_patch.sh <file.md> start
+./scripts/generate_patch.sh <file.md> start
 # edit <file.tex> and perform specific adjustments
-./generate_patch.sh <file.md> end
+./scripts/generate_patch.sh <file.md> end
 ```
 
-Any consecutive call to `generate_patch.sh` will cumulate the modifications.
+Any consecutive call to `scripts/generate_patch.sh` will cumulate the modifications.
