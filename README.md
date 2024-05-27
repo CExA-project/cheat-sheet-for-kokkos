@@ -1,4 +1,4 @@
-# Kokkos cheat sheet
+# Cheat sheets for Kokkos
 
 ## Resources
 

@@ -1,5 +1,5 @@
 ---
-title: Kokkos utilisation cheat sheet
+title: Utilisation cheat sheet for Kokkos
 ---
 
 <!--#ifndef PRINT-->
