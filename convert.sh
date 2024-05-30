@@ -70,7 +70,7 @@ patch_modifs () {
 
 build () {
     local input_file="$1"
-    latexmk -pdf "$input_file"
+    pdflatex -interactive=nonstopmode "$input_file"
 }
 
 usage () {
