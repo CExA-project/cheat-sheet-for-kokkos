@@ -68,9 +68,14 @@ patch_modifs () {
     echo "Applied patch from $output_file_diff"
 }
 
+build () {
+    local input_file="$1"
+    pdflatex -interactive=nonstopmode "$input_file"
+}
+
 usage () {
     cat <<EOF
-convert.sh [-h] FILE
+convert.sh [-b] [-h] FILE
 
 Convert a Markdown file to LaTeX with pre-processing, custom filtering and custom templating.
 
@@ -79,6 +84,8 @@ Positional arguments:
         Input Markdown file.
 
 Optional arguments:
+    -b
+        Build the generated LaTeX file with pdflatex.
     -h
         Show this help message and exit.
 EOF
@@ -95,12 +102,17 @@ get_out_file_diff () {
 }
 
 main () {
-    while getopts ":h" option
+    local enable_build=false
+    while getopts ":hb" option
     do
         case $option in
             h) # help
                 usage
                 return 0
+                ;;
+
+            b) # build
+                enable_build=true
                 ;;
 
             *)
@@ -125,6 +137,11 @@ main () {
 
     convert "$input_file" "$output_file"
     patch_modifs "$output_file_diff"
+
+    if $enable_build
+    then
+        build "$output_file"
+    fi
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]

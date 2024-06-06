@@ -66,3 +66,5 @@ Build the document with:
 ```sh
 pdflatex <file.tex>
 ```
+
+Note that calling `convert.sh` with `-b` automatically builds the generated file, but this option cannot be used when the script is executed with Docker.
