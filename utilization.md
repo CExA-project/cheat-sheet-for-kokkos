@@ -638,12 +638,12 @@ Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> p
 Usually, `teamSize` is replaced by `Kokkos::AUTO` to let Kokkos determine it.
 A kernel running in a team policy has a `Kokkos::TeamPolicy::member_type` argument:
 
-| Method        | Description                          |
-|---------------|--------------------------------------|
-| league_size() | Number of teams in the league        |
-| league_rank() | Index of the team withing the league |
-| team_size()   | Number of threads in the team        |
-| team_rank()   | Index of the thread within the team  |
+| Method          | Description                          |
+|-----------------|--------------------------------------|
+| `league_size()` | Number of teams in the league        |
+| `league_rank()` | Index of the team withing the league |
+| `team_size()`   | Number of threads in the team        |
+| `team_rank()`   | Index of the thread within the team  |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamPolicy.html

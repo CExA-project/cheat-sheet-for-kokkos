@@ -159,7 +159,7 @@ TODO finish this part
 |------------------------------|---------|
 | `-DKokkos_ENABLE_SERIAL=ON`  | Serial  |
 | `-DKokkos_ENABLE_OPENMP=ON`  | OpenMP  |
-| `-DKokkos_ENABLE_PTHREAD=ON` | PThread |
+| `-DKokkos_ENABLE_THREADS=ON` | Threads |
 
 <img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> The serial backend is enabled by default.
 
