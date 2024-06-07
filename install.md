@@ -280,9 +280,10 @@ They can be deduced from the device if present at compile time.
 
 | Option                         | Architecture | Associated cards     |
 |--------------------------------|--------------|----------------------|
+| `-DKokkos_ARCH_AMD_GFX942=ON`  | GFX942       | MI300A, MI300X       |
 | `-DKokkos_ARCH_AMD_GFX90A=ON`  | GFX90A       | MI210, MI250, MI250X |
 | `-DKokkos_ARCH_AMD_GFX908=ON`  | GFX908       | MI100                |
-| `-DKokkos_ARCH_AMD_GFX906=ON`  | GFX906       | MI50/MI60            |
+| `-DKokkos_ARCH_AMD_GFX906=ON`  | GFX906       | MI50, MI60           |
 | `-DKokkos_ARCH_AMD_GFX1100=ON` | GFX1100      | 7900xt               |
 | `-DKokkos_ARCH_AMD_GFX1030=ON` | GFX1030      | V620, W6800          |
 
