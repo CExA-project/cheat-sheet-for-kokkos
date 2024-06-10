@@ -180,15 +180,15 @@ Kokkos::parallel_for(
 #### Create
 
 ```cpp
-Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElementsAtRuntime1, numberOfElementsAtRuntime2...);
+Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElementsAtRuntimeI, numberOfElementsAtRuntimeJ);
 ```
 
-| Template argument | Description                                                                                                                                     |
-|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| `DataType`        | `ScalarType` for the data type, followed by a `*` for each runtime dimension, folowed by a `[numberOfElements]` for each compile time dimension |
-| `LayoutType`      | See [memory layouts](#memory-layouts)                                                                                                           |
-| `MemorySpace`     | See [memory spaces](#memory-spaces)                                                                                                             |
-| `MemoryTraits`    | See [memory traits](#memory-traits)                                                                                                             |
+| Template argument | Description                                                                                                                                      |
+|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `DataType`        | `ScalarType` for the data type, followed by a `*` for each runtime dimension, then by a `[numberOfElements]` for each compile time dimension |
+| `LayoutType`      | See [memory layouts](#memory-layouts)                                                                                                            |
+| `MemorySpace`     | See [memory spaces](#memory-spaces)                                                                                                              |
+| `MemoryTraits`    | See [memory traits](#memory-traits)                                                                                                              |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#constructors
@@ -233,7 +233,7 @@ Kokkos::View<double**[25]> view3D("view3D", 50, 42, 25);
 ###### Resize and preserve content
 
 ```cpp
-Kokkos::resize(view, n0, n1...);
+Kokkos::resize(view, newNumberOfElementsI, newNumberOfElementsJ...);
 ```
 
 <!--#ifndef PRINT-->
@@ -243,7 +243,7 @@ Kokkos::resize(view, n0, n1...);
 ###### Reallocate and do not preserve content
 
 ```cpp
-Kokkos::realloc(view, n0, n1...);
+Kokkos::realloc(view, newNumberOfElementsI, newNumberOfElementsJ...);
 ```
 
 <!--#ifndef PRINT-->
