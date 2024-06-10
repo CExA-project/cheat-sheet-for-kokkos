@@ -94,23 +94,22 @@ title: Utilisation cheat sheet for Kokkos
 
 ```cpp
 int main(int argc, char* argv[]) {
-    Kokkos::initialize();
+    Kokkos::initialize(argc, argv);
     { /* ... */ }
     Kokkos::finalize();
     return 0;
 }
 ```
 
-<!-- commented before this feature is tested -->
-<!-- ### Scope guard -->
-<!--  -->
-<!-- ```cpp -->
-<!-- int main(int argc, char* argv[]) { -->
-<!--     Kokkos::ScopeGuard kokkos(); -->
-<!--     /* ... */ -->
-<!--     return 0; -->
-<!-- } -->
-<!-- ``` -->
+### Scope guard
+
+```cpp
+int main(int argc, char* argv[]) {
+    Kokkos::ScopeGuard kokkos(argc, argv);
+    /* ... */
+    return 0;
+}
+```
 
 ## Kokkos concepts
 
@@ -140,11 +139,11 @@ int main(int argc, char* argv[]) {
 
 #### Specific memory spaces
 
-| Memory space                 | Description                                                                  |
-|------------------------------|------------------------------------------------------------------------------|
-| `Kokkos::HostSpace`          | Accessible by the host but not directly by the device                        |
-| `Kokkos::SharedSpace`        | Accessible by the host and the device; synchronization managed by the driver |
-| `Kokkos::ScratchMemorySpace` | Accessible by the team or the thread that created it and nothing else        |
+| Memory space                 | Description                                                           |
+|------------------------------|-----------------------------------------------------------------------|
+| `Kokkos::HostSpace`          | Accessible by the host but not directly by the device                 |
+| `Kokkos::SharedSpace`        | Accessible by the host and the device; copy managed by the driver     |
+| `Kokkos::ScratchMemorySpace` | Accessible by the team or the thread that created it and nothing else |
 
 <!--#ifndef PRINT-->
 <details>
@@ -181,15 +180,15 @@ Kokkos::parallel_for(
 #### Create
 
 ```cpp
-Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElements);
+Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElementsAtRuntime1, numberOfElementsAtRuntime2...);
 ```
 
-| Template argument | Description                                                                                                                     |
-|-------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| `DataType`        | `ScalarType*[]` where `ScalarType` is the data type, `*` the number of runtime dimensions, and `[]` the compile time dimensions |
-| `LayoutType`      | See [memory layouts](#memory-layouts)                                                                                           |
-| `MemorySpace`     | See [memory spaces](#memory-spaces)                                                                                             |
-| `MemoryTraits`    | See [memory traits](#memory-traits)                                                                                             |
+| Template argument | Description                                                                                                                                     |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| `DataType`        | `ScalarType` for the data type, followed by a `*` for each runtime dimension, folowed by a `[numberOfElements]` for each compile time dimension |
+| `LayoutType`      | See [memory layouts](#memory-layouts)                                                                                                           |
+| `MemorySpace`     | See [memory spaces](#memory-spaces)                                                                                                             |
+| `MemoryTraits`    | See [memory traits](#memory-traits)                                                                                                             |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#constructors
@@ -253,11 +252,11 @@ Kokkos::realloc(view, n0, n1...);
 
 ### Memory Layouts
 
-| Layout                 | Description                                                                                                 | For |
-|------------------------|-------------------------------------------------------------------------------------------------------------|-----|
-| `Kokkos::LayoutRight`  | Strides increase from the right most to the left most dimension, also known as row-major or C-like          | CPU |
-| `Kokkos::LayoutLeft`   | Strides increase from the left most to the right most dimension, also known as column-major or Fortran-like | GPU |
-| `Kokkos::LayoutStride` | Strides can be arbitrary for each dimension                                                                 |     |
+| Layout                 | Description                                                                                                 | Default |
+|------------------------|-------------------------------------------------------------------------------------------------------------|---------|
+| `Kokkos::LayoutRight`  | Strides increase from the right most to the left most dimension, also known as row-major or C-like          | CPU     |
+| `Kokkos::LayoutLeft`   | Strides increase from the left most to the right most dimension, also known as column-major or Fortran-like | GPU     |
+| `Kokkos::LayoutStride` | Strides can be arbitrary for each dimension                                                                 |         |
 
 By default, a layout suited for loops on the high frequency index is used.
 
@@ -366,22 +365,22 @@ Kokkos::deep_copy(view2, view1);
 - [Kokkos Tutorials - Exercise 3](https://github.com/kokkos/kokkos-tutorials/blob/main/Exercises/03/Solution/exercise_3_solution.cpp)
 <!--#endif-->
 
-#### Create and always allocate
+#### Create and always allocate on host
 
 ```cpp
-auto hostView = Kokkos::create_mirror(view);
+auto mirrorView = Kokkos::create_mirror(view);
 ```
 
-#### Create and allocate if source view is not in host space
+#### Create and allocate on host if source view is not in host space
 
 ```cpp
-auto hostView = Kokkos::create_mirror_view(view);
+auto mirrorView = Kokkos::create_mirror_view(view);
 ```
 
 #### Create, allocate and synchronize if source view is not in same space as destination view
 
 ```cpp
-auto hostView = Kokkos::create_mirror_view_and_copy(ExecutionSpace(), view);
+auto mirrorView = Kokkos::create_mirror_view_and_copy(ExecutionSpace(), view);
 ```
 
 ### Subview
@@ -511,18 +510,19 @@ Kokkos::Experimental::contribute(histogram, scatter);
 Kokkos::parallel_for(
     "label",
     ExecutionPolicy</* ... */>(/* ... */),
-    KOKKOS_LAMBDA (const int i) { /* ... */ }
+    KOKKOS_LAMBDA (/* ... */) { /* ... */ }
 );
 ```
 
 ### Reduction
 
 ```cpp
+ScalarType result;
 Kokkos::parallel_reduce(
     "label",
     ExecutionPolicy</* ... */>(/* ... */),
-    KOKKOS_LAMBDA (const int i, double& result_in) { /* ... */ },
-    Kokkos::ReducerConcept<double>(result_out)
+    KOKKOS_LAMBDA (/* ... */, ScalarType& resultLocal) { /* ... */ },
+    Kokkos::ReducerConcept<ScalarType>(result)
 );
 ```
 
@@ -572,7 +572,7 @@ ExecutionSpace().fence();
 #### Team barrier
 
 ```cpp
-Kokkos::TeamPolicy::member_type().team_barrier();
+Kokkos::TeamPolicy<>::member_type().team_barrier();
 ```
 
 <!--#ifndef PRINT-->
@@ -636,7 +636,7 @@ Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> p
 ```
 
 Usually, `teamSize` is replaced by `Kokkos::AUTO` to let Kokkos determine it.
-A kernel running in a team policy has a `Kokkos::TeamPolicy::member_type` argument:
+A kernel running in a team policy has a `Kokkos::TeamPolicy<>::member_type` argument:
 
 | Method          | Description                          |
 |-----------------|--------------------------------------|
@@ -655,7 +655,7 @@ A kernel running in a team policy has a `Kokkos::TeamPolicy::member_type` argume
 Kokkos::parallel_for(
     "label",
     Kokkos::TeamPolicy<>(numberOfElementsI, Kokkos::AUTO),
-    KOKKOS_LAMBDA (const Kokkos::TeamPolicy::member_type& teamMember) {
+    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
         const int i = teamMember.team_rank();
 
         Kokkos::parallel_for(
@@ -679,7 +679,7 @@ Kokkos::TeamVectorRange range(teamMember, firstJ, lastJ);
 ##### Multi-dimensional range (dimension 2)
 
 ```cpp
-Kokkos::TeamVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy::member_type> range(teamMember, numberOfElementsJ, numberOfElementsK);
+Kokkos::TeamVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy<>::member_type> range(teamMember, numberOfElementsJ, numberOfElementsK);
 ```
 
 <!--#ifndef PRINT-->
@@ -692,7 +692,7 @@ Kokkos::TeamVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy::member_type> rang
 Kokkos::parallel_for(
     "label",
     Kokkos::TeamPolicy<>(numberOfElementsI, Kokkos::AUTO),
-    KOKKOS_LAMBDA (const Kokkos::TeamPolicy::member_type& teamMember) {
+    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
         const int i = teamMember.team_rank();
 
         Kokkos::parallel_for(
@@ -724,8 +724,8 @@ Kokkos::ThreadVectorRange range(teamMember, firstK, lastK);
 ##### Multi-dimensional range (dimension 2)
 
 ```cpp
-Kokkos::TeamThreadMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy::member_type> range(teamMember, numberOfElementsJ, numberOfElementsK);
-Kokkos::ThreadVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy::member_type> range(teamMember, numberOfElementsL, numberOfElementsM);
+Kokkos::TeamThreadMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy<>::member_type> range(teamMember, numberOfElementsJ, numberOfElementsK);
+Kokkos::ThreadVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy<>::member_type> range(teamMember, numberOfElementsL, numberOfElementsM);
 ```
 
 <!--#ifndef PRINT-->
@@ -760,7 +760,7 @@ size_t bytes = ScratchPadView::shmem_size(vectorSize);
 
 Kokkos::parallel_for(
     Kokkos::TeamPolicy<ExecutionSpace>(leagueSize, teamSize).set_scratch_size(spaceLevel, Kokkos::PerTeam(bytes)),
-    KOKKOS_LAMBDA (const Kokkos::TeamPolicy::member_type& teamMember) {
+    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
         const int i = teamMember.team_rank();
 
         // Create a view for the scratch pad
@@ -936,10 +936,11 @@ Kokkos::Timer timer;
 
 ### Essential macros
 
-| Macro                    | Description                            |
-|--------------------------|----------------------------------------|
-| `KOKKOS_LAMBDA`          | Replaces capture argument for lambdas  |
-| `KOKKOS_INLINE_FUNCTION` | Replaces capture argument for functors |
+| Macro                    | Description                           |
+|--------------------------|---------------------------------------|
+| `KOKKOS_LAMBDA`          | Replaces capture argument for lambdas |
+| `KOKKOS_INLINE_FUNCTION` | Inlined functor attribute             |
+| `KOKKOS_FUNCTION`        | Functor attribute                     |
 
 ### Extra macros
 
