@@ -8,10 +8,11 @@ title: Utilisation cheat sheet for Kokkos
 
 <img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Only for Kokkos 4.2 and more, for older verison look at the doc.
 
-1. [title: Kokkos utilisation cheat sheet](#title-kokkos-utilisation-cheat-sheet)
+1. [title: Utilisation cheat sheet for Kokkos](#title-utilisation-cheat-sheet-for-kokkos)
 2. [Header](#header)
 3. [Initialization](#initialization)
 	1. [Initialize and finalize](#initialize-and-finalize)
+	2. [Scope guard](#scope-guard)
 4. [Kokkos concepts](#kokkos-concepts)
 	1. [Execution spaces](#execution-spaces)
 	2. [Memory spaces](#memory-spaces)
@@ -27,8 +28,8 @@ title: Utilisation cheat sheet for Kokkos
 	4. [Memory trait](#memory-trait)
 	5. [Deep copy](#deep-copy)
 	6. [Mirror view](#mirror-view)
-		1. [Create and always allocate](#create-and-always-allocate)
-		2. [Create and allocate if source view is not in host space](#create-and-allocate-if-source-view-is-not-in-host-space)
+		1. [Create and always allocate on host](#create-and-always-allocate-on-host)
+		2. [Create and allocate on host if source view is not in host space](#create-and-allocate-on-host-if-source-view-is-not-in-host-space)
 		3. [Create, allocate and synchronize if source view is not in same space as destination view](#create-allocate-and-synchronize-if-source-view-is-not-in-same-space-as-destination-view)
 	7. [Subview](#subview)
 	8. [Scatter view (experimental)](#scatter-view-experimental)
