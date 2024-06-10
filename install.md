@@ -6,16 +6,17 @@ title: Installation cheat sheet for Kokkos
 
 # Kokkos install cheat sheet
 
-1. [Requirements](#requirements)
+1. [title: Installation cheat sheet for Kokkos](#title-installation-cheat-sheet-for-kokkos)
+2. [Requirements](#requirements)
 	1. [Compiler](#compiler)
 	2. [Build system](#build-system)
-2. [How to build Kokkos](#how-to-build-kokkos)
+3. [How to build Kokkos](#how-to-build-kokkos)
 	1. [As part of your application](#as-part-of-your-application)
 	2. [As an external library](#as-an-external-library)
 		1. [Configure, build and install Kokkos](#configure-build-and-install-kokkos)
 		2. [Use in your code](#use-in-your-code)
 	3. [As a Spack package](#as-a-spack-package)
-3. [Kokkos compile options](#kokkos-compile-options)
+4. [Kokkos compile options](#kokkos-compile-options)
 	1. [Host backends](#host-backends)
 	2. [Device backends](#device-backends)
 	3. [Specific options](#specific-options)
@@ -30,10 +31,11 @@ title: Installation cheat sheet for Kokkos
 			3. [NVIDIA GPU architectures (CUDA)](#nvidia-gpu-architectures-cuda)
 	3. [Third-party Libraries (TPLs)](#third-party-libraries-tpls)
 	4. [Examples for the most common architectures](#examples-for-the-most-common-architectures)
-		1. [AMD MI250 GPU with HIP and OpenMP](#amd-mi250-gpu-with-hip-and-openmp)
-		2. [NVIDIA A100 GPU with CUDA and OpenMP](#nvidia-a100-gpu-with-cuda-and-openmp)
-		3. [NVIDIA V100 GPU with CUDA and OpenMP](#nvidia-v100-gpu-with-cuda-and-openmp)
-		4. [Intel GPU Max/Ponte Vecchio GPU with SYCL and OpenMP](#intel-gpu-maxponte-vecchio-gpu-with-sycl-and-openmp)
+		1. [Local CPU with OpenMP](#local-cpu-with-openmp)
+		2. [AMD MI250 GPU with HIP and OpenMP](#amd-mi250-gpu-with-hip-and-openmp)
+		3. [NVIDIA A100 GPU with CUDA and OpenMP](#nvidia-a100-gpu-with-cuda-and-openmp)
+		4. [NVIDIA V100 GPU with CUDA and OpenMP](#nvidia-v100-gpu-with-cuda-and-openmp)
+		5. [Intel GPU Max/Ponte Vecchio GPU with SYCL and OpenMP](#intel-gpu-maxponte-vecchio-gpu-with-sycl-and-openmp)
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
 
@@ -82,9 +84,8 @@ title: Installation cheat sheet for Kokkos
 ```cmake
 add_subdirectory(path/to/kokkos)
 target_link_libraries(
-    my-lib
-    PRIVATE
-        Kokkos::kokkos
+    my-app
+    Kokkos::kokkos
 )
 ```
 
@@ -124,9 +125,8 @@ cmake --install build
 ```cmake
 find_package(Kokkos REQUIRED)
 target_link_libraries(
-    my-lib
-    PRIVATE
-        Kokkos::kokkos
+    my-app
+    Kokkos::kokkos
 )
 ```
 
@@ -269,7 +269,7 @@ Host options are used for controlling optimization and are optional.
 #### Device architectures
 
 Device options are mandatory.
-They can be deduced from the device if present at compile time.
+They can be deduced from the device if present at CMake configuration time.
 
 <details>
 <summary>
@@ -325,7 +325,7 @@ They can be deduced from the device if present at compile time.
 
 | Option                       | Architecture | CC  | Associated cards                                       |
 |------------------------------|--------------|-----|--------------------------------------------------------|
-| `-DKokkos_ARCH_AMPERE90=ON`  | Hopper       | 9.0 | H200, H100                                             |
+| `-DKokkos_ARCH_HOPPER90=ON`  | Hopper       | 9.0 | H200, H100                                             |
 | `-DKokkos_ARCH_ADA89=ON`     | Ada          | 8.9 | GeForce RTX 40 series, RTX 6000/5000 series, L4, L40   |
 | `-DKokkos_ARCH_AMPERE86=ON`  | Ampere       | 8.6 | GeForce RTX 30 series, RTX A series, A40, A10, A16, A2 |
 | `-DKokkos_ARCH_AMPERE80=ON`  | Ampere       | 8.0 | A100, A30                                              |
@@ -365,6 +365,16 @@ They can be deduced from the device if present at compile time.
 <!--#endif-->
 
 ### Examples for the most common architectures
+
+#### Local CPU with OpenMP
+
+```sh
+cmake \
+    -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DKokkos_ARCH_NATIVE=ON \
+    -DKokkos_ENABLE_OPENMP=ON
+```
 
 #### AMD MI250 GPU with HIP and OpenMP
 
@@ -406,7 +416,7 @@ cmake \
 cmake \
     -B build \
     -DCMAKE_CXX_COMPILER=icpx \
-    -DCMAKE_CXX_FLAGS="-fp-model=precise" \
+    -DCMAKE_CXX_FLAGS="-fp-model=precise" \  # for math precision
     -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_SYCL=ON \
     -DKokkos_ARCH_INTEL_PVC=ON \

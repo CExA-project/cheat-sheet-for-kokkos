@@ -1,6 +1,6 @@
---- .install.tex	2024-02-27 11:55:02.064764045 +0100
-+++ install.tex	2024-02-27 11:55:34.036897856 +0100
-@@ -476,7 +476,7 @@
+--- .install.tex	2024-06-10 16:05:24.488983375 +0200
++++ install.tex	2024-06-10 16:05:44.093091587 +0200
+@@ -497,7 +497,7 @@
  \begin{tabularx}{\linewidth}{llX}
  \toprule
  
@@ -8,8 +8,8 @@
 +\tblhead{Option} & \tblhead{Arch.} & \tblhead{Associated
  cards} \\ \midrule
  
- \texttt{-DKokkos\_ARCH\_AMD\_GFX90A=ON} & GFX90A & MI210, MI250,
-@@ -515,7 +515,7 @@
+ \texttt{-DKokkos\_ARCH\_AMD\_GFX942=ON} & GFX942 & MI300A, MI300X \\
+@@ -537,7 +537,7 @@
  \begin{tabularx}{\linewidth}{lllX}
  \toprule
  
@@ -17,4 +17,13 @@
 +\tblhead{Option} & \tblhead{Arch.} & \tblhead{CC} & \tblhead{Associated
  cards} \\ \midrule
  
- \texttt{-DKokkos\_ARCH\_AMPERE90=ON} & Hopper & 9.0 & H200, H100 \\
+ \texttt{-DKokkos\_ARCH\_HOPPER90=ON} & Hopper & 9.0 & H200, H100 \\
+@@ -635,7 +635,7 @@
+ \FunctionTok{cmake} \KeywordTok{\textbackslash{}}
+     \ExtensionTok{{-}B}\NormalTok{ build }\KeywordTok{\textbackslash{}}
+     \ExtensionTok{{-}DCMAKE\_CXX\_COMPILER}\NormalTok{=icpx }\KeywordTok{\textbackslash{}}
+-    \ExtensionTok{{-}DCMAKE\_CXX\_FLAGS}\NormalTok{=}\StringTok{"{-}fp{-}model=precise"} \DataTypeTok{\textbackslash{} }\NormalTok{ \# for math precision}
++    \ExtensionTok{{-}DCMAKE\_CXX\_FLAGS}\NormalTok{=}\StringTok{"{-}fp{-}model=precise"} \DataTypeTok{\textbackslash{} }\CommentTok{ \# for math precision}
+     \ExtensionTok{{-}DCMAKE\_BUILD\_TYPE}\NormalTok{=Release }\KeywordTok{\textbackslash{}}
+     \ExtensionTok{{-}DKokkos\_ENABLE\_SYCL}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
+     \ExtensionTok{{-}DKokkos\_ARCH\_INTEL\_PVC}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
