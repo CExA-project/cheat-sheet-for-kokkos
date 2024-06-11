@@ -416,11 +416,11 @@ cmake \
 cmake \
     -B build \
     -DCMAKE_CXX_COMPILER=icpx \
-    -DCMAKE_CXX_FLAGS="-fp-model=precise" \  # for math precision
     -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_SYCL=ON \
     -DKokkos_ARCH_INTEL_PVC=ON \
-    -DKokkos_ENABLE_OPENMP=ON
+    -DKokkos_ENABLE_OPENMP=ON \
+    -DCMAKE_CXX_FLAGS="-fp-model=precise"  # for math precision
 ```
 
 <!--#ifndef PRINT-->

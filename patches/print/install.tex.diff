@@ -1,5 +1,5 @@
---- .install.tex	2024-06-10 16:05:24.488983375 +0200
-+++ install.tex	2024-06-10 16:05:44.093091587 +0200
+--- .install.tex	2024-06-11 16:45:25.798270906 +0200
++++ install.tex	2024-06-11 16:45:51.158407213 +0200
 @@ -497,7 +497,7 @@
  \begin{tabularx}{\linewidth}{llX}
  \toprule
@@ -18,12 +18,12 @@
  cards} \\ \midrule
  
  \texttt{-DKokkos\_ARCH\_HOPPER90=ON} & Hopper & 9.0 & H200, H100 \\
-@@ -635,7 +635,7 @@
- \FunctionTok{cmake} \KeywordTok{\textbackslash{}}
-     \ExtensionTok{{-}B}\NormalTok{ build }\KeywordTok{\textbackslash{}}
-     \ExtensionTok{{-}DCMAKE\_CXX\_COMPILER}\NormalTok{=icpx }\KeywordTok{\textbackslash{}}
--    \ExtensionTok{{-}DCMAKE\_CXX\_FLAGS}\NormalTok{=}\StringTok{"{-}fp{-}model=precise"} \DataTypeTok{\textbackslash{} }\NormalTok{ \# for math precision}
-+    \ExtensionTok{{-}DCMAKE\_CXX\_FLAGS}\NormalTok{=}\StringTok{"{-}fp{-}model=precise"} \DataTypeTok{\textbackslash{} }\CommentTok{ \# for math precision}
-     \ExtensionTok{{-}DCMAKE\_BUILD\_TYPE}\NormalTok{=Release }\KeywordTok{\textbackslash{}}
+@@ -639,7 +639,7 @@
      \ExtensionTok{{-}DKokkos\_ENABLE\_SYCL}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
      \ExtensionTok{{-}DKokkos\_ARCH\_INTEL\_PVC}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
+     \ExtensionTok{{-}DKokkos\_ENABLE\_OPENMP}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
+-    \ExtensionTok{{-}DCMAKE\_CXX\_FLAGS}\NormalTok{=}\StringTok{"{-}fp{-}model=precise"}\NormalTok{  \# for math precision}
++    \ExtensionTok{{-}DCMAKE\_CXX\_FLAGS}\NormalTok{=}\StringTok{"{-}fp{-}model=precise"}\CommentTok{  \# for math precision}
+ \end{Highlighting}
+ \end{Shaded}
+ 
