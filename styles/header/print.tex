@@ -1,6 +1,6 @@
 % custom header
 
-\usepackage[left=0.5cm, right=0.5cm, top=0cm, bottom=2cm, includehead]{geometry}
+\usepackage[hmargin=0.5cm, vmargin=0cm, includeheadfoot]{geometry}
 \usepackage{multicol}
 \usepackage{mdframed}
 \usepackage{fancyhdr}
@@ -32,35 +32,95 @@
 
 % headers and footers
 
-\setlength{\headheight}{2cm}
-\setlength{\headsep}{0.5cm}
+\newlength{\headerheight}
+\newlength{\footerheight}
+\newlength{\horizontalskip}
+\setlength{\headerheight}{0cm}
+\setlength{\footerheight}{0cm}
+\setlength{\horizontalskip}{0cm}
 
 \fancypagestyle{kokkos}{%
-    \renewcommand{\headrulewidth}{0pt}%
-    \renewcommand{\footrulewidth}{0pt}%
-    \fancyhf{}%
+    \setlength{\headerheight}{1cm}
+    \setlength{\footerheight}{0.5cm}
+    \setlength{\horizontalskip}{0.25cm}
+
+    \newgeometry{
+        headheight=\headerheight,
+        hmargin=0.5cm,
+        vmargin=0cm,
+        includeheadfoot,
+        headsep=0.5cm,
+        footskip=1cm,
+    }
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+
+    \fancyhf{}
+
+    \fancyhead{%
+        % Add the title and the page and the version
+        \setlength{\fboxsep}{0pt}
+        \colorbox{main}{%
+            \parbox[b][\headerheight][c]{\headwidth}{%
+                \fancycenter{%
+                    \hspace{\horizontalskip}%
+                    {\LARGE\bfseries\href{https://kokkos.org/kokkos-core-wiki}{\gettitle}}%
+                    {\large\bfseries\color{lightmain}\ :: page \thepage}%
+                }{}{%
+                    \small\color{lightmain}v\input{VERSION}%
+                    \hspace{\horizontalskip}
+                }
+            }%
+        }%
+    }%
+
+    \fancyfoot{%
+        % Add the Kokkos wiki link
+        \setlength{\fboxsep}{0pt}
+        \colorbox{main}{%
+            \parbox[b][\footerheight][c]{\headwidth}{%
+                \fancycenter{%
+                    \hspace{\horizontalskip}%
+                    \footnotesize\bfseries\color{lightmain}\url{https://kokkos.org/kokkos-core-wiki}%
+                }{}{}
+            }%
+        }%
+    }%
+}
+
+\fancypagestyle{kokkostitle}{%
+    \pagestyle{kokkos}%
+
+    \setlength{\headerheight}{2cm}
+    \newgeometry{
+        headheight=\headerheight,
+        hmargin=0.5cm,
+        vmargin=0cm,
+        includeheadfoot,
+        headsep=0.5cm,
+        footskip=1cm,
+    }
+
     \fancyhead{%
         % Add the title and the page
         \setlength{\fboxsep}{0pt}
         \colorbox{main}{%
-            \parbox[b][\headheight][c]{0.5\headheight}{%
+            \parbox[b][\headerheight][c]{0.5\headerheight}{%
                 \includegraphics[
                     height=\headheight,
                 ]{images/kokkos_wire.pdf}
             }%
-            \parbox[b][\headheight][c]{\headwidth}{%
-                {\Huge\bfseries{}\href{https://kokkos.org/kokkos-core-wiki}{\gettitle}}%
-                {\Large\bfseries\color{lightmain}\ :: page \thepage}%
+            \hspace{-0.5\headerheight}
+            \parbox[b][\headerheight][c]{\headwidth}{%
+                \fancycenter{%
+                    \hspace{0.4\headerheight}
+                    {\Huge\bfseries{}\href{https://kokkos.org/kokkos-core-wiki}{\gettitle}}%
+                    {\Large\bfseries\color{lightmain}\ :: page \thepage}%
+                }{}{%
+                    \small\color{lightmain}v\input{VERSION}%
+                    \hspace{\horizontalskip}
+                }
             }%
-        }%
-    }%
-    \fancyhead[R]{%
-        % Add the version
-        \parbox[b][\headheight][t]{2\headheight}{%
-            \vspace{0.5em}%
-            \raggedleft%
-            v\input{VERSION}%
-            \phantom{\hspace{0.5em}}%
         }%
     }%
 }
@@ -72,7 +132,8 @@
 \fancyhfoffset[LO,RE]{\oddmarginwidth}
 \fancyhfoffset[LE,RO]{\evenmarginwidth}
 
-\pagestyle{kokkos}
+\pagestyle{kokkostitle}
+% \thispagestyle{kokkostitle}
 
 % sections
 
@@ -191,3 +252,29 @@
 
 \widowpenalty10000
 \clubpenalty10000
+
+% extra commands
+
+\makeatletter
+
+\newcommand*\dotcolumnfill{%
+    % https://tex.stackexchange.com/a/319436
+    \par
+    \null
+    \vskip -\ht\strutbox
+    \xleaders \hb@xt@ \hsize {%
+        \strut \cleaders \hb@xt@ .44em{\hss.\hss}\hfill
+    }\vfill
+    \vskip \ht\strutbox
+    \break
+}
+
+\makeatother
+
+\newcommand\notessection{%
+    \subsection{Notes}
+
+    \vspace{1em}
+
+    \dotcolumnfill
+}
