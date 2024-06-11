@@ -366,7 +366,7 @@ They can be deduced from the device if present at CMake configuration time.
 
 ### Examples for the most common architectures
 
-#### Local CPU with OpenMP
+#### Current CPU with OpenMP
 
 ```sh
 cmake \
