@@ -140,11 +140,11 @@ int main(int argc, char* argv[]) {
 
 #### Specific memory spaces
 
-| Memory space                 | Description                                                           |
-|------------------------------|-----------------------------------------------------------------------|
-| `Kokkos::HostSpace`          | Accessible by the host but not directly by the device                 |
-| `Kokkos::SharedSpace`        | Accessible by the host and the device; copy managed by the driver     |
-| `Kokkos::ScratchMemorySpace` | Accessible by the team or the thread that created it and nothing else |
+| Memory space                    | Description                                                                    |
+|---------------------------------|--------------------------------------------------------------------------------|
+| `Kokkos::HostSpace`             | Accessible from the host but may not be accessible directly from the device    |
+| `Kokkos::SharedSpace`           | Accessible from the host and from the device; copy managed by the driver       |
+| `Kokkos::SharedHostPinnedSpace` | Accessible from the host and from the device; zero copy access in small chunks |
 
 <!--#ifndef PRINT-->
 <details>
@@ -190,6 +190,8 @@ Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numb
 | `LayoutType`      | See [memory layouts](#memory-layouts)                                                                                                            |
 | `MemorySpace`     | See [memory spaces](#memory-spaces)                                                                                                              |
 | `MemoryTraits`    | See [memory traits](#memory-traits)                                                                                                              |
+
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Template arguments are optional, but their order matters.
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#constructors
@@ -557,7 +559,7 @@ The reducer class can be omitted for `Kokkos::Sum`.
 #### Global fence
 
 ```cpp
-Kokkos::fence();
+Kokkos::fence("label");
 ```
 
 <!--#ifndef PRINT-->
@@ -567,7 +569,7 @@ Kokkos::fence();
 #### Execution space fence
 
 ```cpp
-ExecutionSpace().fence();
+ExecutionSpace().fence("label");
 ```
 
 #### Team barrier

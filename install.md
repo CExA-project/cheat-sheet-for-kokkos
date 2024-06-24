@@ -161,16 +161,15 @@ TODO finish this part
 | `-DKokkos_ENABLE_OPENMP=ON`  | OpenMP  |
 | `-DKokkos_ENABLE_THREADS=ON` | Threads |
 
-<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> The serial backend is enabled by default.
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> The serial backend is enabled by default if no other host backend is enabled.
 
 ### Device backends
 
-| Option                            | Backend       | Notes        |
-|-----------------------------------|---------------|--------------|
-| `-DKokkos_ENABLE_CUDA=ON`         | CUDA          |              |
-| `-DKokkos_ENABLE_HIP=ON`          | HIP           |              |
-| `-DKokkos_ENABLE_SYCL=ON`         | SYCL          | Experimental |
-| `-DKokkos_ENABLE_OPENMPTARGET=ON` | OpenMP target | Experimental |
+| Option                    | Backend | Device |
+|---------------------------|---------|--------|
+| `-DKokkos_ENABLE_CUDA=ON` | CUDA    | NVIDIA |
+| `-DKokkos_ENABLE_HIP=ON`  | HIP     | AMD    |
+| `-DKokkos_ENABLE_SYCL=ON` | SYCL    | Intel  |
 
 <img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> You can only select the serial backend, plus another host backend and one device backend at a time.
 
@@ -180,12 +179,9 @@ See [architecture-specific options](#architecture-specific-options).
 
 | Option                                  | Description                                               |
 |-----------------------------------------|-----------------------------------------------------------|
-| `-DKokkos_ENABLE_BENCHMARKS=ON`         | Build benchmarks                                          |
-| `-DKokkos_ENABLE_COMPILER_WARNINGS=ON`  | Print all compiler warnings                               |
 | `-DKokkos_ENABLE_DEBUG=ON`              | Activate extra debug features, may increase compile times |
 | `-DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON` | Use bounds checking, will increase runtime                |
 | `-DKokkos_ENABLE_EXAMPLES=ON`           | Build examples                                            |
-| `-DKokkos_ENABLE_TESTS=ON`              | Build tests                                               |
 | `-DKokkos_ENABLE_TUNING=ON`             | Create bindings for tuning tools                          |
 
 <!--#ifndef PRINT-->
