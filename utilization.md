@@ -791,17 +791,17 @@ Kokkos::parallel_for(
 
 ### Atomic operations
 
-| Operation                  | Replaces                             |
-|----------------------------|--------------------------------------|
-| `Kokkos::atomic_add`       | `+=`                                 |
-| `Kokkos::atomic_and`       | `&=`                                 |
-| `Kokkos::atomic_assign`    | `=`                                  |
-| `Kokkos::atomic_decrement` | `--`                                 |
-| `Kokkos::atomic_increment` | `++`                                 |
-| `Kokkos::atomic_max`       | `std::max` on previous and new value |
-| `Kokkos::atomic_min`       | `std::min` on previous and new value |
-| `Kokkos::atomic_or`        | `\|=`                                |
-| `Kokkos::atomic_sub`       | `-=`                                 |
+| Operation                      | Replaces             |
+|--------------------------------|----------------------|
+| `Kokkos::atomic_add(&x, y)`    | `x += y`             |
+| `Kokkos::atomic_and(&x, y)`    | `x &= y`             |
+| `Kokkos::atomic_assign(&x, y)` | `x = y`              |
+| `Kokkos::atomic_decrement(&x)` | `x--`                |
+| `Kokkos::atomic_increment(&x)` | `y++`                |
+| `Kokkos::atomic_max(&x, y)`    | `x = std::max(x, y)` |
+| `Kokkos::atomic_min(&x, y)`    | `x = std::min(x, y)` |
+| `Kokkos::atomic_or(&x, y)`     | `x \|= y`            |
+| `Kokkos::atomic_sub(&x, y)`    | `x -= y`             |
 
 <!--#ifndef PRINT-->
 <details>
