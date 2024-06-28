@@ -219,10 +219,9 @@
     skins,
 }
 
-\renewenvironment{Shaded}{%
+\renewenvironment{Shaded}[1][]{%
     \begin{tcolorbox}[
         skin=tilemiddle,
-        breakable,
         colback=lightgray,
         leftrule=0pt,
         rightrule=0pt,
@@ -238,10 +237,12 @@
         left=\fboxsep,
         right=\fboxsep ,
         pad at break=0.75\fboxsep,
-      ]%
-}{%
+        #1,
+        ]%
+    }{%
     \end{tcolorbox}
 }
+
 
 \colorlet{codemain}{kokkos}
 \colorlet{codelightmain}{kokkos!70}
