@@ -184,14 +184,14 @@ Kokkos::parallel_for(
 Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElementsAtRuntimeI, numberOfElementsAtRuntimeJ);
 ```
 
-| Template argument | Description                                                                                                                                      |
-|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `DataType`        | `ScalarType` for the data type, followed by a `*` for each runtime dimension, then by a `[numberOfElements]` for each compile time dimension |
-| `LayoutType`      | See [memory layouts](#memory-layouts)                                                                                                            |
-| `MemorySpace`     | See [memory spaces](#memory-spaces)                                                                                                              |
-| `MemoryTraits`    | See [memory traits](#memory-traits)                                                                                                              |
+| Template argument | Description                                                                                                                                                  |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `DataType`        | `ScalarType` for the data type, followed by a `*` for each runtime dimension, then by a `[numberOfElements]` for each compile time dimension, mandatory |
+| `LayoutType`      | See [memory layouts](#memory-layouts), optional                                                                                                              |
+| `MemorySpace`     | See [memory spaces](#memory-spaces), optional                                                                                                                |
+| `MemoryTraits`    | See [memory traits](#memory-traits), optional                                                                                                                |
 
-<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Template arguments are optional, but their order matters.
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> The order of template arguments is important.
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#constructors
@@ -939,11 +939,12 @@ Kokkos::Timer timer;
 
 ### Essential macros
 
-| Macro                    | Description                           |
-|--------------------------|---------------------------------------|
-| `KOKKOS_LAMBDA`          | Replaces capture argument for lambdas |
-| `KOKKOS_INLINE_FUNCTION` | Inlined functor attribute             |
-| `KOKKOS_FUNCTION`        | Functor attribute                     |
+| Macro                    | Description                                            |
+|--------------------------|--------------------------------------------------------|
+| `KOKKOS_LAMBDA`          | Replaces capture argument for lambdas                  |
+| `KOKKOS_CLASS_LAMBDA`    | Replaces capture argument for lambdas, captures `this` |
+| `KOKKOS_FUNCTION`        | Functor attribute                                      |
+| `KOKKOS_INLINE_FUNCTION` | Inlined functor attribute                              |
 
 ### Extra macros
 
