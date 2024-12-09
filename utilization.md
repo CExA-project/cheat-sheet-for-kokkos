@@ -140,11 +140,11 @@ int main(int argc, char* argv[]) {
 
 #### Specific memory spaces
 
-| Memory space                 | Description                                                           |
-|------------------------------|-----------------------------------------------------------------------|
-| `Kokkos::HostSpace`          | Accessible by the host but not directly by the device                 |
-| `Kokkos::SharedSpace`        | Accessible by the host and the device; copy managed by the driver     |
-| `Kokkos::ScratchMemorySpace` | Accessible by the team or the thread that created it and nothing else |
+| Memory space                    | Description                                                                    |
+|---------------------------------|--------------------------------------------------------------------------------|
+| `Kokkos::HostSpace`             | Accessible from the host but may not be accessible directly from the device    |
+| `Kokkos::SharedSpace`           | Accessible from the host and from the device; copy managed by the driver       |
+| `Kokkos::SharedHostPinnedSpace` | Accessible from the host and from the device; zero copy access in small chunks |
 
 <!--#ifndef PRINT-->
 <details>
@@ -184,12 +184,14 @@ Kokkos::parallel_for(
 Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElementsAtRuntimeI, numberOfElementsAtRuntimeJ);
 ```
 
-| Template argument | Description                                                                                                                                      |
-|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `DataType`        | `ScalarType` for the data type, followed by a `*` for each runtime dimension, then by a `[numberOfElements]` for each compile time dimension |
-| `LayoutType`      | See [memory layouts](#memory-layouts)                                                                                                            |
-| `MemorySpace`     | See [memory spaces](#memory-spaces)                                                                                                              |
-| `MemoryTraits`    | See [memory traits](#memory-traits)                                                                                                              |
+| Template argument | Description                                                                                                                                                  |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `DataType`        | `ScalarType` for the data type, followed by a `*` for each runtime dimension, then by a `[numberOfElements]` for each compile time dimension, mandatory |
+| `LayoutType`      | See [memory layouts](#memory-layouts), optional                                                                                                              |
+| `MemorySpace`     | See [memory spaces](#memory-spaces), optional                                                                                                                |
+| `MemoryTraits`    | See [memory traits](#memory-traits), optional                                                                                                                |
+
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> The order of template arguments is important.
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/view/view.html#constructors
@@ -557,7 +559,7 @@ The reducer class can be omitted for `Kokkos::Sum`.
 #### Global fence
 
 ```cpp
-Kokkos::fence();
+Kokkos::fence("label");
 ```
 
 <!--#ifndef PRINT-->
@@ -567,7 +569,7 @@ Kokkos::fence();
 #### Execution space fence
 
 ```cpp
-ExecutionSpace().fence();
+ExecutionSpace().fence("label");
 ```
 
 #### Team barrier
@@ -789,17 +791,17 @@ Kokkos::parallel_for(
 
 ### Atomic operations
 
-| Operation                  | Replaces                             |
-|----------------------------|--------------------------------------|
-| `Kokkos::atomic_add`       | `+=`                                 |
-| `Kokkos::atomic_and`       | `&=`                                 |
-| `Kokkos::atomic_assign`    | `=`                                  |
-| `Kokkos::atomic_decrement` | `--`                                 |
-| `Kokkos::atomic_increment` | `++`                                 |
-| `Kokkos::atomic_max`       | `std::max` on previous and new value |
-| `Kokkos::atomic_min`       | `std::min` on previous and new value |
-| `Kokkos::atomic_or`        | `\|=`                                |
-| `Kokkos::atomic_sub`       | `-=`                                 |
+| Operation                      | Replaces             |
+|--------------------------------|----------------------|
+| `Kokkos::atomic_add(&x, y)`    | `x += y`             |
+| `Kokkos::atomic_and(&x, y)`    | `x &= y`             |
+| `Kokkos::atomic_assign(&x, y)` | `x = y`              |
+| `Kokkos::atomic_decrement(&x)` | `x--`                |
+| `Kokkos::atomic_increment(&x)` | `y++`                |
+| `Kokkos::atomic_max(&x, y)`    | `x = std::max(x, y)` |
+| `Kokkos::atomic_min(&x, y)`    | `x = std::min(x, y)` |
+| `Kokkos::atomic_or(&x, y)`     | `x \|= y`            |
+| `Kokkos::atomic_sub(&x, y)`    | `x -= y`             |
 
 <!--#ifndef PRINT-->
 <details>
@@ -937,11 +939,12 @@ Kokkos::Timer timer;
 
 ### Essential macros
 
-| Macro                    | Description                           |
-|--------------------------|---------------------------------------|
-| `KOKKOS_LAMBDA`          | Replaces capture argument for lambdas |
-| `KOKKOS_INLINE_FUNCTION` | Inlined functor attribute             |
-| `KOKKOS_FUNCTION`        | Functor attribute                     |
+| Macro                    | Description                                            |
+|--------------------------|--------------------------------------------------------|
+| `KOKKOS_LAMBDA`          | Replaces capture argument for lambdas                  |
+| `KOKKOS_CLASS_LAMBDA`    | Replaces capture argument for lambdas, captures `this` |
+| `KOKKOS_FUNCTION`        | Functor attribute                                      |
+| `KOKKOS_INLINE_FUNCTION` | Inlined functor attribute                              |
 
 ### Extra macros
 
