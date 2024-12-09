@@ -170,11 +170,11 @@
     % The sub sub section name has a small left margin, which only affects the
     % first line if the name spawns on multi lines; this is inelegant but I
     % haven't found a better way for now
-    \hspace{\fboxsep}\strut#1
+    \hspace{\fboxsep}\strut#1%
 }
 
 \newcommand{\subsubsectionstyleextra}{%
-    {\color{main}\titlerule}%
+    \titleline{\color{main}\titlerule}%
 }
 
 \newcommand{\paragraphstyle}[1]{%
@@ -213,21 +213,40 @@
     commandchars=\\\{\}
 }
 
-\renewenvironment{Shaded}{%
-   \vspace{0.5em}
-   \begin{mdframed}[
-       backgroundcolor=lightgray,
-       hidealllines=true,
-       nobreak=true,
-       font=\codesize,
-   ]
-}{%
-   \end{mdframed}
+\usepackage{tcolorbox}
+\tcbuselibrary{
+    breakable,
+    skins,
 }
 
+\renewenvironment{Shaded}[1][]{%
+    \begin{tcolorbox}[
+        skin=tilemiddle,
+        colback=lightgray,
+        leftrule=0pt,
+        rightrule=0pt,
+        toprule=0pt,
+        bottomrule=0pt,
+        fontupper=\codesize,
+        before skip=0.5em,
+        after skip=0.5em,
+        left skip=0pt,
+        right skip=0pt,
+        top=\fboxsep,
+        bottom=\fboxsep,
+        left=\fboxsep,
+        right=\fboxsep ,
+        pad at break=0.75\fboxsep,
+        #1,
+        ]%
+    }{%
+    \end{tcolorbox}
+}
+
+
 \colorlet{codemain}{kokkos}
-\colorlet{codelightmain}{kokkos!60}
-\colorlet{codegray}{gray}
+\colorlet{codelightmain}{kokkos!70}
+\colorlet{codegray}{gray!90!black}
 
 \renewcommand{\AttributeTok}[1]{{\color{codelightmain}#1}}
 \renewcommand{\BuiltInTok}[1]{{\color{codemain}#1}}
