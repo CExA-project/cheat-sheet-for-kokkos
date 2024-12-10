@@ -159,7 +159,7 @@ Kokkos::View<double*, Kokkos::SharedSpace> sharedView("sharedView", numberOfElem
 
 // Scratch memory space
 Kokkos::parallel_for(
-    Kokkos::TeamPolicy<>(leagueSize, teamSize),
+    Kokkos::TeamPolicy(leagueSize, teamSize),
     KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& team) {
         // Allocate scratch memory for each team
         Kokkos::View<double*, Kokkos::ScratchMemorySpace> scratchView(team.team_scratch(1), scratchSize);
@@ -657,7 +657,7 @@ A kernel running in a team policy has a `Kokkos::TeamPolicy<>::member_type` argu
 ```cpp
 Kokkos::parallel_for(
     "label",
-    Kokkos::TeamPolicy<>(numberOfElementsI, Kokkos::AUTO),
+    Kokkos::TeamPolicy(numberOfElementsI, Kokkos::AUTO),
     KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
         const int i = teamMember.team_rank();
 
@@ -694,7 +694,7 @@ Kokkos::TeamVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy<>::member_type> ra
 ```cpp
 Kokkos::parallel_for(
     "label",
-    Kokkos::TeamPolicy<>(numberOfElementsI, Kokkos::AUTO),
+    Kokkos::TeamPolicy(numberOfElementsI, Kokkos::AUTO),
     KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
         const int i = teamMember.team_rank();
 
@@ -763,7 +763,7 @@ size_t bytes = ScratchPadView::shmem_size(vectorSize);
 
 Kokkos::parallel_for(
     Kokkos::TeamPolicy<ExecutionSpace>(leagueSize, teamSize).set_scratch_size(spaceLevel, Kokkos::PerTeam(bytes)),
-    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
+    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<ExecutionSpace>::member_type& teamMember) {
         const int i = teamMember.team_rank();
 
         // Create a view for the scratch pad

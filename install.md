@@ -234,11 +234,12 @@ Host options are used for controlling optimization and are optional.
 
 </summary>
 
-| Option                    | Architecture             |
-|---------------------------|--------------------------|
-| `-DKokkos_ARCH_A64FX=ON`  | ARMv8.2 with SVE Support |
-| `-DKokkos_ARCH_ARMV81=ON` | ARMV8.1                  |
-| `-DKokkos_ARCH_ARMV80=ON` | ARMV8.0                  |
+| Option                         | Architecture             |
+|--------------------------------|--------------------------|
+| `-DKokkos_ARCH_ARMV9_GRACE=ON` | Grace                    |
+| `-DKokkos_ARCH_A64FX=ON`       | ARMv8.2 with SVE Support |
+| `-DKokkos_ARCH_ARMV81=ON`      | ARMV8.1                  |
+| `-DKokkos_ARCH_ARMV80=ON`      | ARMV8.0                  |
 
 </details>
 
