@@ -795,13 +795,17 @@ Kokkos::parallel_for(
 |--------------------------------|----------------------|
 | `Kokkos::atomic_add(&x, y)`    | `x += y`             |
 | `Kokkos::atomic_and(&x, y)`    | `x &= y`             |
-| `Kokkos::atomic_assign(&x, y)` | `x = y`              |
-| `Kokkos::atomic_decrement(&x)` | `x--`                |
-| `Kokkos::atomic_increment(&x)` | `y++`                |
+| `Kokkos::atomic_dec(&x)`       | `x--`                |
+| `Kokkos::atomic_inc(&x)`       | `x++`                |
+| `Kokkos::atomic_lshift(&x, y)` | `x = x << y`         |
 | `Kokkos::atomic_max(&x, y)`    | `x = std::max(x, y)` |
 | `Kokkos::atomic_min(&x, y)`    | `x = std::min(x, y)` |
+| `Kokkos::atomic_mod(&x, y)`    | `x = %= y`           |
+| `Kokkos::atomic_nand(&x, y)`   | `x = !(x && y)`      |
 | `Kokkos::atomic_or(&x, y)`     | `x \|= y`            |
+| `Kokkos::atomic_rshift(&x, y)` | `x = x >> y`         |
 | `Kokkos::atomic_sub(&x, y)`    | `x -= y`             |
+| `Kokkos::atomic_xor(&x, y)`    | `x ^= y`             |
 
 <!--#ifndef PRINT-->
 <details>
@@ -826,7 +830,6 @@ Kokkos::parallel_for(
 | Operation                                | Description                                                            |
 |------------------------------------------|------------------------------------------------------------------------|
 | `Kokkos::atomic_exchange`                | Assign destination to new value and return old value                   |
-| `Kokkos::atomic_compare_exchange_strong` | Assign destination to new value if old value equals a comparison value |
 
 <!--#ifndef PRINT-->
 <details>

@@ -261,6 +261,19 @@ Host options are used for controlling optimization and are optional.
 
 </details>
 
+<details>
+<summary>
+
+##### RISC-V CPU architectures
+
+</summary>
+
+| Option                          | Architecture |
+|---------------------------------|--------------|
+| `-DKokkos_ARCH_RISCV_RVA22V=ON` | RVA22V       |
+
+</details>
+
 <!--#endif-->
 
 #### Device architectures
@@ -275,14 +288,16 @@ They can be deduced from the device if present at CMake configuration time.
 
 </summary>
 
-| Option                         | Architecture | Associated cards     |
-|--------------------------------|--------------|----------------------|
-| `-DKokkos_ARCH_AMD_GFX942=ON`  | GFX942       | MI300A, MI300X       |
-| `-DKokkos_ARCH_AMD_GFX90A=ON`  | GFX90A       | MI210, MI250, MI250X |
-| `-DKokkos_ARCH_AMD_GFX908=ON`  | GFX908       | MI100                |
-| `-DKokkos_ARCH_AMD_GFX906=ON`  | GFX906       | MI50, MI60           |
-| `-DKokkos_ARCH_AMD_GFX1100=ON` | GFX1100      | 7900xt               |
-| `-DKokkos_ARCH_AMD_GFX1030=ON` | GFX1030      | V620, W6800          |
+| Option                            | Architecture | Associated cards                                 |
+|-----------------------------------|--------------|--------------------------------------------------|
+| `-DKokkos_ARCH_AMD_GFX942_APU=ON` | GFX942 APU   | MI300A                                           |
+| `-DKokkos_ARCH_AMD_GFX942=ON`     | GFX942       | MI300X                                           |
+| `-DKokkos_ARCH_AMD_GFX90A=ON`     | GFX90A       | MI210, MI250, MI250X                             |
+| `-DKokkos_ARCH_AMD_GFX908=ON`     | GFX908       | MI100                                            |
+| `-DKokkos_ARCH_AMD_GFX906=ON`     | GFX906       | MI50, MI60                                       |
+| `-DKokkos_ARCH_AMD_GFX1103=ON`    | GFX1103      | Ryzen 8000G, Radeon 740M, 760M, 780M, 880M, 980M |
+| `-DKokkos_ARCH_AMD_GFX1100=ON`    | GFX1100      | 7900xt                                           |
+| `-DKokkos_ARCH_AMD_GFX1030=ON`    | GFX1030      | V620, W6800                                      |
 
 <!--#ifndef PRINT-->
 
@@ -310,6 +325,14 @@ They can be deduced from the device if present at CMake configuration time.
 | `-DKokkos_ARCH_INTEL_DG1=ON`   | Iris XeMAX            |
 | `-DKokkos_ARCH_INTEL_GEN12=ON` | Gen12                 |
 | `-DKokkos_ARCH_INTEL_GEN11=ON` | Gen11                 |
+
+<!--#ifndef PRINT-->
+
+| Option                                            | Description                                   |
+|---------------------------------------------------|-----------------------------------------------|
+| `-DKokkos_ENABLE_SYCL_RELOCATABLE_DEVICE_CODE=ON` | Enable Relocatable Device Code (RDC) for SYCL |
+
+<!--#endif-->
 
 </details>
 
@@ -417,8 +440,10 @@ cmake \
     -DKokkos_ENABLE_SYCL=ON \
     -DKokkos_ARCH_INTEL_PVC=ON \
     -DKokkos_ENABLE_OPENMP=ON \
-    -DCMAKE_CXX_FLAGS="-fp-model=precise"  # for math precision
+    -DCMAKE_CXX_FLAGS="-fp-model=precise"
 ```
+
+Last option is for math operators precision.
 
 <!--#ifndef PRINT-->
 <img title="Code" alt="Code" src="./images/code_txt.svg" height="25"> For more code examples:
