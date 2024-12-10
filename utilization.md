@@ -98,7 +98,6 @@ int main(int argc, char* argv[]) {
     Kokkos::initialize(argc, argv);
     { /* ... */ }
     Kokkos::finalize();
-    return 0;
 }
 ```
 
@@ -108,7 +107,6 @@ int main(int argc, char* argv[]) {
 int main(int argc, char* argv[]) {
     Kokkos::ScopeGuard kokkos(argc, argv);
     /* ... */
-    return 0;
 }
 ```
 
@@ -140,11 +138,11 @@ int main(int argc, char* argv[]) {
 
 #### Specific memory spaces
 
-| Memory space                    | Description                                                                    |
-|---------------------------------|--------------------------------------------------------------------------------|
-| `Kokkos::HostSpace`             | Accessible from the host but may not be accessible directly from the device    |
-| `Kokkos::SharedSpace`           | Accessible from the host and from the device; copy managed by the driver       |
-| `Kokkos::SharedHostPinnedSpace` | Accessible from the host and from the device; zero copy access in small chunks |
+| Memory space                    | Description                                                               |
+|---------------------------------|---------------------------------------------------------------------------|
+| `Kokkos::HostSpace`             | Accessible from the host but maybe not from the device                    |
+| `Kokkos::SharedSpace`           | Accessible from the host and the device; copy managed by the driver       |
+| `Kokkos::SharedHostPinnedSpace` | Accessible from the host and the device; zero copy access in small chunks |
 
 <!--#ifndef PRINT-->
 <details>
