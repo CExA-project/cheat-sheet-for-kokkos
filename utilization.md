@@ -803,6 +803,7 @@ Kokkos::parallel_for(
 | `Kokkos::atomic_or(&x, y)`     | `x \|= y`            |
 | `Kokkos::atomic_rshift(&x, y)` | `x = x >> y`         |
 | `Kokkos::atomic_sub(&x, y)`    | `x -= y`             |
+| `Kokkos::atomic_store(&x, y)`  | `x = y`             |
 | `Kokkos::atomic_xor(&x, y)`    | `x ^= y`             |
 
 <!--#ifndef PRINT-->
