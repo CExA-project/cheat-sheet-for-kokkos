@@ -6,37 +6,6 @@ title: Installation cheat sheet for Kokkos
 
 # Kokkos install cheat sheet
 
-1. [title: Installation cheat sheet for Kokkos](#title-installation-cheat-sheet-for-kokkos)
-2. [Requirements](#requirements)
-	1. [Compiler](#compiler)
-	2. [Build system](#build-system)
-3. [How to build Kokkos](#how-to-build-kokkos)
-	1. [As part of your application](#as-part-of-your-application)
-	2. [As an external library](#as-an-external-library)
-		1. [Configure, build and install Kokkos](#configure-build-and-install-kokkos)
-		2. [Use in your code](#use-in-your-code)
-	3. [As a Spack package](#as-a-spack-package)
-4. [Kokkos compile options](#kokkos-compile-options)
-	1. [Host backends](#host-backends)
-	2. [Device backends](#device-backends)
-	3. [Specific options](#specific-options)
-	4. [Architecture-specific options](#architecture-specific-options)
-		1. [Host architectures](#host-architectures)
-			1. [AMD CPU architectures](#amd-cpu-architectures)
-			2. [ARM CPU architectures](#arm-cpu-architectures)
-			3. [Intel CPU architectures](#intel-cpu-architectures)
-		2. [Device architectures](#device-architectures)
-			1. [AMD GPU architectures (HIP)](#amd-gpu-architectures-hip)
-			2. [Intel GPU architectures (SYCL)](#intel-gpu-architectures-sycl)
-			3. [NVIDIA GPU architectures (CUDA)](#nvidia-gpu-architectures-cuda)
-	3. [Third-party Libraries (TPLs)](#third-party-libraries-tpls)
-	4. [Examples for the most common architectures](#examples-for-the-most-common-architectures)
-		1. [Local CPU with OpenMP](#local-cpu-with-openmp)
-		2. [AMD MI250 GPU with HIP and OpenMP](#amd-mi250-gpu-with-hip-and-openmp)
-		3. [NVIDIA A100 GPU with CUDA and OpenMP](#nvidia-a100-gpu-with-cuda-and-openmp)
-		4. [NVIDIA V100 GPU with CUDA and OpenMP](#nvidia-v100-gpu-with-cuda-and-openmp)
-		5. [Intel GPU Max/Ponte Vecchio GPU with SYCL and OpenMP](#intel-gpu-maxponte-vecchio-gpu-with-sycl-and-openmp)
-
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/building.html
