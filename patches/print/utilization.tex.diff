@@ -1,6 +1,6 @@
---- .utilization.tex	2024-04-04 15:24:34.870938021 +0200
-+++ utilization.tex	2024-04-04 16:05:20.788280374 +0200
-@@ -353,13 +353,12 @@
+--- .utilization.tex	2024-12-16 11:27:31.689344896 +0100
++++ utilization.tex	2024-12-16 11:29:59.637362751 +0100
+@@ -451,13 +451,12 @@
  \hypertarget{generic-memory-spaces}{%
  \paragraph{Generic memory spaces}\label{generic-memory-spaces}}
  
@@ -17,16 +17,16 @@
  host \\
  \texttt{Kokkos::DefaultHostExecutionSpace::memory\_space} & On host & On
  host \\
-@@ -403,7 +402,7 @@
+@@ -501,7 +500,7 @@
  \begin{tabularx}{\linewidth}{lX}
  \toprule
  
 -\tblhead{Template argument} & \tblhead{Description} \\ \midrule
 +\tblhead{Template arg.} & \tblhead{Description} \\ \midrule
  
- \texttt{DataType} & \texttt{ScalarType*{[}{]}} where \texttt{ScalarType}
- is the data type, \texttt{*} the number of runtime dimensions, and
-@@ -580,7 +579,7 @@
+ \texttt{DataType} & \texttt{ScalarType} for the data type, followed by a
+ \texttt{*} for each runtime dimension, then by a
+@@ -697,7 +696,7 @@
  \begin{tabularx}{\linewidth}{lX}
  \toprule
  
@@ -35,7 +35,7 @@
  
  \texttt{DataType} & Scalar type of the view and its dimensionality \\
  \texttt{Operation} & See \protect\hyperlink{scatter-operation}{scatter
-@@ -745,7 +744,7 @@
+@@ -863,7 +862,7 @@
  \begin{tabularx}{\linewidth}{lX}
  \toprule
  
@@ -44,7 +44,28 @@
  
  \texttt{ExecutionSpace} & See
  \protect\hyperlink{execution-spaces}{execution spaces}; defaults to
-@@ -1003,13 +1002,13 @@
+@@ -985,7 +984,11 @@
+ \NormalTok{    Kokkos::TeamPolicy(numberOfElementsI, Kokkos::AUTO),}
+ \NormalTok{    KOKKOS\_LAMBDA (}\AttributeTok{const}\NormalTok{ Kokkos::TeamPolicy\textless{}\textgreater{}::}\DataTypeTok{member\_type}\NormalTok{\& teamMember) \{}
+         \AttributeTok{const} \DataTypeTok{int}\NormalTok{ i = teamMember.team\_rank();}
++\end{Highlighting}
++\end{Shaded}
+ 
++\begin{Shaded}
++\begin{Highlighting}[]
+ \NormalTok{        Kokkos::parallel\_for(}
+ \NormalTok{            Kokkos::TeamThreadRange(teamMember, firstJ, lastJ),}
+ \NormalTok{            [=] (}\AttributeTok{const} \DataTypeTok{int}\NormalTok{ j) \{}
+@@ -1106,7 +1109,7 @@
+ \hypertarget{atomic-exchanges}{%
+ \subsubsection{Atomic exchanges}\label{atomic-exchanges}}
+ 
+-\begin{tabularx}{\linewidth}{lX}
++\begin{tabularx}{\linewidth}{XX}
+ \toprule
+ 
+ \tblhead{Operation} & \tblhead{Description} \\ \midrule
+@@ -1126,13 +1129,13 @@
  \hypertarget{math-functions}{%
  \subsubsection{Math functions}\label{math-functions}}
  
@@ -60,7 +81,7 @@
  \texttt{remainder}, \texttt{fma}, \texttt{fmax}, \texttt{fmin},
  \texttt{fdim}, \texttt{nan} \\
  Exponential & \texttt{exp}, \texttt{exp2}, \texttt{expm1}, \texttt{log},
-@@ -1019,7 +1018,7 @@
+@@ -1142,7 +1145,7 @@
  \texttt{acos}, \texttt{atan}, \texttt{atan2} \\
  Hyperbolic & \texttt{sinh}, \texttt{cosh}, \texttt{tanh},
  \texttt{asinh}, \texttt{acosh}, \texttt{atanh} \\
