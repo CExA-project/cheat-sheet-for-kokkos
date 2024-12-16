@@ -6,7 +6,7 @@ title: Utilisation cheat sheet for Kokkos
 
 # Kokkos utilization cheat sheet
 
-<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Only for Kokkos 4.2 and more, for older verison look at the doc.
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Only for Kokkos 4.5 and more, for older verison look at the doc.
 
 1. [title: Utilisation cheat sheet for Kokkos](#title-utilisation-cheat-sheet-for-kokkos)
 2. [Header](#header)
@@ -39,7 +39,7 @@ title: Utilisation cheat sheet for Kokkos
 		4. [Scatter](#scatter)
 		5. [Compute](#compute)
 		6. [Gather](#gather)
-9. [Parallelism patterns](#parallelism-patterns)
+9. [Parallel constructs](#parallel-constructs)
 	1. [For loop](#for-loop)
 	2. [Reduction](#reduction)
 	3. [Fences](#fences)
@@ -98,7 +98,6 @@ int main(int argc, char* argv[]) {
     Kokkos::initialize(argc, argv);
     { /* ... */ }
     Kokkos::finalize();
-    return 0;
 }
 ```
 
@@ -108,7 +107,6 @@ int main(int argc, char* argv[]) {
 int main(int argc, char* argv[]) {
     Kokkos::ScopeGuard kokkos(argc, argv);
     /* ... */
-    return 0;
 }
 ```
 
@@ -140,11 +138,11 @@ int main(int argc, char* argv[]) {
 
 #### Specific memory spaces
 
-| Memory space                    | Description                                                                    |
-|---------------------------------|--------------------------------------------------------------------------------|
-| `Kokkos::HostSpace`             | Accessible from the host but may not be accessible directly from the device    |
-| `Kokkos::SharedSpace`           | Accessible from the host and from the device; copy managed by the driver       |
-| `Kokkos::SharedHostPinnedSpace` | Accessible from the host and from the device; zero copy access in small chunks |
+| Memory space                    | Description                                                               |
+|---------------------------------|---------------------------------------------------------------------------|
+| `Kokkos::HostSpace`             | Accessible from the host but maybe not from the device                    |
+| `Kokkos::SharedSpace`           | Accessible from the host and the device; copy managed by the driver       |
+| `Kokkos::SharedHostPinnedSpace` | Accessible from the host and the device; zero copy access in small chunks |
 
 <!--#ifndef PRINT-->
 <details>
@@ -157,14 +155,8 @@ Kokkos::View<double*, Kokkos::HostSpace> hostView("hostView", numberOfElements);
 // Shared space
 Kokkos::View<double*, Kokkos::SharedSpace> sharedView("sharedView", numberOfElements);
 
-// Scratch memory space
-Kokkos::parallel_for(
-    Kokkos::TeamPolicy<>(leagueSize, teamSize),
-    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& team) {
-        // Allocate scratch memory for each team
-        Kokkos::View<double*, Kokkos::ScratchMemorySpace> scratchView(team.team_scratch(1), scratchSize);
-    }
-);
+// Shared host pinned space
+Kokkos::View<double*, Kokkos::SharedHostPinnedSpace> sharedHostPinnedView("sharedHostPinnedView", numberOfElements);
 ```
 
 </details>
@@ -297,7 +289,7 @@ Memory traits are indicated with `Kokkos::MemoryTraits<>` and are combined with 
 ```cpp
 // Unmanaged view on CPU
 double* data = new double[numberOfElements];
-Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Unmanaged>> unmanagedView(data, numberOfElements);
+Kokkos::View<double*, Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> unmanagedView(data, numberOfElements);
 
 // Unmanaged view on GPU using CUDA
 double* data;
@@ -505,7 +497,7 @@ Kokkos::Experimental::contribute(histogram, scatter);
 </details>
 <!--#endif-->
 
-## Parallelism patterns
+## Parallel constructs
 
 ### For loop
 
@@ -657,7 +649,7 @@ A kernel running in a team policy has a `Kokkos::TeamPolicy<>::member_type` argu
 ```cpp
 Kokkos::parallel_for(
     "label",
-    Kokkos::TeamPolicy<>(numberOfElementsI, Kokkos::AUTO),
+    Kokkos::TeamPolicy(numberOfElementsI, Kokkos::AUTO),
     KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
         const int i = teamMember.team_rank();
 
@@ -694,7 +686,7 @@ Kokkos::TeamVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy<>::member_type> ra
 ```cpp
 Kokkos::parallel_for(
     "label",
-    Kokkos::TeamPolicy<>(numberOfElementsI, Kokkos::AUTO),
+    Kokkos::TeamPolicy(numberOfElementsI, Kokkos::AUTO),
     KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
         const int i = teamMember.team_rank();
 
@@ -763,7 +755,7 @@ size_t bytes = ScratchPadView::shmem_size(vectorSize);
 
 Kokkos::parallel_for(
     Kokkos::TeamPolicy<ExecutionSpace>(leagueSize, teamSize).set_scratch_size(spaceLevel, Kokkos::PerTeam(bytes)),
-    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
+    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<ExecutionSpace>::member_type& teamMember) {
         const int i = teamMember.team_rank();
 
         // Create a view for the scratch pad
@@ -795,13 +787,18 @@ Kokkos::parallel_for(
 |--------------------------------|----------------------|
 | `Kokkos::atomic_add(&x, y)`    | `x += y`             |
 | `Kokkos::atomic_and(&x, y)`    | `x &= y`             |
-| `Kokkos::atomic_assign(&x, y)` | `x = y`              |
-| `Kokkos::atomic_decrement(&x)` | `x--`                |
-| `Kokkos::atomic_increment(&x)` | `y++`                |
+| `Kokkos::atomic_dec(&x)`       | `x--`                |
+| `Kokkos::atomic_inc(&x)`       | `x++`                |
+| `Kokkos::atomic_lshift(&x, y)` | `x = x << y`         |
 | `Kokkos::atomic_max(&x, y)`    | `x = std::max(x, y)` |
 | `Kokkos::atomic_min(&x, y)`    | `x = std::min(x, y)` |
+| `Kokkos::atomic_mod(&x, y)`    | `x %= y`           |
+| `Kokkos::atomic_nand(&x, y)`   | `x = !(x && y)`      |
 | `Kokkos::atomic_or(&x, y)`     | `x \|= y`            |
+| `Kokkos::atomic_rshift(&x, y)` | `x = x >> y`         |
 | `Kokkos::atomic_sub(&x, y)`    | `x -= y`             |
+| `Kokkos::atomic_store(&x, y)`  | `x = y`              |
+| `Kokkos::atomic_xor(&x, y)`    | `x ^= y`             |
 
 <!--#ifndef PRINT-->
 <details>
@@ -813,7 +810,7 @@ Kokkos::parallel_for(
     KOKKOS_LAMBDA (const int i) {
         const int value = /* ... */;
         const int bucketIndex = computeBucketIndex (value);
-        Kokkos::atomic_increment(&histogram(bucketIndex));
+        Kokkos::atomic_inc(&histogram(bucketIndex));
     }
 );
 ```
@@ -823,26 +820,26 @@ Kokkos::parallel_for(
 
 ### Atomic exchanges
 
-| Operation                                | Description                                                            |
-|------------------------------------------|------------------------------------------------------------------------|
-| `Kokkos::atomic_exchange`                | Assign destination to new value and return old value                   |
-| `Kokkos::atomic_compare_exchange_strong` | Assign destination to new value if old value equals a comparison value |
+| Operation                                                | Description                                                                                  |
+|----------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| `Kokkos::atomic_exchange(&x, desired)`                   | Assign desired value to object and return old value                                          |
+| `Kokkos::atomic_compare_exchange(&x, expected, desired)` | Assign desired value to object if the object has the expected value and return the old value |
 
 <!--#ifndef PRINT-->
 <details>
 <summary>Example</summary>
 
 ```cpp
-// Assign destination to new value and return old value
-int new = 20;
-int destination = 10;
-int old = atomic_exchange(&destination, new);
+// Assign desired value to object and return old value
+int desired = 20;
+int obj = 10;
+int old = Kokkos::atomic_exchange(&obj, desired);
 
-// Assign destination to new value if old value equals a comparison value
-int new = 20;
-int destination = 10;
-int comparison = 10;
-bool success = atomic_compare_exchange_strong(&destination, comparison, new);
+// Assign desired value to object if the object has the expected value and return the old value
+int desired = 20;
+int obj = 10;
+int expected = 10;
+int old = atomic_compare_exchange(&obj, expected, desired);
 ```
 
 </details>
