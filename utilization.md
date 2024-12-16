@@ -792,7 +792,7 @@ Kokkos::parallel_for(
 | `Kokkos::atomic_lshift(&x, y)` | `x = x << y`         |
 | `Kokkos::atomic_max(&x, y)`    | `x = std::max(x, y)` |
 | `Kokkos::atomic_min(&x, y)`    | `x = std::min(x, y)` |
-| `Kokkos::atomic_mod(&x, y)`    | `x = %= y`           |
+| `Kokkos::atomic_mod(&x, y)`    | `x %= y`           |
 | `Kokkos::atomic_nand(&x, y)`   | `x = !(x && y)`      |
 | `Kokkos::atomic_or(&x, y)`     | `x \|= y`            |
 | `Kokkos::atomic_rshift(&x, y)` | `x = x >> y`         |
