@@ -330,3 +330,15 @@
 
     \dotcolumnfill{#1}
 }
+
+\newcommand\watermark{%
+    \begin{flushright}
+        Brought to you by%
+        \raisebox{-0.4\height}{%
+            \hspace{\horizontalskip}%
+            \href{https://cexa-project.org}{\includegraphics[height=1cm]{cexa}}%
+            \hspace{\horizontalskip}%
+            \href{https://mdls.fr}{\includegraphics[height=1cm]{maison_de_la_simulation}}%
+        }%
+    \end{flushright}
+}
