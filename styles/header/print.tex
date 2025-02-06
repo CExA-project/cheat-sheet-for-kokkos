@@ -10,6 +10,7 @@
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{fvextra}
+\usepackage{ifthen}
 
 \definecolor{kokkos}{RGB}{30, 120, 152}
 
@@ -35,22 +36,27 @@
 \newlength{\headerheight}
 \newlength{\footerheight}
 \newlength{\horizontalskip}
+\newlength{\printmargin}
+\newlength{\logomaxheight}
 \setlength{\headerheight}{0cm}
 \setlength{\footerheight}{0cm}
 \setlength{\horizontalskip}{0cm}
+\setlength{\printmargin}{0cm} % change here to add print margin, a good first guess is 0.4cm
+
+\graphicspath{{images/}}
 
 \fancypagestyle{kokkos}{%
     \setlength{\headerheight}{1cm}
-    \setlength{\footerheight}{0.5cm}
+    \setlength{\footerheight}{0.5cm + 0.25 \printmargin}
     \setlength{\horizontalskip}{0.25cm}
 
     \newgeometry{
-        headheight=\headerheight,
         hmargin=0.5cm,
         vmargin=0cm,
         includeheadfoot,
+        headheight=\headerheight,
         headsep=0.5cm,
-        footskip=1cm,
+        footskip=\footerheight + 2\horizontalskip,
     }
     \renewcommand{\headrulewidth}{0pt}
     \renewcommand{\footrulewidth}{0pt}
@@ -78,10 +84,14 @@
         % Add the Kokkos wiki link
         \setlength{\fboxsep}{0pt}
         \colorbox{main}{%
-            \parbox[b][\footerheight][c]{\headwidth}{%
+            \parbox[b][\footerheight][t]{\headwidth}{%
                 \fancycenter{%
+                    \ifthenelse{\isodd{\value{page}}}{%
+                    }{%
+                        \hspace{\printmargin}%
+                    }%
                     \hspace{\horizontalskip}%
-                    \footnotesize\bfseries\color{lightmain}\url{https://kokkos.org/kokkos-core-wiki}%
+                    \footnotesize\bfseries\color{lightmain}\strut\url{https://kokkos.org/kokkos-core-wiki}%
                 }{}{}
             }%
         }%
@@ -93,32 +103,57 @@
 
     \setlength{\headerheight}{2cm}
     \newgeometry{
-        headheight=\headerheight,
         hmargin=0.5cm,
         vmargin=0cm,
         includeheadfoot,
+        headheight=\headerheight,
         headsep=0.5cm,
-        footskip=1cm,
+        footskip=\footerheight + 2\horizontalskip,
     }
 
     \fancyhead{%
         % Add the title and the page
         \setlength{\fboxsep}{0pt}
         \colorbox{main}{%
-            \parbox[b][\headerheight][c]{0.5\headerheight}{%
-                \includegraphics[
-                    height=\headheight,
-                ]{images/kokkos_wire.pdf}
+            \parbox[b][\headerheight][b]{\headerheight}{%
+                % add left continuation of the logo
+                \ifthenelse{\isodd{\value{page}}}{%
+                }{%
+                    \colorbox{lightmain}{%
+                        \parbox[b][\headerheight]{\printmargin}{~}%
+                    }%
+                }%
+                \begin{minipage}[b][\headerheight][b]{\headerheight - \printmargin}
+                    \setlength{\logomaxheight}{\headerheight - 0.75\printmargin}
+                    % add top continuation of the logo
+                    \colorbox{lightmain}{%
+                        \parbox[b][\printmargin][b]{
+                            0.575\logomaxheight % manual adjust logo height
+                        }{~}%
+                    }%
+                    \vspace{-0.04cm} % manual adjust vertical gap
+                    \\
+                    \includegraphics[
+                        height=\logomaxheight,
+                    ]{images/kokkos_wire.pdf}%
+                \end{minipage}
             }%
-            \hspace{-0.5\headerheight}
+            \hspace{-\headerheight}
             \parbox[b][\headerheight][c]{\headwidth}{%
                 \fancycenter{%
+                    \ifthenelse{\isodd{\value{page}}}{%
+                    }{%
+                        \hspace{\printmargin}%
+                    }%
                     \hspace{0.4\headerheight}
                     {\Huge\bfseries{}\href{https://kokkos.org/kokkos-core-wiki}{\gettitle}}%
                     {\Large\bfseries\color{lightmain}\ :: page \thepage}%
                 }{}{%
                     \small\color{lightmain}v\input{VERSION}%
                     \hspace{\horizontalskip}
+                    \ifthenelse{\isodd{\value{page}}}{%
+                        \hspace{\printmargin}%
+                    }{}%
                 }
             }%
         }%
@@ -273,7 +308,7 @@
 
 \makeatletter
 
-\newcommand*\dotcolumnfill{%
+\newcommand{\dotcolumnfill}[1]{%
     % https://tex.stackexchange.com/a/319436
     \par
     \null
@@ -281,16 +316,17 @@
     \xleaders \hb@xt@ \hsize {%
         \strut \cleaders \hb@xt@ .44em{\hss.\hss}\hfill
     }\vfill
+    #1
     \vskip \ht\strutbox
     \break
 }
 
 \makeatother
 
-\newcommand\notessection{%
+\newcommand\notessection[1]{%
     \subsection{Notes}
 
     \vspace{1em}
 
-    \dotcolumnfill
+    \dotcolumnfill{#1}
 }
