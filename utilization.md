@@ -322,14 +322,14 @@ A subview has the same reference count as its parent view, so the parent view wo
 <!--#endif-->
 
 ```cpp
-auto subview = Kokkos::subview(view, Kokkos::ALL, Kokkos::pair(rangeFirst, rangeLast), value);
+auto subview = Kokkos::subview(view, selector1, selector2, ...);
 ```
 
-| Subset selection | Description                         |
-|------------------|-------------------------------------|
-| `Kokkos::ALL`    | All elements in this dimension      |
-| `Kokkos::pair`   | Range of elements in this dimension |
-| `value`          | Specific element in this dimension  |
+| Subset selector             | Description                         |
+|-----------------------------|-------------------------------------|
+| `Kokkos::ALL`               | All elements in this dimension      |
+| `Kokkos::pair(first, last)` | Range of elements in this dimension |
+| `value`                     | Specific element in this dimension  |
 
 ### Scatter view (experimental)
 
