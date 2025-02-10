@@ -308,6 +308,7 @@
 
 \makeatletter
 
+% fill with dotted lines until the end of the page
 \newcommand{\dotcolumnfill}[1]{%
     % https://tex.stackexchange.com/a/319436
     \par
@@ -323,6 +324,7 @@
 
 \makeatother
 
+% notes section with dotted lines
 \newcommand\notessection[1]{%
     \subsection{Notes}
 
@@ -331,6 +333,7 @@
     \dotcolumnfill{#1}
 }
 
+% watermark with CExA and MDLS logos
 \newcommand\watermark{%
     \begin{flushright}
         Brought to you by%
