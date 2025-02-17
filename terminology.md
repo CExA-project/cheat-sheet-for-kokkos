@@ -21,8 +21,8 @@ title: Terminology cheat sheet for Kokkos
 | Shared memory                    | Unified virtual memory (UVM) | Unified memory     | Unified shared memory (USM) |
 
 <!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> ttps://rocm.docs.amd.com/projects/HIP/en/docs-develop/how-to/hip_runtime_api/memory_management/device_memory.html
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> ttps://rocm.docs.amd.com/projects/HIP/en/latest/how-to/performance_guidelines.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://rocm.docs.amd.com/projects/HIP/en/docs-develop/how-to/hip_runtime_api/memory_management/device_memory.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/performance_guidelines.html
 <!--#endif-->
 
 ## Execution
@@ -31,7 +31,7 @@ title: Terminology cheat sheet for Kokkos
 |--------------|-------------------------------|--------------------|---------------|--------------------|
 | Core cluster | Streaming multiprocessor (SM) | Compute unit (CU)  | Xe core       | Compute unit       |
 | Core         | Streaming processor           | Processing element | Vector engine | Processing element |
-| Vector?      | Warp                          | Wavefront          | SIMD?         | Sub group          |
+| SIMD         | Warp                          | Wavefront          | SIMD?         | Sub group          |
 | Vector lane  | Thread                        | Work item          |               | Work item          |
 |              | NVPTX                         | AMDIL              | SPIR          |                    |
 | Loop body    | Kernel                        | Kernel             | Kernel        | Kernel             |
@@ -40,11 +40,11 @@ title: Terminology cheat sheet for Kokkos
 
 | Kokkos | OpenMP target | OpenACC | Cuda   | HIP         | SYCL       |
 |--------|---------------|---------|--------|-------------|------------|
-| Team   | Team          | Gang    | Grid   | Index range | ND-range   |
-| Thread | Thread        | Worker  | Block  | Work group  | Work group |
+| League |               |         | Grid   | Index range | ND-range   |
+| Team   | Team          | Gang    | Block  | Work group  | Work group |
+| Thread | Thread        | Worker  | Warp   | Wavefront   | Sub group  |
 | Vector | SIMD          | Vector  | Thread | Work item   | Work item  |
 
 <!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> ttps://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/2023-0/sycl-thread-mapping-and-gpu-occupancy.html
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> ttps://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/2023-0/sycl-thread-mapping-and-gpu-occupancy.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/2023-0/sycl-thread-mapping-and-gpu-occupancy.html
 <!--#endif-->
