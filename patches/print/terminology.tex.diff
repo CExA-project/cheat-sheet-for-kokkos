@@ -1,0 +1,41 @@
+--- .terminology.tex	2025-02-17 18:24:07.445994128 +0100
++++ terminology.tex	2025-02-17 18:25:36.133471628 +0100
+@@ -351,12 +351,10 @@
+ \begin{document}
+ \maketitle
+ 
+-\begin{multicols}{2}
+-
+ \hypertarget{memory}{%
+ \subsection{Memory}\label{memory}}
+ 
+-\begin{tabularx}{\linewidth}{XXXX}
++\begin{tabularx}{\linewidth}{lXXX}
+ \toprule
+ 
+ \tblhead{Kokkos} & \tblhead{Cuda} & \tblhead{HIP} & \tblhead{SYCL} \\ \midrule
+@@ -380,7 +378,7 @@
+ \hypertarget{execution}{%
+ \subsection{Execution}\label{execution}}
+ 
+-\begin{tabularx}{\linewidth}{lXXlX}
++\begin{tabularx}{\linewidth}{XlXXX}
+ \toprule
+ 
+ \tblhead{CPU} & \tblhead{NVIDIA} & \tblhead{AMD} & \tblhead{Intel
+@@ -401,7 +399,7 @@
+ \hypertarget{hierarchical-parallelism}{%
+ \subsection{Hierarchical parallelism}\label{hierarchical-parallelism}}
+ 
+-\begin{tabularx}{\linewidth}{Xlllll}
++\begin{tabularx}{\linewidth}{XXXXXX}
+ \toprule
+ 
+ \tblhead{Kokkos} & \tblhead{OpenMP
+@@ -415,6 +413,4 @@
+ \bottomrule
+ \end{tabularx}
+ 
+-\end{multicols}
+-
+ \end{document}
