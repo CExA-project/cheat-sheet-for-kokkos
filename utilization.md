@@ -8,78 +8,11 @@ title: Utilisation cheat sheet for Kokkos
 
 <img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Only for Kokkos 4.5 and more, for older verison look at the doc.
 
-1. [title: Utilisation cheat sheet for Kokkos](#title-utilisation-cheat-sheet-for-kokkos)
-2. [Header](#header)
-3. [Initialization](#initialization)
-	1. [Initialize and finalize](#initialize-and-finalize)
-	2. [Scope guard](#scope-guard)
-4. [Kokkos concepts](#kokkos-concepts)
-	1. [Execution spaces](#execution-spaces)
-	2. [Memory spaces](#memory-spaces)
-		1. [Generic memory spaces](#generic-memory-spaces)
-		2. [Specific memory spaces](#specific-memory-spaces)
-3. [Memory management](#memory-management)
-	1. [View](#view)
-		1. [Create](#create)
-		2. [Manage](#manage)
-				1. [Resize and preserve content](#resize-and-preserve-content)
-				2. [Reallocate and do not preserve content](#reallocate-and-do-not-preserve-content)
-	3. [Memory Layouts](#memory-layouts)
-	4. [Memory trait](#memory-trait)
-	5. [Deep copy](#deep-copy)
-	6. [Mirror view](#mirror-view)
-		1. [Create and always allocate on host](#create-and-always-allocate-on-host)
-		2. [Create and allocate on host if source view is not in host space](#create-and-allocate-on-host-if-source-view-is-not-in-host-space)
-		3. [Create, allocate and synchronize if source view is not in same space as destination view](#create-allocate-and-synchronize-if-source-view-is-not-in-same-space-as-destination-view)
-	7. [Subview](#subview)
-	8. [Scatter view (experimental)](#scatter-view-experimental)
-		1. [Specific header](#specific-header)
-		2. [Create](#create)
-		3. [Scatter operation](#scatter-operation)
-		4. [Scatter](#scatter)
-		5. [Compute](#compute)
-		6. [Gather](#gather)
-9. [Parallel constructs](#parallel-constructs)
-	1. [For loop](#for-loop)
-	2. [Reduction](#reduction)
-	3. [Fences](#fences)
-		1. [Global fence](#global-fence)
-		2. [Execution space fence](#execution-space-fence)
-		3. [Team barrier](#team-barrier)
-4. [Execution policy](#execution-policy)
-	1. [Create](#create)
-	2. [Ranges](#ranges)
-		1. [One-dimensional range](#one-dimensional-range)
-		2. [Multi-dimensional (dimension 2)](#multi-dimensional-dimension-2)
-	3. [Hierarchical parallelism](#hierarchical-parallelism)
-		1. [Team policy](#team-policy)
-		2. [Team vector level (2-level hierarchy)](#team-vector-level-2-level-hierarchy)
-			1. [One-dimensional range](#one-dimensional-range)
-			2. [Multi-dimensional range (dimension 2)](#multi-dimensional-range-dimension-2)
-		3. [Team thread vector level (3-level hierarchy)](#team-thread-vector-level-3-level-hierarchy)
-			1. [One-dimensional range](#one-dimensional-range)
-			2. [Multi-dimensional range (dimension 2)](#multi-dimensional-range-dimension-2)
-4. [Scratch memory](#scratch-memory)
-	1. [Scratch memory space](#scratch-memory-space)
-	2. [Create and populate](#create-and-populate)
-5. [Atomics](#atomics)
-	1. [Atomic operations](#atomic-operations)
-	2. [Atomic exchanges](#atomic-exchanges)
-6. [Mathematics](#mathematics)
-	1. [Math functions](#math-functions)
-	2. [Complex numbers](#complex-numbers)
-		1. [Create](#create)
-		2. [Manage](#manage)
-3. [Utilities](#utilities)
-	1. [Code interruption](#code-interruption)
-	2. [Print inside a kernel](#print-inside-a-kernel)
-	3. [Timer](#timer)
-		1. [Create](#create)
-		2. [Manage](#manage)
-	4. [Manage parallel environment](#manage-parallel-environment)
-4. [Macros](#macros)
-	1. [Essential macros](#essential-macros)
-	2. [Extra macros](#extra-macros)
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/programmingguide.html
+
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core-index.html
+
+<img title="Doc" alt="Doc" src="./images/tutorial_txt.svg" height="25"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_01_Introduction.pdf
 
 <!--#endif-->
 
@@ -389,14 +322,14 @@ A subview has the same reference count as its parent view, so the parent view wo
 <!--#endif-->
 
 ```cpp
-auto subview = Kokkos::subview(view, Kokkos::ALL, Kokkos::pair(rangeFirst, rangeLast), value);
+auto subview = Kokkos::subview(view, selector1, selector2, ...);
 ```
 
-| Subset selection | Description                         |
-|------------------|-------------------------------------|
-| `Kokkos::ALL`    | All elements in this dimension      |
-| `Kokkos::pair`   | Range of elements in this dimension |
-| `value`          | Specific element in this dimension  |
+| Subset selector             | Description                         |
+|-----------------------------|-------------------------------------|
+| `Kokkos::ALL`               | All elements in this dimension      |
+| `Kokkos::pair(first, last)` | Range of elements in this dimension |
+| `value`                     | Specific element in this dimension  |
 
 ### Scatter view (experimental)
 

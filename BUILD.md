@@ -9,9 +9,12 @@ Then the documents are converted to LaTeX sources, which can be compiled as PDF 
 ### Requirements
 
 - GPP (General Pre-Processor);
-- Pandoc;
+- Pandoc 2;
 - PDFLatex (from at least `texlive-latex-extra`); and
 - Python 3.
+
+Note that Pandoc 2 is not available anymore on Ubuntu 24.04 !
+In that case, please use the provided Docker image.
 
 ### Install dependencies
 
@@ -44,7 +47,7 @@ pip3 install --user -r requirements.txt
 A docker image containing all dependencies (minus LaTeX) is available:
 
 ```sh
-docker build -t kokkos_cheat_sheet .
+sudo docker build -t kokkos_cheat_sheet .
 ```
 
 ## Generate LaTeX files
@@ -54,10 +57,10 @@ Call the `convert.sh` script which pre-processes the input Markdown file and con
 ```sh
 ./convert.sh <file.md>
 # or
-docker run --rm -v $PWD:/work docker_cheat_sheet ./convert.sh <file.md>
+sudo docker run --rm -v $PWD:/work kokkos_cheat_sheet --user $UID:$GID ./convert.sh <file.md>
 ```
 
-Note that an additional `--user $UID:$GID` can be required to produce a file with your ownership on some systems.
+Note that `--user $UID:$GID` is required to produce a file with your ownership on some systems.
 
 ## Build PDF document
 

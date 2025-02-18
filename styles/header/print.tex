@@ -251,48 +251,49 @@
     skins,
 }
 
-\renewenvironment{Shaded}[1][]{%
-    \begin{tcolorbox}[
-        skin=tilemiddle,
-        colback=lightgray,
-        leftrule=0pt,
-        rightrule=0pt,
-        toprule=0pt,
-        bottomrule=0pt,
-        fontupper=\codesize,
-        before skip=0.5em,
-        after skip=0.5em,
-        left skip=0pt,
-        right skip=0pt,
-        top=\fboxsep,
-        bottom=\fboxsep,
-        left=\fboxsep,
-        right=\fboxsep ,
-        pad at break=0.75\fboxsep,
-        #1,
-        ]%
-    }{%
-    \end{tcolorbox}
-}
+\ifcsmacro{Shaded}{
+    \renewenvironment{Shaded}[1][]{%
+        \begin{tcolorbox}[
+            skin=tilemiddle,
+            colback=lightgray,
+            leftrule=0pt,
+            rightrule=0pt,
+            toprule=0pt,
+            bottomrule=0pt,
+            fontupper=\codesize,
+            before skip=0.5em,
+            after skip=0.5em,
+            left skip=0pt,
+            right skip=0pt,
+            top=\fboxsep,
+            bottom=\fboxsep,
+            left=\fboxsep,
+            right=\fboxsep ,
+            pad at break=0.75\fboxsep,
+            #1,
+            ]%
+        }{%
+        \end{tcolorbox}
+    }
 
+    \colorlet{codemain}{kokkos}
+    \colorlet{codelightmain}{kokkos!70}
+    \colorlet{codegray}{gray!90!black}
 
-\colorlet{codemain}{kokkos}
-\colorlet{codelightmain}{kokkos!70}
-\colorlet{codegray}{gray!90!black}
-
-\renewcommand{\AttributeTok}[1]{{\color{codelightmain}#1}}
-\renewcommand{\BuiltInTok}[1]{{\color{codemain}#1}}
-\renewcommand{\CommentTok}[1]{{\color{codegray}\textit{#1}}}
-\renewcommand{\CommentVarTok}[1]{{\color{codegray}\textit{#1}}}
-\renewcommand{\ConstantTok}[1]{{\color{codegray}#1}}
-\renewcommand{\ControlFlowTok}[1]{{\color{codemain}#1}}
-\renewcommand{\DataTypeTok}[1]{{\color{codemain}#1}}
-\renewcommand{\DecValTok}[1]{{\color{codelightmain}#1}}
-\renewcommand{\FunctionTok}[1]{{\color{codemain}#1}}
-\renewcommand{\KeywordTok}[1]{{\color{codemain}\textbf{#1}}}
-\renewcommand{\OtherTok}[1]{{\color{codelightmain}#1}}
-\renewcommand{\PreprocessorTok}[1]{{\color{codegray}#1}}
-\renewcommand{\StringTok}[1]{{\color{codemain}#1}}
+    \renewcommand{\AttributeTok}[1]{{\color{codelightmain}#1}}
+    \renewcommand{\BuiltInTok}[1]{{\color{codemain}#1}}
+    \renewcommand{\CommentTok}[1]{{\color{codegray}\textit{#1}}}
+    \renewcommand{\CommentVarTok}[1]{{\color{codegray}\textit{#1}}}
+    \renewcommand{\ConstantTok}[1]{{\color{codegray}#1}}
+    \renewcommand{\ControlFlowTok}[1]{{\color{codemain}#1}}
+    \renewcommand{\DataTypeTok}[1]{{\color{codemain}#1}}
+    \renewcommand{\DecValTok}[1]{{\color{codelightmain}#1}}
+    \renewcommand{\FunctionTok}[1]{{\color{codemain}#1}}
+    \renewcommand{\KeywordTok}[1]{{\color{codemain}\textbf{#1}}}
+    \renewcommand{\OtherTok}[1]{{\color{codelightmain}#1}}
+    \renewcommand{\PreprocessorTok}[1]{{\color{codegray}#1}}
+    \renewcommand{\StringTok}[1]{{\color{codemain}#1}}
+}{}
 
 % code inline
 
