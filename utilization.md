@@ -352,14 +352,14 @@ auto subview = Kokkos::subview(view, Kokkos::ALL, Kokkos::pair(rangeFirst, range
 #### Create
 
 ```cpp
-auto scatter_view = Kokkos::Experimental::create_scatter_view<Operation, Duplication, Contribution>(view);
+auto scatterView = Kokkos::Experimental::create_scatter_view<Operation, Duplication, Contribution>(targetView);
 ```
 
 | Template argument | Description                                                                                                                                                 |
 |-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `Operation`       | See [scatter operation](#scatter-operation); defaults to `Kokkos::Experimental::ScatterSum`                                                                 |
-| `Duplication`     | Whether to duplicate the grid or not; choices are `Kokkos::Experimental::ScatterDuplicated`, and `Kokkos::Experimental::ScatterNonDuplicated`; defaults to the option that is the most optimised for the view's Execution Space |
-| `Contribution`    | Whether to contribute using atomics or not; choices are `Kokkos::Experimental::ScatterAtomic`, or `Kokkos::Experimental::ScatterNonAtomic`; defaults to the option that is the most optimised for the view's Execution Space |
+| `Duplication`     | Whether to duplicate the grid or not; choices are `Kokkos::Experimental::ScatterDuplicated`, and `Kokkos::Experimental::ScatterNonDuplicated`; defaults to the option that is the most optimised for targetView's Execution Space |
+| `Contribution`    | Whether to contribute using atomics or not; choices are `Kokkos::Experimental::ScatterAtomic`, or `Kokkos::Experimental::ScatterNonAtomic`; defaults to the option that is the most optimised for targetView's Execution Space |
 
 #### Scatter operation
 
