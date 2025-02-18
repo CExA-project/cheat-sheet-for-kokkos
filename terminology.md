@@ -38,12 +38,12 @@ title: Terminology cheat sheet for Kokkos
 
 ## Hierarchical parallelism
 
-| Kokkos | OpenMP target | OpenACC | Cuda   | HIP         | SYCL       |
-|--------|---------------|---------|--------|-------------|------------|
-| League |               |         | Grid   | Index range | ND-range   |
-| Team   | Team          | Gang    | Block  | Work group  | Work group |
-| Thread | Thread        | Worker  | Warp   | Wavefront   | Sub group  |
-| Vector | SIMD          | Vector  | Thread | Work item   | Work item  |
+| Kokkos | OpenMP target | OpenACC        | Cuda   | HIP         | SYCL       |
+|--------|---------------|----------------|--------|-------------|------------|
+| League |               |                | Grid   | Index range | ND-range   |
+| Team   | Team          | Gang           | Block  | Work group  | Work group |
+| Thread | Thread        |                | Warp   | Wavefront   | Sub group  |
+| Vector | SIMD          | Worker, Vector | Thread | Work item   | Work item  |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/2023-0/sycl-thread-mapping-and-gpu-occupancy.html
