@@ -352,17 +352,14 @@ auto subview = Kokkos::subview(view, Kokkos::ALL, Kokkos::pair(rangeFirst, range
 #### Create
 
 ```cpp
-ScatterView<DataType, Operation, ExecutionSpace, Layout, Contribution> scatter(targetView);
+auto scatter_view = Kokkos::Experimental::create_scatter_view<Operation, Duplication, Contribution>(view);
 ```
 
 | Template argument | Description                                                                                                                                                 |
 |-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `DataType`        | Scalar type of the view and its dimensionality                                                                                                              |
 | `Operation`       | See [scatter operation](#scatter-operation); defaults to `Kokkos::Experimental::ScatterSum`                                                                 |
-| `ExecutionSpace`  | See [execution spaces](#executiondspaces); defaults to `Kokkos::DefaultExecutionSpace`                                                                      |
-| `Layout`          | See [layouts](#memory-layouts)                                                                                                                              |
-| `Duplication`     | Whether to duplicate the grid or not; defaults to `Kokkos::Experimental::ScatterDuplicated`, other option is `Kokkos::Experimental::ScatterNonDuplicated` |
-| `Contribution`    | Whether to contribute to use atomics; defaults to `Kokkos::Experimental::ScatterAtomic`, other option is `Kokkos::Experimental::ScatterNonAtomic`     |
+| `Duplication`     | Whether to duplicate the grid or not; choices are `Kokkos::Experimental::ScatterDuplicated`, and `Kokkos::Experimental::ScatterNonDuplicated`; defaults to the option that is the most optimised for the view's Execution Space |
+| `Contribution`    | Whether to contribute using atomics or not; choices are `Kokkos::Experimental::ScatterAtomic`, or `Kokkos::Experimental::ScatterNonAtomic`; defaults to the option that is the most optimised for the view's Execution Space |
 
 #### Scatter operation
 
