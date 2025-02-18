@@ -11,6 +11,17 @@ GPP_USERMODE_CHARACTER_STACK='('
 GPP_USERMODE_CHARACTER_UNSTACK=')'
 GPP_USERMODE_NUMBER='#'
 GPP_USERMODE_QUOTE=''
+PANDOC_VERSION_MAJOR=2
+
+check_pandoc_version () {
+    version=$(pandoc --version | grep "^pandoc" | sed 's/pandoc \([0-9]\+\).*/\1/')
+
+    if [[ "$version" != "$PANDOC_VERSION_MAJOR" ]]
+    then
+        echo "Unsupported Pandoc version: $version" >&2
+        return 1
+    fi
+}
 
 convert () {
     local input_file="$1"
@@ -146,5 +157,6 @@ main () {
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
+    check_pandoc_version
     main "$@"
 fi
