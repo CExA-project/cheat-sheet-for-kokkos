@@ -70,6 +70,31 @@ cmake -B build \
 - https://github.com/kokkos/kokkos/tree/master/example/build_cmake_in_tree
 <!--#endif-->
 
+### As a dependency managed by CMake
+
+```cmake
+find_package(Kokkos CONFIG)
+if(NOT Kokkos_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(
+        kokkos
+        URL https://github.com/kokkos/kokkos/releases/download/x.y.z/kokkos-x.y.z.zip
+    )
+    FetchContent_MakeAvailable(kokkos)
+endif()
+target_link_libraries(
+    my-app
+    Kokkos::kokkos
+)
+```
+
+```sh
+cd path/to/your/code
+cmake -B build \
+    -DCMAKE_CXX_COMPILER=<your C++ compiler> \
+    <Kokkos compile options>
+```
+
 ### As an external library
 
 #### Configure, build and install Kokkos
