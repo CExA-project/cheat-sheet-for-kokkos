@@ -1,6 +1,15 @@
---- .install.tex	2024-06-11 16:45:25.798270906 +0200
-+++ install.tex	2024-06-11 16:45:51.158407213 +0200
-@@ -497,7 +497,7 @@
+--- .install.tex	2025-02-21 20:31:49.235182630 +0100
++++ install.tex	2025-02-21 20:32:21.670428339 +0100
+@@ -472,7 +472,7 @@
+     \KeywordTok{include}\NormalTok{(FetchContent)}
+     \FunctionTok{FetchContent\_Declare}\NormalTok{(}
+ \NormalTok{        kokkos}
+-\NormalTok{        URL https://github.com/kokkos/kokkos/releases/download/x.y.z/kokkos{-}x.y.z.zip}
++\NormalTok{        URL https://github.com/kokkos/kokkos/releases/download/x.y.z/\break{}kokkos{-}x.y.z.zip}
+ \NormalTok{    )}
+     \FunctionTok{FetchContent\_MakeAvailable}\NormalTok{(kokkos)}
+ \KeywordTok{endif}\NormalTok{()}
+@@ -627,7 +627,7 @@
  \begin{tabularx}{\linewidth}{llX}
  \toprule
  
@@ -8,8 +17,8 @@
 +\tblhead{Option} & \tblhead{Arch.} & \tblhead{Associated
  cards} \\ \midrule
  
- \texttt{-DKokkos\_ARCH\_AMD\_GFX942=ON} & GFX942 & MI300A, MI300X \\
-@@ -537,7 +537,7 @@
+ \texttt{-DKokkos\_ARCH\_AMD\_GFX942\_APU=ON} & GFX942 APU & MI300A \\
+@@ -670,7 +670,7 @@
  \begin{tabularx}{\linewidth}{lllX}
  \toprule
  
@@ -18,12 +27,3 @@
  cards} \\ \midrule
  
  \texttt{-DKokkos\_ARCH\_HOPPER90=ON} & Hopper & 9.0 & H200, H100 \\
-@@ -639,7 +639,7 @@
-     \ExtensionTok{{-}DKokkos\_ENABLE\_SYCL}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
-     \ExtensionTok{{-}DKokkos\_ARCH\_INTEL\_PVC}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
-     \ExtensionTok{{-}DKokkos\_ENABLE\_OPENMP}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
--    \ExtensionTok{{-}DCMAKE\_CXX\_FLAGS}\NormalTok{=}\StringTok{"{-}fp{-}model=precise"}\NormalTok{  \# for math precision}
-+    \ExtensionTok{{-}DCMAKE\_CXX\_FLAGS}\NormalTok{=}\StringTok{"{-}fp{-}model=precise"}\CommentTok{  \# for math precision}
- \end{Highlighting}
- \end{Shaded}
- 
