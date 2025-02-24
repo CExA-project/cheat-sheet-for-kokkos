@@ -25,7 +25,7 @@ She wants to code with Kokkos efficiently without getting lost in the documentat
 
 ## Christophe
 
-Former CUDA developper for six years, he is specialized in GPU code tuning.
+Former CUDA developer for six years, he is specialized in GPU code tuning.
 
 He wants to transition to Kokkos to target other GPUs without having to learn their specific language.
 
