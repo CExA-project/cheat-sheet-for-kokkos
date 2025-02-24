@@ -6,7 +6,7 @@ title: Utilisation cheat sheet for Kokkos
 
 # Kokkos utilization cheat sheet
 
-<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Only for Kokkos 4.5 and more, for older verison look at the doc.
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Only for Kokkos 4.5 and more, for older version look at the doc.
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/programmingguide.html
 
@@ -403,7 +403,7 @@ KOKKOS_INLINE_FUNCTION double compute(double weight) { /* ... */ }
 Kokkos::View<double*> positions("positions", 100);
 Kokkos::View<double*> weight("weight", 100);
 
-// Historgram of N bins
+// Histogram of N bins
 Kokkos::View<double*> histogram("bar", N);
 
 Kokkos::Experimental::ScatterView<double*> scatter(histogram);
@@ -463,8 +463,8 @@ With `Kokkos::ReducerConcept` being one of the following:
 | `Kokkos::MaxLoc`    | `std::max_element`    | Maximum and associated index               |
 | `Kokkos::Min`       | `std::min`            | Minimum                                    |
 | `Kokkos::MinLoc`    | `std::min_element`    | Minimum and associated index               |
-| `Kokkos::MinMax`    | `std::minmax`         | Minimun and maximum                        |
-| `Kokkos::MinMaxLoc` | `std::minmax_element` | Minimun and maximun and associated indices |
+| `Kokkos::MinMax`    | `std::minmax`         | Minimum and maximum                        |
+| `Kokkos::MinMaxLoc` | `std::minmax_element` | Minimum and maximum and associated indices |
 | `Kokkos::Prod`      | `*`                   | Product                                    |
 | `Kokkos::Sum`       | `+`                   | Sum                                        |
 
@@ -563,12 +563,12 @@ Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> p
 Usually, `teamSize` is replaced by `Kokkos::AUTO` to let Kokkos determine it.
 A kernel running in a team policy has a `Kokkos::TeamPolicy<>::member_type` argument:
 
-| Method          | Description                          |
-|-----------------|--------------------------------------|
-| `league_size()` | Number of teams in the league        |
-| `league_rank()` | Index of the team withing the league |
-| `team_size()`   | Number of threads in the team        |
-| `team_rank()`   | Index of the thread within the team  |
+| Method          | Description                         |
+|-----------------|-------------------------------------|
+| `league_size()` | Number of teams in the league       |
+| `league_rank()` | Index of the team within the league |
+| `team_size()`   | Number of threads in the team       |
+| `team_rank()`   | Index of the thread within the team |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamPolicy.html
