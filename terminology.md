@@ -10,15 +10,14 @@ title: Terminology cheat sheet for Kokkos
 
 ## Memory
 
-| Kokkos                           | Cuda                         | HIP                | SYCL                        |
-|----------------------------------|------------------------------|--------------------|-----------------------------|
-| Default execution space's memory | Global memory                | Global memory      | Global memory               |
-| Default execution space's memory | Texture memory               | Texture memory     | Image memory                |
-| Scratch pad memory               | Shared memory                | Shared memory      | (Shared) local memory       |
-|                                  | Local memory                 | Local memory       |                             |
-|                                  | Register                     | Register           | Private memory              |
-| Shared host pinned memory        | Pinned host memory           | Pinned host memory | Host unified shared memory  |
-| Shared memory                    | Unified virtual memory (UVM) | Unified memory     | Unified shared memory (USM) |
+| Kokkos                                        | Cuda                         | HIP                | SYCL                        |
+|-----------------------------------------------|------------------------------|--------------------|-----------------------------|
+| `Kokkos::DefaultExecutionSpace::memory_space` | Global memory                | Global memory      | Global memory               |
+| `Kokkos::ScratchMemorySpace`                  | Shared memory                | Shared memory      | (Shared) local memory       |
+| --                                            | Local memory                 | Local memory       | --                          |
+| --                                            | Register                     | Register           | Private memory              |
+| `Kokkos::SharedHostPinnedSpace`               | Pinned host memory           | Pinned host memory | Host unified shared memory  |
+| `Kokkos::SharedSpace`                         | Unified virtual memory (UVM) | Unified memory     | Unified shared memory (USM) |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://rocm.docs.amd.com/projects/HIP/en/docs-develop/how-to/hip_runtime_api/memory_management/device_memory.html
@@ -27,22 +26,21 @@ title: Terminology cheat sheet for Kokkos
 
 ## Execution
 
-| CPU          | NVIDIA                        | AMD                | Intel Xe-HPC  | SYCL               |
-|--------------|-------------------------------|--------------------|---------------|--------------------|
-| Core cluster | Streaming multiprocessor (SM) | Compute unit (CU)  | Xe core       | Compute unit       |
-| Core         | Streaming processor           | Processing element | Vector engine | Processing element |
-| SIMD         | Warp                          | Wavefront          | SIMD?         | Sub group          |
-| Vector lane  | Thread                        | Work item          |               | Work item          |
-|              | NVPTX                         | AMDIL              | SPIR          |                    |
-| Loop body    | Kernel                        | Kernel             | Kernel        | Kernel             |
+| Cuda on NVIDIA                | HIP on AMD         | SYCL/OpenCL on Intel | Notes                   |
+|-------------------------------|--------------------|----------------------|-------------------------|
+| Streaming multiprocessor (SM) | Compute unit (CU)  | Compute unit         |                         |
+| Streaming processor           | Processing element | Processing element   |                         |
+| Warp                          | Wavefront          | Sub group            |                         |
+| Thread                        | Work item          | Work item            |                         |
+| NVPTX                         | AMDIL              | SPIR                 | Not strictly equivalent |
 
 ## Hierarchical parallelism
 
 | Kokkos | OpenMP target | OpenACC        | Cuda   | HIP         | SYCL       |
 |--------|---------------|----------------|--------|-------------|------------|
-| League |               |                | Grid   | Index range | ND-range   |
+| League | --            | --             | Grid   | Index range | ND-range   |
 | Team   | Team          | Gang           | Block  | Work group  | Work group |
-| Thread | Thread        |                | Warp   | Wavefront   | Sub group  |
+| Thread | Thread        | --             | Warp   | Wavefront   | Sub group  |
 | Vector | SIMD          | Worker, Vector | Thread | Work item   | Work item  |
 
 <!--#ifndef PRINT-->
