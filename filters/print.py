@@ -65,25 +65,25 @@ def tbl_alignment(s, h, v):
                 long_line_cols[index_col] |= has_long_line(col[0], threshold=THRESHOLD_CODE if one_single_code_cols[index_col] else THRESHOLD_NORMAL)
 
     # mark a left column as big if its size is over threshold
-    aligments = []
+    alignments = []
     for index_col, e in enumerate(s):
         align = aligns[e["t"]]
 
         if align == "l" and long_line_cols[index_col]:
-            aligments.append("X")
+            alignments.append("X")
             continue
 
-        aligments.append(align)
+        alignments.append(align)
 
     # if there are no big columns, make the first left one big
-    if "X" not in aligments:
+    if "X" not in alignments:
         try:
-            aligments[aligments.index("l")] = "X"
+            alignments[alignments.index("l")] = "X"
 
         except ValueError:
             pass
 
-    return "".join(aligments)
+    return "".join(alignments)
 
 
 def tbl_headers(s):
