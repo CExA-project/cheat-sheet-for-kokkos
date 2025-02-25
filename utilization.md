@@ -6,7 +6,7 @@ title: Utilisation cheat sheet for Kokkos
 
 # Kokkos utilization cheat sheet
 
-<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Only for Kokkos 4.5 and more, for older verison look at the doc.
+<img title="Warning" alt="Warning" src="./images/warning_txt.svg" height="25"> Only for Kokkos 4.5 and more, for older version look at the doc.
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/programmingguide.html
 
@@ -352,17 +352,14 @@ auto subview = Kokkos::subview(view, selector1, selector2, ...);
 #### Create
 
 ```cpp
-ScatterView<DataType, Operation, ExecutionSpace, Layout, Contribution> scatter(targetView);
+auto scatterView = Kokkos::Experimental::create_scatter_view<Operation, Duplication, Contribution>(targetView);
 ```
 
 | Template argument | Description                                                                                                                                                 |
 |-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `DataType`        | Scalar type of the view and its dimensionality                                                                                                              |
 | `Operation`       | See [scatter operation](#scatter-operation); defaults to `Kokkos::Experimental::ScatterSum`                                                                 |
-| `ExecutionSpace`  | See [execution spaces](#executiondspaces); defaults to `Kokkos::DefaultExecutionSpace`                                                                      |
-| `Layout`          | See [layouts](#memory-layouts)                                                                                                                              |
-| `Duplication`     | Whether to duplicate the grid or not; defaults to `Kokkos::Experimental::ScatterDuplicated`, other option is `Kokkos::Experimental::ScatterNonDuplicated` |
-| `Contribution`    | Whether to contribute to use atomics; defaults to `Kokkos::Experimental::ScatterAtomic`, other option is `Kokkos::Experimental::ScatterNonAtomic`     |
+| `Duplication`     | Whether to duplicate the grid or not; choices are `Kokkos::Experimental::ScatterDuplicated`, and `Kokkos::Experimental::ScatterNonDuplicated`; defaults to the option that is the most optimised for targetView's Execution Space |
+| `Contribution`    | Whether to contribute using atomics or not; choices are `Kokkos::Experimental::ScatterAtomic`, or `Kokkos::Experimental::ScatterNonAtomic`; defaults to the option that is the most optimised for targetView's Execution Space |
 
 #### Scatter operation
 
@@ -406,7 +403,7 @@ KOKKOS_INLINE_FUNCTION double compute(double weight) { /* ... */ }
 Kokkos::View<double*> positions("positions", 100);
 Kokkos::View<double*> weight("weight", 100);
 
-// Historgram of N bins
+// Histogram of N bins
 Kokkos::View<double*> histogram("bar", N);
 
 Kokkos::Experimental::ScatterView<double*> scatter(histogram);
@@ -466,8 +463,8 @@ With `Kokkos::ReducerConcept` being one of the following:
 | `Kokkos::MaxLoc`    | `std::max_element`    | Maximum and associated index               |
 | `Kokkos::Min`       | `std::min`            | Minimum                                    |
 | `Kokkos::MinLoc`    | `std::min_element`    | Minimum and associated index               |
-| `Kokkos::MinMax`    | `std::minmax`         | Minimun and maximum                        |
-| `Kokkos::MinMaxLoc` | `std::minmax_element` | Minimun and maximun and associated indices |
+| `Kokkos::MinMax`    | `std::minmax`         | Minimum and maximum                        |
+| `Kokkos::MinMaxLoc` | `std::minmax_element` | Minimum and maximum and associated indices |
 | `Kokkos::Prod`      | `*`                   | Product                                    |
 | `Kokkos::Sum`       | `+`                   | Sum                                        |
 
@@ -566,12 +563,12 @@ Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> p
 Usually, `teamSize` is replaced by `Kokkos::AUTO` to let Kokkos determine it.
 A kernel running in a team policy has a `Kokkos::TeamPolicy<>::member_type` argument:
 
-| Method          | Description                          |
-|-----------------|--------------------------------------|
-| `league_size()` | Number of teams in the league        |
-| `league_rank()` | Index of the team withing the league |
-| `team_size()`   | Number of threads in the team        |
-| `team_rank()`   | Index of the thread within the team  |
+| Method          | Description                         |
+|-----------------|-------------------------------------|
+| `league_size()` | Number of teams in the league       |
+| `league_rank()` | Index of the team within the league |
+| `team_size()`   | Number of threads in the team       |
+| `team_rank()`   | Index of the thread within the team |
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamPolicy.html
