@@ -84,16 +84,15 @@
         % Add the Kokkos wiki link
         \setlength{\fboxsep}{0pt}
         \colorbox{main}{%
-            \parbox[b][\footerheight][t]{\headwidth}{%
-                \fancycenter{%
-                    \ifthenelse{\isodd{\value{page}}}{%
-                    }{%
-                        \hspace{\printmargin}%
-                    }%
-                    \hspace{\horizontalskip}%
-                    \footnotesize\bfseries\color{lightmain}\strut\url{https://kokkos.org/kokkos-core-wiki}%
-                }{}{}
-            }%
+            \begin{minipage}[b][\footerheight][t]{\headwidth}
+                \vspace{0.2em}%
+                \ifthenelse{\isodd{\value{page}}}{%
+                }{%
+                    \hspace{\printmargin}%
+                }%
+                \hspace{\horizontalskip}%
+                \footnotesize\bfseries\color{lightmain}\strut\url{https://kokkos.org/kokkos-core-wiki}%
+            \end{minipage}%
         }%
     }%
 }
