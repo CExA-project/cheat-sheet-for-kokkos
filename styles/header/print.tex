@@ -46,61 +46,12 @@
 \graphicspath{{images/}}
 
 \fancypagestyle{kokkos}{%
-    \setlength{\headerheight}{1cm}
+    \setlength{\headerheight}{2cm}
     \setlength{\footerheight}{0.5cm + 0.25 \printmargin}
     \setlength{\horizontalskip}{0.25cm}
-
-    \newgeometry{
-        hmargin=0.5cm,
-        vmargin=0cm,
-        includeheadfoot,
-        headheight=\headerheight,
-        headsep=0.5cm,
-        footskip=\footerheight + 2\horizontalskip,
-    }
     \renewcommand{\headrulewidth}{0pt}
     \renewcommand{\footrulewidth}{0pt}
 
-    \fancyhf{}
-
-    \fancyhead{%
-        % Add the title and the page and the version
-        \setlength{\fboxsep}{0pt}
-        \colorbox{main}{%
-            \parbox[b][\headerheight][c]{\headwidth}{%
-                \fancycenter{%
-                    \hspace{\horizontalskip}%
-                    {\LARGE\bfseries\href{https://kokkos.org/kokkos-core-wiki}{\gettitle}}%
-                    {\large\bfseries\color{lightmain}\ :: page \thepage}%
-                }{}{%
-                    \small\color{lightmain}v\input{VERSION}%
-                    \hspace{\horizontalskip}
-                }
-            }%
-        }%
-    }%
-
-    \fancyfoot{%
-        % Add the Kokkos wiki link
-        \setlength{\fboxsep}{0pt}
-        \colorbox{main}{%
-            \begin{minipage}[b][\footerheight][t]{\headwidth}
-                \vspace{0.2em}%
-                \ifthenelse{\isodd{\value{page}}}{%
-                }{%
-                    \hspace{\printmargin}%
-                }%
-                \hspace{\horizontalskip}%
-                \footnotesize\bfseries\color{lightmain}\strut\url{https://kokkos.org/kokkos-core-wiki}%
-            \end{minipage}%
-        }%
-    }%
-}
-
-\fancypagestyle{kokkostitle}{%
-    \pagestyle{kokkos}%
-
-    \setlength{\headerheight}{2cm}
     \newgeometry{
         hmargin=0.5cm,
         vmargin=0cm,
@@ -109,6 +60,8 @@
         headsep=0.5cm,
         footskip=\footerheight + 2\horizontalskip,
     }
+
+    \fancyhf{}
 
     \fancyhead{%
         % Add the title and the page
@@ -157,6 +110,22 @@
             }%
         }%
     }%
+
+    \fancyfoot{%
+        % Add the Kokkos wiki link
+        \setlength{\fboxsep}{0pt}
+        \colorbox{main}{%
+            \begin{minipage}[b][\footerheight][t]{\headwidth}
+                \vspace{0.2em}%
+                \ifthenelse{\isodd{\value{page}}}{%
+                }{%
+                    \hspace{\printmargin}%
+                }%
+                \hspace{\horizontalskip}%
+                \footnotesize\bfseries\color{lightmain}\strut\url{https://kokkos.org/kokkos-core-wiki}%
+            \end{minipage}%
+        }%
+    }%
 }
 
 \newlength{\oddmarginwidth}
@@ -166,8 +135,7 @@
 \fancyhfoffset[LO,RE]{\oddmarginwidth}
 \fancyhfoffset[LE,RO]{\evenmarginwidth}
 
-\pagestyle{kokkostitle}
-% \thispagestyle{kokkostitle}
+\pagestyle{kokkos}
 
 % sections
 
