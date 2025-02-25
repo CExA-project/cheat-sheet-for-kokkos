@@ -2,6 +2,7 @@ variables:
   documentclass: article
   classoption:
     - table
+    - twoside
   papersize: a4
   fontsize: 10pt
 pdf-engine: pdflatex

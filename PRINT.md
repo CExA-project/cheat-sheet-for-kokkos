@@ -2,9 +2,9 @@
 
 ## Add print margins to the document
 
-When the LaTeX file has been generated, you can add a print margin with the length `printmargin` in the TEX file. This length squeezes the logo, the title, the version number in the header, and the link in the footer to allow a full-size print when the printer automatically crops the edges of the printing area.
+When the LaTeX file has been generated, you can add a print margin in the TEX file to allow a full-size print when the printer automatically crops the edges of the printing area.
 
-A good print margin first guess is 0.4 cm.
+See the `\printmargin` length and the other tuning lengths in the preamble of the generated file. Starting values are suggested.
 
 ## Add watermark and notes section
 
