@@ -10,6 +10,8 @@
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{fvextra}
+\usepackage{ifthen}
+\usepackage{relsize}
 
 \definecolor{kokkos}{RGB}{30, 120, 152}
 
@@ -30,110 +32,168 @@
 \def\gettitle{\@title}
 \makeatother
 
+% images
+
+\graphicspath{{images/}}
+
 % headers and footers
 
 \newlength{\headerheight}
 \newlength{\footerheight}
+\newlength{\headerheightreduction}
+\newlength{\footerheightreduction}
 \newlength{\horizontalskip}
-\setlength{\headerheight}{0cm}
-\setlength{\footerheight}{0cm}
-\setlength{\horizontalskip}{0cm}
+\newlength{\printmargin}
+\newlength{\printmarginwidth}
+\newlength{\printmarginheight}
+\newlength{\marginwidth}
+\newlength{\marginwidthreduction}
+\newlength{\footheight}
+\newlength{\headerfooterskip}
+\newlength{\headerfooterskipreduction}
+
+% print sizes tuning
+
+% change here to add print margin
+% this adds \printmargin on the outer horizontal margin (think two-sided document)
+% and 0.75\printmargin on the top and bottom vertical margins
+% in other words, this adds \printmargin horizontally and 1.5\printmargin vertically
+% note that using this variable will certainly mess with the page layout!
+% to counterbalance this, you can tune the other lengths defined below
+% a good first guess is 0.4cm
+\setlength{\printmargin}{0cm}
+
+% change here to reduce the effect of \printmargin on the outer horizontal margin for the text body only
+% a good first guess is 0.2cm
+\setlength{\marginwidthreduction}{0cm}
+
+% change here to reduce the space between the text and the header/footer
+% a good first guess is 0.2cm
+\setlength{\headerfooterskipreduction}{0cm}
+
+% change here to reduce the height of the header
+% a good first guess is 0.2cm
+\setlength{\headerheightreduction}{0cm}
+
+% change here to reduce the height of the footer
+% a good first guess is 0.2cm
+\setlength{\footerheightreduction}{0cm}
+
+% change here to put a factor ratio on text size
+% change this value if nothing else helps!
+% a good first guess is 0.95
+\newcommand{\textratio}{1}
 
 \fancypagestyle{kokkos}{%
-    \setlength{\headerheight}{1cm}
-    \setlength{\footerheight}{0.5cm}
+    \setlength{\headerheight}{2cm - \headerheightreduction}
+    \setlength{\footerheight}{0.5cm - \footerheightreduction}
     \setlength{\horizontalskip}{0.25cm}
+    \setlength{\marginwidth}{0.5cm}
+    \setlength{\headerfooterskip}{0.5cm - \headerfooterskipreduction}
+    \setlength{\printmarginwidth}{\printmargin}
+    \setlength{\printmarginheight}{0.75\printmargin}
 
-    \newgeometry{
-        headheight=\headerheight,
-        hmargin=0.5cm,
-        vmargin=0cm,
-        includeheadfoot,
-        headsep=0.5cm,
-        footskip=1cm,
-    }
     \renewcommand{\headrulewidth}{0pt}
     \renewcommand{\footrulewidth}{0pt}
+
+    \newgeometry{
+        inner=\marginwidth,
+        outer=\marginwidth + \printmarginwidth - \marginwidthreduction,
+        vmargin=0cm,
+        includeheadfoot,
+        headheight=\headerheight + \printmarginheight,
+        headsep=\headerfooterskip,
+        footskip=\headerfooterskip + \footerheight + \printmarginheight,
+    }
+
+    % set missing footheight
+    \setlength{\footheight}{\footerheight + \printmarginheight}
+
+    % set offsets for the header and footer blocks to have exactly the width of the page
+    \fancyhfoffset[RE,LO]{\marginwidth}
+    \fancyhfoffset[LE,RO]{\marginwidth + \printmarginwidth - \marginwidthreduction}
 
     \fancyhf{}
 
     \fancyhead{%
-        % Add the title and the page and the version
-        \setlength{\fboxsep}{0pt}
+        % Add the title, the page number, and the version
+        \setlength{\fboxsep}{0pt}%
         \colorbox{main}{%
+            % logo with continuation
+            \parbox[b][\headheight][b]{\headheight}{%
+                % add left continuation of the logo
+                \ifthenelse{\isodd{\value{page}}}{%
+                }{%
+                    \colorbox{lightmain}{%
+                        \parbox[b][\headheight]{\printmargin}{~}%
+                    }%
+                }%
+                \begin{minipage}[b][\headheight][b]{\headerheight}
+                    % add top continuation of the logo
+                    \colorbox{lightmain}{%
+                        \parbox[b][\printmargin][b]{
+                            0.575\headerheight% manual adjust logo height
+                        }{~}%
+                    }%
+                    \vspace{-0.04cm} % manual adjust vertical gap
+                    \\
+                    \includegraphics[
+                        height=\headerheight,
+                    ]{images/kokkos_wire.pdf}%
+                \end{minipage}
+            }%
+            % remove logo horizontal space
+            \hspace{-\headheight}
+            % title and page number
             \parbox[b][\headerheight][c]{\headwidth}{%
                 \fancycenter{%
-                    \hspace{\horizontalskip}%
-                    {\LARGE\bfseries\href{https://kokkos.org/kokkos-core-wiki}{\gettitle}}%
-                    {\large\bfseries\color{lightmain}\ :: page \thepage}%
+                    % add print margin
+                    \ifthenelse{\isodd{\value{page}}}{%
+                    }{%
+                        \hspace{\printmarginwidth}%
+                    }%
+                    % add custom space for logo
+                    \hspace{0.4\headerheight}
+                    % title
+                    {\Huge\bfseries{}\href{https://kokkos.org/kokkos-core-wiki}{\gettitle}}%
+                    % page number
+                    {\Large\bfseries\color{lightmain}\ :: page \thepage}%
                 }{}{%
+                    % version
                     \small\color{lightmain}v\input{VERSION}%
+                    % add small margin
                     \hspace{\horizontalskip}
-                }
+                    % add print margin
+                    \ifthenelse{\isodd{\value{page}}}{%
+                        \hspace{\printmarginwidth}%
+                    }{}%
+                }%
             }%
         }%
     }%
 
     \fancyfoot{%
         % Add the Kokkos wiki link
-        \setlength{\fboxsep}{0pt}
+        \setlength{\fboxsep}{0pt}%
         \colorbox{main}{%
-            \parbox[b][\footerheight][c]{\headwidth}{%
-                \fancycenter{%
+            \parbox[b][\footheight][t]{\headwidth}{%
+                \parbox[t][\footerheight][c]{\headwidth}{%
+                    % add print margin
+                    \ifthenelse{\isodd{\value{page}}}{%
+                    }{%
+                        \hspace{\printmarginwidth}%
+                    }%
+                    % add small margin
                     \hspace{\horizontalskip}%
-                    \footnotesize\bfseries\color{lightmain}\url{https://kokkos.org/kokkos-core-wiki}%
-                }{}{}
+                    % link
+                    \footnotesize\bfseries\color{lightmain}\strut\url{https://kokkos.org/kokkos-core-wiki}%
+                }%
             }%
         }%
     }%
 }
 
-\fancypagestyle{kokkostitle}{%
-    \pagestyle{kokkos}%
-
-    \setlength{\headerheight}{2cm}
-    \newgeometry{
-        headheight=\headerheight,
-        hmargin=0.5cm,
-        vmargin=0cm,
-        includeheadfoot,
-        headsep=0.5cm,
-        footskip=1cm,
-    }
-
-    \fancyhead{%
-        % Add the title and the page
-        \setlength{\fboxsep}{0pt}
-        \colorbox{main}{%
-            \parbox[b][\headerheight][c]{0.5\headerheight}{%
-                \includegraphics[
-                    height=\headheight,
-                ]{images/kokkos_wire.pdf}
-            }%
-            \hspace{-0.5\headerheight}
-            \parbox[b][\headerheight][c]{\headwidth}{%
-                \fancycenter{%
-                    \hspace{0.4\headerheight}
-                    {\Huge\bfseries{}\href{https://kokkos.org/kokkos-core-wiki}{\gettitle}}%
-                    {\Large\bfseries\color{lightmain}\ :: page \thepage}%
-                }{}{%
-                    \small\color{lightmain}v\input{VERSION}%
-                    \hspace{\horizontalskip}
-                }
-            }%
-        }%
-    }%
-}
-
-\newlength{\oddmarginwidth}
-\setlength{\oddmarginwidth}{1in+\hoffset+\oddsidemargin}
-\newlength{\evenmarginwidth}
-\setlength{\evenmarginwidth}{\evensidemargin+1in}
-\fancyhfoffset[LO,RE]{\oddmarginwidth}
-\fancyhfoffset[LE,RO]{\evenmarginwidth}
-
-\pagestyle{kokkostitle}
-% \thispagestyle{kokkostitle}
+\pagestyle{kokkos}
 
 % sections
 
@@ -274,7 +334,8 @@
 
 \makeatletter
 
-\newcommand*\dotcolumnfill{%
+% fill with dotted lines until the end of the page
+\newcommand{\dotcolumnfill}[1]{%
     % https://tex.stackexchange.com/a/319436
     \par
     \null
@@ -282,16 +343,31 @@
     \xleaders \hb@xt@ \hsize {%
         \strut \cleaders \hb@xt@ .44em{\hss.\hss}\hfill
     }\vfill
+    #1
     \vskip \ht\strutbox
     \break
 }
 
 \makeatother
 
-\newcommand\notessection{%
+% notes section with dotted lines
+\newcommand\notessection[1]{%
     \subsection{Notes}
 
     \vspace{1em}
 
-    \dotcolumnfill
+    \dotcolumnfill{#1}
+}
+
+% watermark with CExA and MDLS logos
+\newcommand\watermark{%
+    \begin{flushright}
+        Brought to you by%
+        \raisebox{-0.4\height}{%
+            \hspace{1em}%
+            \href{https://cexa-project.org}{\includegraphics[height=1cm]{cexa}}%
+            \hspace{1em}%
+            \href{https://mdls.fr}{\includegraphics[height=1cm]{maison_de_la_simulation}}%
+        }%
+    \end{flushright}
 }
