@@ -358,8 +358,8 @@ auto scatterView = Kokkos::Experimental::create_scatter_view<Operation, Duplicat
 | Template argument | Description                                                                                                                                                 |
 |-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `Operation`       | See [scatter operation](#scatter-operation); defaults to `Kokkos::Experimental::ScatterSum`                                                                 |
-| `Duplication`     | Whether to duplicate the grid or not; choices are `Kokkos::Experimental::ScatterDuplicated`, and `Kokkos::Experimental::ScatterNonDuplicated`; defaults to the option that is the most optimised for targetView's Execution Space |
-| `Contribution`    | Whether to contribute using atomics or not; choices are `Kokkos::Experimental::ScatterAtomic`, or `Kokkos::Experimental::ScatterNonAtomic`; defaults to the option that is the most optimised for targetView's Execution Space |
+| `Duplication`     | Whether to duplicate the grid or not; choices are `Kokkos::Experimental::ScatterDuplicated`, and `Kokkos::Experimental::ScatterNonDuplicated`; defaults to the option that is the most optimised for `targetView`'s execution space |
+| `Contribution`    | Whether to contribute using atomics or not; choices are `Kokkos::Experimental::ScatterAtomic`, or `Kokkos::Experimental::ScatterNonAtomic`; defaults to the option that is the most optimised for `targetView`'s execution space |
 
 #### Scatter operation
 
@@ -370,22 +370,23 @@ auto scatterView = Kokkos::Experimental::create_scatter_view<Operation, Duplicat
 | `Kokkos::Experimental::ScatterMin`  | Minimum value |
 | `Kokkos::Experimental::ScatterMax`  | Maximum value |
 
-#### Scatter
+#### Scatter, compute, and gather
 
 ```cpp
-auto access = scatter.access();
-```
+Kokkos::parallel_for(
+    "label",
+    /* ... */,
+    KOKKOS_LAMBDA (/* ... */) {
+        // scatter
+        auto scatterAccess = scatterView.access();
 
-#### Compute
+        // compute
+        scatterAccess(/* index */) /* operation */ /* contribution */;
+    }
+);
 
-```cpp
-access(index) += value;
-```
-
-#### Gather
-
-```cpp
-Kokkos::Experimental::contribute(targetView, scatter);
+// gather
+Kokkos::Experimental::contribute(targetView, scatterView);
 ```
 
 <!--#ifndef PRINT-->
@@ -396,32 +397,32 @@ Kokkos::Experimental::contribute(targetView, scatter);
 #include<Kokkos_ScatterView.hpp>
 
 // Compute histogram of values in view1D
-KOKKOS_INLINE_FUNCTION int getIndex(double pos) { /* ... */ }
+KOKKOS_INLINE_FUNCTION int getIndex(double position) { /* ... */ }
 KOKKOS_INLINE_FUNCTION double compute(double weight) { /* ... */ }
 
-// List of elements to process
-Kokkos::View<double*> positions("positions", 100);
+// Views of 100 elements to process
+Kokkos::View<double*> position("position", 100);
 Kokkos::View<double*> weight("weight", 100);
 
-// Histogram of N bins
-Kokkos::View<double*> histogram("bar", N);
+// Histogram of 10 slots
+Kokkos::View<double*> histogram("bar", 10);
+auto histogramScatter = Kokkos::Experimental::create_scatter_view(histogram);
 
-Kokkos::Experimental::ScatterView<double*> scatter(histogram);
 Kokkos::parallel_for(
     100,
-    KOKKOS_LAMBDA(const int i) {
+    KOKKOS_LAMBDA (const int i) {
         // scatter
-        auto access = scatter.access();
+        auto access = histogramScatter.access();
 
         // compute
-        auto index = getIndex(positions(i);
-        auto contribution = compute(weight(i);
+        const auto index = getIndex(position(i));
+        const auto contribution = compute(weight(i));
         access(index) += contribution;
     }
 );
 
 // gather
-Kokkos::Experimental::contribute(histogram, scatter);
+Kokkos::Experimental::contribute(histogram, histogramScatter);
 ```
 
 </details>
