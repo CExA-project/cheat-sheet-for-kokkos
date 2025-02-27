@@ -15,7 +15,7 @@ title: Terminology cheat sheet for Kokkos
 | Kokkos                                                                         | Cuda   | HIP               | SYCL       |
 |--------------------------------------------------------------------------------|--------|-------------------|------------|
 | `Kokkos::TeamPolicy</* ... */>(/* ... */)`                                     | Grid   | Grid, index range | ND-Range   |
-| `Kokkos::TeamPolicy</* ... */>::member_type(/* ... */)`                        | Block  | Block, work group | Work-group |
+| `Kokkos::TeamPolicy</* ... */>::member_type(/* ... */)` (one-dimensional only)                       | Block  | Block, work group | Work-group |
 | `Kokkos::TeamThread*Range(/* ... */)`                                          | Warp   | Warp, wavefront   | Sub-group  |
 | `Kokkos::TeamVector*Range(/* ... */)`, `Kokkos::ThreadVector*Range(/* ... */)` | Thread | Thread, work item | Work-item  |
 
@@ -27,12 +27,12 @@ title: Terminology cheat sheet for Kokkos
 
 ### Memory
 
-| Kokkos                                        | Cuda                         | HIP                | SYCL                               |
-|-----------------------------------------------|------------------------------|--------------------|------------------------------------|
-| `Kokkos::DefaultExecutionSpace::memory_space` | Global memory                | Global memory      | Global memory                      |
-| `Kokkos::ScratchMemorySpace` (with level 0)   | Shared memory                | Shared memory      | (Shared) local memory              |
-| `Kokkos::SharedHostPinnedSpace`               | Pinned host memory           | Pinned host memory | Host Unified shared memory (USM)   |
-| `Kokkos::SharedSpace`                         | Unified virtual memory (UVM) | Unified memory     | Shared Unified shared memory (USM) |
+| Kokkos                                        | Cuda                         | HIP                | SYCL                                       |
+|-----------------------------------------------|------------------------------|--------------------|--------------------------------------------|
+| `Kokkos::DefaultExecutionSpace::memory_space` | Global memory                | Global memory      | Global memory                              |
+| `Kokkos::ScratchMemorySpace` (with level 0)   | Shared memory                | Shared memory      | (Shared) local memory                      |
+| `Kokkos::SharedHostPinnedSpace`               | Pinned host memory           | Pinned host memory | Unified shared memory (USM) of type host   |
+| `Kokkos::SharedSpace`                         | Unified virtual memory (UVM) | Unified memory     | Unified shared memory (USM) of type shared |
 
 ### Execution
 
