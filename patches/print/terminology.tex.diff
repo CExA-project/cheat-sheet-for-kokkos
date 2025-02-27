@@ -1,29 +1,42 @@
---- .terminology.tex	2025-02-24 15:40:49.656585437 +0100
-+++ terminology.tex	2025-02-24 15:48:03.533623699 +0100
-@@ -351,12 +351,10 @@
+--- .terminology.tex	2025-02-27 16:25:03.677983819 +0100
++++ terminology.tex	2025-02-27 16:25:10.360030340 +0100
+@@ -351,8 +351,6 @@
  \begin{document}
  \maketitle
  
 -\begin{multicols}{2}
 -
- \hypertarget{memory}{%
- \subsection{Memory}\label{memory}}
+ \hypertarget{kokkos-mapping}{%
+ \subsection{Kokkos mapping}\label{kokkos-mapping}}
  
--\begin{tabularx}{\linewidth}{lXXX}
-+\begin{tabularx}{\linewidth}{llXl}
+@@ -360,7 +358,7 @@
+ \subsubsection{Hierarchical
+ parallelism}\label{hierarchical-parallelism}}
+ 
+-\begin{tabularx}{\linewidth}{llXl}
++\begin{tabularx}{\linewidth}{lXXX}
  \toprule
  
  \tblhead{Kokkos} & \tblhead{Cuda} & \tblhead{HIP} & \tblhead{SYCL} \\ \midrule
-@@ -396,7 +394,7 @@
- \hypertarget{hierarchical-parallelism}{%
- \subsection{Hierarchical parallelism}\label{hierarchical-parallelism}}
+@@ -381,7 +379,7 @@
+ \hypertarget{memory}{%
+ \subsubsection{Memory}\label{memory}}
  
--\begin{tabularx}{\linewidth}{Xlllll}
-+\begin{tabularx}{\linewidth}{XXXXXX}
+-\begin{tabularx}{\linewidth}{lXXX}
++\begin{tabularx}{\linewidth}{lllX}
  \toprule
  
- \tblhead{Kokkos} & \tblhead{OpenMP
-@@ -410,6 +408,4 @@
+ \tblhead{Kokkos} & \tblhead{Cuda} & \tblhead{HIP} & \tblhead{SYCL} \\ \midrule
+@@ -401,7 +399,7 @@
+ \hypertarget{execution}{%
+ \subsubsection{Execution}\label{execution}}
+ 
+-\begin{tabularx}{\linewidth}{Xlll}
++\begin{tabularx}{\linewidth}{lXXX}
+ \toprule
+ 
+ \tblhead{Kokkos} & \tblhead{Cuda} & \tblhead{HIP} & \tblhead{SYCL} \\ \midrule
+@@ -429,6 +427,4 @@
  \bottomrule
  \end{tabularx}
  
