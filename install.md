@@ -6,9 +6,9 @@ title: Installation cheat sheet for Kokkos
 
 # Kokkos install cheat sheet
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/quick-start.html
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/building.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
 
 <img title="Doc" alt="Doc" src="./images/tutorial_txt.svg" height="25"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_01_Introduction.pdf
 
@@ -42,7 +42,7 @@ title: Installation cheat sheet for Kokkos
 | CMake        | 3.16            |                             |
 
 <!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/requirements.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/requirements.html
 <!--#endif-->
 
 ## How to build Kokkos
@@ -154,7 +154,7 @@ Depending if Kokkos is already installed, you may have to call CMake with `-DKok
 
 TODO finish this part
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> See https://kokkos.org/kokkos-core-wiki/building.html#spack
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/package-managers.html?highlight=spack#spack-https-spack-io
 
 <!--#endif-->
 
@@ -204,7 +204,7 @@ See [architecture-specific options](#architecture-specific-options).
 
 </details>
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/configuration-guide.html
 <!--#endif-->
 
 ### Architecture-specific options
@@ -388,7 +388,7 @@ They can be deduced from the device if present at CMake configuration time.
 <!--#ifndef PRINT-->
 ### Third-party Libraries (TPLs)
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25">  See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/configuration-guide.html#keywords-tpls
 <!--#endif-->
 
 ### Examples for the most common architectures
