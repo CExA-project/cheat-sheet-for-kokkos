@@ -1,5 +1,5 @@
---- .terminology.tex	2025-02-27 16:25:03.677983819 +0100
-+++ terminology.tex	2025-02-27 16:25:10.360030340 +0100
+--- .terminology.tex	2025-02-28 10:06:48.009221195 +0100
++++ terminology.tex	2025-02-28 10:07:44.227382266 +0100
 @@ -351,8 +351,6 @@
  \begin{document}
  \maketitle
@@ -13,7 +13,7 @@
  \subsubsection{Hierarchical
  parallelism}\label{hierarchical-parallelism}}
  
--\begin{tabularx}{\linewidth}{llXl}
+-\begin{tabularx}{\linewidth}{XlXl}
 +\begin{tabularx}{\linewidth}{lXXX}
  \toprule
  
@@ -27,7 +27,7 @@
  \toprule
  
  \tblhead{Kokkos} & \tblhead{Cuda} & \tblhead{HIP} & \tblhead{SYCL} \\ \midrule
-@@ -401,7 +399,7 @@
+@@ -403,7 +401,7 @@
  \hypertarget{execution}{%
  \subsubsection{Execution}\label{execution}}
  
@@ -36,7 +36,7 @@
  \toprule
  
  \tblhead{Kokkos} & \tblhead{Cuda} & \tblhead{HIP} & \tblhead{SYCL} \\ \midrule
-@@ -429,6 +427,4 @@
+@@ -432,6 +430,4 @@
  \bottomrule
  \end{tabularx}
  

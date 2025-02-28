@@ -30,8 +30,8 @@ title: Terminology cheat sheet for Kokkos
 | Kokkos                                        | Cuda                         | HIP                | SYCL                                       |
 |-----------------------------------------------|------------------------------|--------------------|--------------------------------------------|
 | `Kokkos::DefaultExecutionSpace::memory_space` | Global memory                | Global memory      | Global memory                              |
-| `Kokkos::ScratchMemorySpace` (space level 0)  | Shared memory                | Shared memory      | (Shared) local memory?                     |
-| `Kokkos::ScratchMemorySpace` (space level 1)  | Global memory                | Global memory      | Global memory?                             |
+| `Kokkos::ScratchMemorySpace` (space level 0)  | Shared memory                | Shared memory      | (Shared) local memory                      |
+| `Kokkos::ScratchMemorySpace` (space level 1)  | Global memory                | Global memory      | Global memory                              |
 | `Kokkos::SharedHostPinnedSpace`               | Pinned host memory           | Pinned host memory | Unified shared memory (USM) of type host   |
 | `Kokkos::SharedSpace`                         | Unified virtual memory (UVM) | Unified memory     | Unified shared memory (USM) of type shared |
 
