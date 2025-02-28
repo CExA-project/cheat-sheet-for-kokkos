@@ -1,15 +1,15 @@
---- .install.tex	2025-02-21 20:31:49.235182630 +0100
-+++ install.tex	2025-02-21 20:32:21.670428339 +0100
-@@ -472,7 +472,7 @@
-     \KeywordTok{include}\NormalTok{(FetchContent)}
-     \FunctionTok{FetchContent\_Declare}\NormalTok{(}
- \NormalTok{        kokkos}
--\NormalTok{        URL https://github.com/kokkos/kokkos/releases/download/x.y.z/kokkos{-}x.y.z.zip}
-+\NormalTok{        URL https://github.com/kokkos/kokkos/releases/download/x.y.z/\break{}kokkos{-}x.y.z.zip}
- \NormalTok{    )}
-     \FunctionTok{FetchContent\_MakeAvailable}\NormalTok{(kokkos)}
- \KeywordTok{endif}\NormalTok{()}
-@@ -627,7 +627,7 @@
+--- .install.tex	2025-02-28 15:37:52.208429178 +0100
++++ install.tex	2025-02-28 15:38:14.746538842 +0100
+@@ -471,7 +471,7 @@
+ \KeywordTok{include}\NormalTok{(FetchContent)}
+ \FunctionTok{FetchContent\_Declare}\NormalTok{(}
+ \NormalTok{    kokkos}
+-\NormalTok{    URL https://github.com/kokkos/kokkos/releases/download/x.y.z/kokkos{-}x.y.z.zip}
++\NormalTok{    URL https://github.com/kokkos/kokkos/releases/download/x.y.z/\break{}kokkos{-}x.y.z.zip}
+ \NormalTok{)}
+ \FunctionTok{FetchContent\_MakeAvailable}\NormalTok{(kokkos)}
+ \KeywordTok{target\_link\_libraries}\NormalTok{(}
+@@ -645,7 +645,7 @@
  \begin{tabularx}{\linewidth}{llX}
  \toprule
  
@@ -18,7 +18,7 @@
  cards} \\ \midrule
  
  \texttt{-DKokkos\_ARCH\_AMD\_GFX942\_APU=ON} & GFX942 APU & MI300A \\
-@@ -670,7 +670,7 @@
+@@ -688,7 +688,7 @@
  \begin{tabularx}{\linewidth}{lllX}
  \toprule
  
