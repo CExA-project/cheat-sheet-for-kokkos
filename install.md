@@ -40,14 +40,13 @@ title: Installation cheat sheet for Kokkos
 | CMake        | 3.18            | For better Fortran linking  |
 | CMake        | 3.16            |                             |
 
-
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/requirements.html
 <!--#endif-->
 
 ## How to build Kokkos
 
-### As part of your application
+### As a sub-directory dependency
 
 ```cmake
 add_subdirectory(path/to/kokkos)
@@ -64,24 +63,22 @@ cmake -B build \
     <Kokkos compile options>
 ```
 
-<!--#ifndef PRINT-->
-<img title="Code" alt="Code" src="./images/code_txt.svg" height="25"> Code example:
+You may want to provide Kokkos as a Git submodule.
 
-- https://github.com/kokkos/kokkos/tree/master/example/build_cmake_in_tree
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#embedded-kokkos-via-add-subdirectory-and-git-submodules
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/command/add_subdirectory.html#command:add_subdirectory
 <!--#endif-->
 
-### As a dependency managed by CMake
+### As an online dependency
 
 ```cmake
-find_package(Kokkos CONFIG)
-if(NOT Kokkos_FOUND)
-    include(FetchContent)
-    FetchContent_Declare(
-        kokkos
-        URL https://github.com/kokkos/kokkos/releases/download/x.y.z/kokkos-x.y.z.zip
-    )
-    FetchContent_MakeAvailable(kokkos)
-endif()
+include(FetchContent)
+FetchContent_Declare(
+    kokkos
+    URL https://github.com/kokkos/kokkos/releases/download/x.y.z/kokkos-x.y.z.zip
+)
+FetchContent_MakeAvailable(kokkos)
 target_link_libraries(
     my-app
     Kokkos::kokkos
@@ -95,7 +92,12 @@ cmake -B build \
     <Kokkos compile options>
 ```
 
-### As an external library
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#embedded-kokkos-via-fetchcontent
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/module/FetchContent.html
+<!--#endif-->
+
+### As an external dependency
 
 #### Configure, build and install Kokkos
 
@@ -109,14 +111,10 @@ cmake --build build
 cmake --install build
 ```
 
-<!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/building.html
-<!--#endif-->
-
 #### Use in your code
 
 ```cmake
-find_package(Kokkos REQUIRED)
+find_package(Kokkos x.y.z REQUIRED)
 target_link_libraries(
     my-app
     Kokkos::kokkos
@@ -131,8 +129,23 @@ cmake -B build \
 ```
 
 <!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#external-kokkos-recommended-for-most-users
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/guide/tutorial/index.html
 <!--#endif-->
+
+### As an external or sub-directory/online dependency
+
+```cmake
+find_package(Kokkos x.y.z QUIET)
+if(Kokkos_FOUND)
+    message(STATUS "Using installed Kokkos in ${Kokkos_DIR}")
+else()
+    message(STATUS "Using Kokkos from ...")
+    # use either the sub-directory or the online dependency approach
+endif()
+```
+
+Depending if Kokkos is already installed, you may have to call CMake with `-DKokkos_ROOT`, or with Kokkos compile options.
 
 <!--#ifndef PRINT-->
 
