@@ -669,32 +669,36 @@ Each team has access to a scratch memory pad, which has the team's lifetime, and
 
 ### Scratch memory space
 
-| Level | Memory size                 | Access speed |
-|-------|-----------------------------|--------------|
-| 0     | Limited (tens of kilobytes) | Fast         |
-| 1     | Larger (few gigabytes)      | Medium       |
+| Space level | Memory size                 | Access speed |
+|-------------|-----------------------------|--------------|
+| 0           | Limited (tens of kilobytes) | Fast         |
+| 1           | Larger (few gigabytes)      | Medium       |
+
+Used when passing the team policy to the parallel construct and when creating the scratch memory pad.
 
 ### Create and populate
 
 ```cpp
-// Define a scratch memory view type
-using ScratchPadView = View<double*, ExecutionSpace::scratch_memory_space, MemoryUnmanaged>;
+// Define a scratch memory pad type
+using ScratchPad = Kokkos::View<DataType, Kokkos::DefaultExecutionSpace::scratch_memory_space, Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
 
-// Compute how much scratch memory (in bytes) is needed
-size_t bytes = ScratchPadView::shmem_size(vectorSize);
+// Compute how much scratch memory is needed (in bytes)
+size_t bytes = ScratchPad::shmem_size(vectorSize);
 
+// Create the team policy and specify the total scratch memory needed
 Kokkos::parallel_for(
-    Kokkos::TeamPolicy<ExecutionSpace>(leagueSize, teamSize).set_scratch_size(spaceLevel, Kokkos::PerTeam(bytes)),
-    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<ExecutionSpace>::member_type& teamMember) {
-        const int i = teamMember.team_rank();
+    "label",
+    Kokkos::TeamPolicy<>(leagueSize, teamSize).set_scratch_size(spaceLevel, Kokkos::PerTeam(bytes)),
+    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
+        const int i = teamMember.league_rank();
 
-        // Create a view for the scratch pad
-        ScratchPadView scratch(teamMember.team_scratch(spaceLevel), vectorSize);
+        // Create the scratch pad
+        ScratchPad scratch(teamMember.team_scratch(spaceLevel), vectorSize);
 
         // Initialize it
-        Kokkoss::parallel_for(
-            Kokkos::ThreadVectorRange(teamMember, vectorSize),
-            [=] (const int j) { scratch(j) = view(i, j); }
+        Kokkos::parallel_for(
+            Kokkos::TeamVectorRange(teamMember, vectorSize),
+            [=] (const int j) { scratch(j) = getScratchData(i, j); }
         );
 
         // Synchronize
