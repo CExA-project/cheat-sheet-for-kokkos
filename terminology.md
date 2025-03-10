@@ -14,10 +14,10 @@ title: Terminology cheat sheet for Kokkos
 
 | Kokkos                                                                         | Cuda   | HIP               | SYCL       |
 |--------------------------------------------------------------------------------|--------|-------------------|------------|
-| `Kokkos::TeamPolicy</* ... */>(/* ... */)`                                     | Grid   | Grid, index range | ND-Range   | League
-| `Kokkos::TeamPolicy</* ... */>::member_type(/* ... */)` (one-dimensional only) | Block  | Block, work group | Work-group | Team
-| `Kokkos::TeamThread*Range(/* ... */)`                                          | Warp   | Warp, wavefront   | Sub-group  | SIMD chunk
-| `Kokkos::TeamVector*Range(/* ... */)`, `Kokkos::ThreadVector*Range(/* ... */)` | Thread | Thread, work item | Work-item  | OpenMP thread, SIMD lane
+| Instance of `Kokkos::TeamPolicy</* ... */>`                                     | Grid   | Grid, index range | ND-Range   | League
+| Instance of `Kokkos::TeamPolicy</* ... */>::member_type` (one-dimensional only) | Block  | Block, work group | Work-group | Team
+| Instance of `Kokkos::TeamThread*Range`                                          | Warp   | Warp, wavefront   | Sub-group  | SIMD chunk
+| Instance of `Kokkos::TeamVector*Range`, `Kokkos::ThreadVector*Range` | Thread | Thread, work item | Work-item  | OpenMP thread, SIMD lane
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://docs.nvidia.com/cuda/cuda-c-programming-guide/#thread-hierarchy
@@ -45,7 +45,7 @@ title: Terminology cheat sheet for Kokkos
 
 | Kokkos                                        | Cuda                         | HIP                | SYCL                               |
 |-----------------------------------------------|------------------------------|--------------------|------------------------------------|
-| `Kokkos::DefaultExecutionSpace()`             | Stream                       | Stream             | Queue                              |
+| Instance of `Kokkos::DefaultExecutionSpace`             | Stream                       | Stream             | Queue                              |
 
 ## GPU terminology equivalences
 
