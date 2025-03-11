@@ -469,7 +469,8 @@ With `Kokkos::ReducerConcept` being one of the following:
 | `Kokkos::Prod`      | `*`                   | Product                                    |
 | `Kokkos::Sum`       | `+`                   | Sum                                        |
 
-The reducer class can be omitted for `Kokkos::Sum`.
+A scalar value may be passed, for which the reduction is limited to a sum.
+When using the `TeamVectorMDRange`, the `TeamThreadMDRange`, or the `ThreadVectorMDRange` execution policy, only a scalar value may be passed, for which the reduction is also limited to a sum.
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/parallel-dispatch/parallel_reduce.html
@@ -570,6 +571,8 @@ A kernel running in a team policy has a `Kokkos::TeamPolicy<>::member_type` argu
 | `league_rank()` | Index of the team within the league |
 | `team_size()`   | Number of threads in the team       |
 | `team_rank()`   | Index of the thread within the team |
+
+Note that nested parallel constructs do not use `KOKKOS_LAMBDA` but `[=]`.
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamPolicy.html
