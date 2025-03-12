@@ -572,7 +572,7 @@ A kernel running in a team policy has a `Kokkos::TeamPolicy<>::member_type` argu
 | `team_size()`   | Number of threads in the team       |
 | `team_rank()`   | Index of the thread within the team |
 
-Note that nested parallel constructs do not use `KOKKOS_LAMBDA` but `[=]`.
+Note that nested parallel constructs do not use `KOKKOS_LAMBDA` to create lambdas. One must use the C++ syntax, for example `[=]` or `[&]`.
 
 <!--#ifndef PRINT-->
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/API/core/policies/TeamPolicy.html
