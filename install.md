@@ -18,19 +18,18 @@ title: Installation cheat sheet for Kokkos
 
 ### Compiler
 
-| Compiler      | Minimum version | Notes    |
-|---------------|-----------------|----------|
-| ARM Clang     | 20.1            |          |
-| Clang         | 10.0.0          | For CUDA |
-| Clang         | 8.0.0           | For CPU  |
-| GCC           | 8.2.0           |          |
-| Intel Classic | 19.0.5          |          |
-| Intel LLVM    | 2022.0.0        | For SYCL |
-| Intel LLVM    | 2021.1.1        | For CPU  |
-| MSVC          | 19.29           |          |
-| NVCC          | 11.0            |          |
-| NVHPC/PGI     | 22.3            |          |
-| ROCM          | 5.2.0           |          |
+| Compiler   | Minimum version | Notes    |
+|------------|-----------------|----------|
+| ARM Clang  | 20.1            |          |
+| Clang      | 10.0.0          | For CUDA |
+| Clang      | 8.0.0           | For CPU  |
+| GCC        | 8.2.0           |          |
+| Intel LLVM | 2022.0.0        | For SYCL |
+| Intel LLVM | 2021.1.1        | For CPU  |
+| MSVC       | 19.29           |          |
+| NVCC       | 11.0            |          |
+| NVHPC/PGI  | 22.3            |          |
+| ROCM       | 5.2.0           |          |
 
 ### Build system
 
