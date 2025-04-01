@@ -24,11 +24,11 @@ title: Installation cheat sheet for Kokkos
 | Clang      | 10.0.0          | For CUDA |
 | Clang      | 8.0.0           | For CPU  |
 | GCC        | 8.2.0           |          |
-| Intel LLVM | 2022.0.0        | For SYCL |
+| Intel LLVM | 2023.0.0        | For SYCL |
 | Intel LLVM | 2021.1.1        | For CPU  |
 | MSVC       | 19.29           |          |
 | NVCC       | 11.0            |          |
-| NVHPC/PGI  | 22.3            |          |
+| NVHPC      | 22.3            |          |
 | ROCM       | 5.2.0           |          |
 
 ### Build system
@@ -189,6 +189,7 @@ Host options are used for controlling optimization and are optional.
 
 | Option                  | Architecture |
 |-------------------------|--------------|
+| `-DKokkos_ARCH_ZEN4=ON` | Zen4         |
 | `-DKokkos_ARCH_ZEN3=ON` | Zen3         |
 | `-DKokkos_ARCH_ZEN2=ON` | Zen2         |
 | `-DKokkos_ARCH_ZEN=ON`  | Zen          |
