@@ -357,11 +357,11 @@ They can be deduced from the device if present at CMake configuration time.
 cmake \
     -B build \
     -DCMAKE_BUILD_TYPE=Release \
-    -DKokkos_ARCH_NATIVE=ON \
-    -DKokkos_ENABLE_OPENMP=ON
+    -DKokkos_ENABLE_OPENMP=ON \
+    -DKokkos_ARCH_NATIVE=ON
 ```
 
-#### AMD MI250 GPU with HIP and OpenMP
+#### AMD MI250 GPU with HIP
 
 ```sh
 cmake \
@@ -369,33 +369,30 @@ cmake \
     -DCMAKE_CXX_COMPILER=hipcc \
     -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_HIP=ON \
-    -DKokkos_ARCH_AMD_GFX90A=ON \
-    -DKokkos_ENABLE_OPENMP=ON
+    -DKokkos_ARCH_AMD_GFX90A=ON
 ```
 
-#### NVIDIA A100 GPU with CUDA and OpenMP
+#### NVIDIA H100 GPU with CUDA
 
 ```sh
 cmake \
     -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_CUDA=ON \
-    -DKokkos_ARCH_AMPERE80=ON \
-    -DKokkos_ENABLE_OPENMP=ON
+    -DKokkos_ARCH_HOPPER90=ON
 ```
 
-#### NVIDIA V100 GPU with CUDA and OpenMP
+#### NVIDIA A100 GPU with CUDA
 
 ```sh
 cmake \
     -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_CUDA=ON \
-    -DKokkos_ARCH_VOLTA70=ON \
-    -DKokkos_ENABLE_OPENMP=ON
+    -DKokkos_ARCH_AMPERE80=ON
 ```
 
-#### Intel GPU Max/Ponte Vecchio GPU with SYCL and OpenMP
+#### Intel GPU Max with SYCL
 
 ```sh
 cmake \
@@ -404,7 +401,6 @@ cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_SYCL=ON \
     -DKokkos_ARCH_INTEL_PVC=ON \
-    -DKokkos_ENABLE_OPENMP=ON \
     -DCMAKE_CXX_FLAGS="-fp-model=precise"
 ```
 
