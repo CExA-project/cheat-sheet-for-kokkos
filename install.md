@@ -326,10 +326,6 @@ They can be deduced from the device if present at CMake configuration time.
 | `-DKokkos_ARCH_MAXWELL53=ON` | Maxwell      | 5.3 |                                                        |
 | `-DKokkos_ARCH_MAXWELL52=ON` | Maxwell      | 5.2 | M6, M60, M4, M40                                       |
 | `-DKokkos_ARCH_MAXWELL50=ON` | Maxwell      | 5.0 | M10                                                    |
-| `-DKokkos_ARCH_KEPLER37=ON`  | Kepler       | 3.7 | K80                                                    |
-| `-DKokkos_ARCH_KEPLER35=ON`  | Kepler       | 3.5 | K40, K20                                               |
-| `-DKokkos_ARCH_KEPLER32=ON`  | Kepler       | 3.2 |                                                        |
-| `-DKokkos_ARCH_KEPLER30=ON`  | Kepler       | 3.0 | K10                                                    |
 
 <!--#ifndef PRINT-->
 
