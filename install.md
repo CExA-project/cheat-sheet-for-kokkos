@@ -286,14 +286,14 @@ They can be deduced from the device if present at CMake configuration time.
 
 </summary>
 
-| Option                         | Architecture          |
-|--------------------------------|-----------------------|
-| `-DKokkos_ARCH_INTEL_GEN=ON`   | Generic JIT           |
-| `-DKokkos_ARCH_INTEL_XEHP=ON`  | Xe-HP                 |
-| `-DKokkos_ARCH_INTEL_PVC=ON`   | GPU Max/Ponte Vecchio |
-| `-DKokkos_ARCH_INTEL_DG1=ON`   | Iris XeMAX            |
-| `-DKokkos_ARCH_INTEL_GEN12=ON` | Gen12                 |
-| `-DKokkos_ARCH_INTEL_GEN11=ON` | Gen11                 |
+| Option                         | Architecture            |
+|--------------------------------|-------------------------|
+| `-DKokkos_ARCH_INTEL_GEN=ON`   | Generic JIT             |
+| `-DKokkos_ARCH_INTEL_XEHP=ON`  | Xe-HP                   |
+| `-DKokkos_ARCH_INTEL_PVC=ON`   | GPU Max (Ponte Vecchio) |
+| `-DKokkos_ARCH_INTEL_DG1=ON`   | Iris XeMAX              |
+| `-DKokkos_ARCH_INTEL_GEN12=ON` | Gen12                   |
+| `-DKokkos_ARCH_INTEL_GEN11=ON` | Gen11                   |
 
 <!--#ifndef PRINT-->
 
@@ -326,10 +326,6 @@ They can be deduced from the device if present at CMake configuration time.
 | `-DKokkos_ARCH_MAXWELL53=ON` | Maxwell      | 5.3 |                                                        |
 | `-DKokkos_ARCH_MAXWELL52=ON` | Maxwell      | 5.2 | M6, M60, M4, M40                                       |
 | `-DKokkos_ARCH_MAXWELL50=ON` | Maxwell      | 5.0 | M10                                                    |
-| `-DKokkos_ARCH_KEPLER37=ON`  | Kepler       | 3.7 | K80                                                    |
-| `-DKokkos_ARCH_KEPLER35=ON`  | Kepler       | 3.5 | K40, K20                                               |
-| `-DKokkos_ARCH_KEPLER32=ON`  | Kepler       | 3.2 |                                                        |
-| `-DKokkos_ARCH_KEPLER30=ON`  | Kepler       | 3.0 | K10                                                    |
 
 <!--#ifndef PRINT-->
 
@@ -361,11 +357,25 @@ They can be deduced from the device if present at CMake configuration time.
 cmake \
     -B build \
     -DCMAKE_BUILD_TYPE=Release \
-    -DKokkos_ARCH_NATIVE=ON \
-    -DKokkos_ENABLE_OPENMP=ON
+    -DKokkos_ENABLE_OPENMP=ON \
+    -DKokkos_ARCH_NATIVE=ON
 ```
 
-#### AMD MI250 GPU with HIP and OpenMP
+#### AMD MI300A APU with HIP
+
+```sh
+export HSA_XNACK=1
+cmake \
+    -B build \
+    -DCMAKE_CXX_COMPILER=hipcc \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DKokkos_ENABLE_HIP=ON \
+    -DKokkos_ARCH_AMD_GFX942_APU=ON
+```
+
+Environment variable is required to access host allocations from the device.
+
+#### AMD MI250 GPU with HIP
 
 ```sh
 cmake \
@@ -373,33 +383,10 @@ cmake \
     -DCMAKE_CXX_COMPILER=hipcc \
     -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_HIP=ON \
-    -DKokkos_ARCH_AMD_GFX90A=ON \
-    -DKokkos_ENABLE_OPENMP=ON
+    -DKokkos_ARCH_AMD_GFX90A=ON
 ```
 
-#### NVIDIA A100 GPU with CUDA and OpenMP
-
-```sh
-cmake \
-    -B build \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DKokkos_ENABLE_CUDA=ON \
-    -DKokkos_ARCH_AMPERE80=ON \
-    -DKokkos_ENABLE_OPENMP=ON
-```
-
-#### NVIDIA V100 GPU with CUDA and OpenMP
-
-```sh
-cmake \
-    -B build \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DKokkos_ENABLE_CUDA=ON \
-    -DKokkos_ARCH_VOLTA70=ON \
-    -DKokkos_ENABLE_OPENMP=ON
-```
-
-#### Intel GPU Max/Ponte Vecchio GPU with SYCL and OpenMP
+#### Intel GPU Max 1550 (Ponte Vecchio) with SYCL
 
 ```sh
 cmake \
@@ -408,11 +395,30 @@ cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DKokkos_ENABLE_SYCL=ON \
     -DKokkos_ARCH_INTEL_PVC=ON \
-    -DKokkos_ENABLE_OPENMP=ON \
     -DCMAKE_CXX_FLAGS="-fp-model=precise"
 ```
 
 Last option is for math operators precision.
+
+#### NVIDIA H100 GPU with CUDA
+
+```sh
+cmake \
+    -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DKokkos_ENABLE_CUDA=ON \
+    -DKokkos_ARCH_HOPPER90=ON
+```
+
+#### NVIDIA A100 GPU with CUDA
+
+```sh
+cmake \
+    -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DKokkos_ENABLE_CUDA=ON \
+    -DKokkos_ARCH_AMPERE80=ON
+```
 
 <!--#ifndef PRINT-->
 <img title="Code" alt="Code" src="./images/code_txt.svg" height="25"> For more code examples:
