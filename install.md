@@ -286,14 +286,14 @@ They can be deduced from the device if present at CMake configuration time.
 
 </summary>
 
-| Option                         | Architecture          |
-|--------------------------------|-----------------------|
-| `-DKokkos_ARCH_INTEL_GEN=ON`   | Generic JIT           |
-| `-DKokkos_ARCH_INTEL_XEHP=ON`  | Xe-HP                 |
-| `-DKokkos_ARCH_INTEL_PVC=ON`   | GPU Max/Ponte Vecchio |
-| `-DKokkos_ARCH_INTEL_DG1=ON`   | Iris XeMAX            |
-| `-DKokkos_ARCH_INTEL_GEN12=ON` | Gen12                 |
-| `-DKokkos_ARCH_INTEL_GEN11=ON` | Gen11                 |
+| Option                         | Architecture            |
+|--------------------------------|-------------------------|
+| `-DKokkos_ARCH_INTEL_GEN=ON`   | Generic JIT             |
+| `-DKokkos_ARCH_INTEL_XEHP=ON`  | Xe-HP                   |
+| `-DKokkos_ARCH_INTEL_PVC=ON`   | GPU Max (Ponte Vecchio) |
+| `-DKokkos_ARCH_INTEL_DG1=ON`   | Iris XeMAX              |
+| `-DKokkos_ARCH_INTEL_GEN12=ON` | Gen12                   |
+| `-DKokkos_ARCH_INTEL_GEN11=ON` | Gen11                   |
 
 <!--#ifndef PRINT-->
 
@@ -386,6 +386,20 @@ cmake \
     -DKokkos_ARCH_AMD_GFX90A=ON
 ```
 
+#### Intel GPU Max 1550 (Ponte Vecchio) with SYCL
+
+```sh
+cmake \
+    -B build \
+    -DCMAKE_CXX_COMPILER=icpx \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DKokkos_ENABLE_SYCL=ON \
+    -DKokkos_ARCH_INTEL_PVC=ON \
+    -DCMAKE_CXX_FLAGS="-fp-model=precise"
+```
+
+Last option is for math operators precision.
+
 #### NVIDIA H100 GPU with CUDA
 
 ```sh
@@ -405,20 +419,6 @@ cmake \
     -DKokkos_ENABLE_CUDA=ON \
     -DKokkos_ARCH_AMPERE80=ON
 ```
-
-#### Intel GPU Max with SYCL
-
-```sh
-cmake \
-    -B build \
-    -DCMAKE_CXX_COMPILER=icpx \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DKokkos_ENABLE_SYCL=ON \
-    -DKokkos_ARCH_INTEL_PVC=ON \
-    -DCMAKE_CXX_FLAGS="-fp-model=precise"
-```
-
-Last option is for math operators precision.
 
 <!--#ifndef PRINT-->
 <img title="Code" alt="Code" src="./images/code_txt.svg" height="25"> For more code examples:
