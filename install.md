@@ -361,6 +361,20 @@ cmake \
     -DKokkos_ARCH_NATIVE=ON
 ```
 
+#### AMD MI300A APU with HIP
+
+```sh
+export HSA_XNACK=1
+cmake \
+    -B build \
+    -DCMAKE_CXX_COMPILER=hipcc \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DKokkos_ENABLE_HIP=ON \
+    -DKokkos_ARCH_AMD_GFX942_APU=ON
+```
+
+Environment variable is required to access host allocations from the device.
+
 #### AMD MI250 GPU with HIP
 
 ```sh
