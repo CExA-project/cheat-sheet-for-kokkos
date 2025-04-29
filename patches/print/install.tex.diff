@@ -1,15 +1,15 @@
---- .install.tex	2025-02-28 15:37:52.208429178 +0100
-+++ install.tex	2025-02-28 15:38:14.746538842 +0100
-@@ -471,7 +471,7 @@
+--- .install.tex	2025-04-29 15:05:59.861833564 +0200
++++ install.tex	2025-04-29 15:09:46.159589195 +0200
+@@ -591,7 +591,7 @@
  \KeywordTok{include}\NormalTok{(FetchContent)}
  \FunctionTok{FetchContent\_Declare}\NormalTok{(}
  \NormalTok{    kokkos}
--\NormalTok{    URL https://github.com/kokkos/kokkos/releases/download/x.y.z/kokkos{-}x.y.z.zip}
-+\NormalTok{    URL https://github.com/kokkos/kokkos/releases/download/x.y.z/\break{}kokkos{-}x.y.z.zip}
+-\NormalTok{    URL https://github.com/kokkos/kokkos/releases/download/x.y.zz/kokkos{-}x.y.zz.tar.gz}
++\NormalTok{    URL https://github.com/kokkos/kokkos/releases/download/x.y.zz\break{}/kokkos{-}x.y.zz.tar.gz}
+ \NormalTok{    URL\_HASH SHA256=\textless{}hash for x.y.z archive\textgreater{}}
  \NormalTok{)}
  \FunctionTok{FetchContent\_MakeAvailable}\NormalTok{(kokkos)}
- \KeywordTok{target\_link\_libraries}\NormalTok{(}
-@@ -645,7 +645,7 @@
+@@ -709,7 +709,7 @@
  \begin{tabularx}{\linewidth}{llX}
  \toprule
  
@@ -18,7 +18,7 @@
  cards} \\ \midrule
  
  \texttt{-DKokkos\_ARCH\_AMD\_GFX942\_APU=ON} & GFX942 APU & MI300A \\
-@@ -688,7 +688,7 @@
+@@ -752,7 +752,7 @@
  \begin{tabularx}{\linewidth}{lllX}
  \toprule
  
@@ -27,3 +27,19 @@
  cards} \\ \midrule
  
  \texttt{-DKokkos\_ARCH\_HOPPER90=ON} & Hopper & 9.0 & H200, H100 \\
+@@ -766,6 +766,15 @@
+ \texttt{-DKokkos\_ARCH\_VOLTA70=ON} & Volta & 7.0 & V100 \\
+ \texttt{-DKokkos\_ARCH\_PASCAL61=ON} & Pascal & 6.1 & P6, P40, P4 \\
+ \texttt{-DKokkos\_ARCH\_PASCAL60=ON} & Pascal & 6.0 & P100 \\
++\bottomrule
++\end{tabularx}
++
++\begin{tabularx}{\linewidth}{lllX}
++\toprule
++
++\tblhead{Option} & \tblhead{Arch.} & \tblhead{CC} & \tblhead{Associated
++cards} \\ \midrule
++
+ \texttt{-DKokkos\_ARCH\_MAXWELL53=ON} & Maxwell & 5.3 &  \\
+ \texttt{-DKokkos\_ARCH\_MAXWELL52=ON} & Maxwell & 5.2 & M6, M60, M4,
+ M40 \\

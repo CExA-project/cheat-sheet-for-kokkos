@@ -44,58 +44,7 @@ title: Installation cheat sheet for Kokkos
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/requirements.html
 <!--#endif-->
 
-## How to build Kokkos
-
-### As a sub-directory dependency
-
-```cmake
-add_subdirectory(path/to/kokkos)
-target_link_libraries(
-    my-app
-    Kokkos::kokkos
-)
-```
-
-```sh
-cd path/to/your/code
-cmake -B build \
-    -DCMAKE_CXX_COMPILER=<your C++ compiler> \
-    <Kokkos compile options>
-```
-
-You may want to provide Kokkos as a Git submodule.
-
-<!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#embedded-kokkos-via-add-subdirectory-and-git-submodules
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/command/add_subdirectory.html#command:add_subdirectory
-<!--#endif-->
-
-### As an online dependency
-
-```cmake
-include(FetchContent)
-FetchContent_Declare(
-    kokkos
-    URL https://github.com/kokkos/kokkos/releases/download/x.y.z/kokkos-x.y.z.zip
-)
-FetchContent_MakeAvailable(kokkos)
-target_link_libraries(
-    my-app
-    Kokkos::kokkos
-)
-```
-
-```sh
-cd path/to/your/code
-cmake -B build \
-    -DCMAKE_CXX_COMPILER=<your C++ compiler> \
-    <Kokkos compile options>
-```
-
-<!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#embedded-kokkos-via-fetchcontent
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/module/FetchContent.html
-<!--#endif-->
+## How to integrate Kokkos
 
 ### As an external dependency
 
@@ -111,7 +60,7 @@ cmake --build build
 cmake --install build
 ```
 
-#### Use in your code
+#### Setup, and configure your code
 
 ```cmake
 find_package(Kokkos x.y.z REQUIRED)
@@ -133,7 +82,62 @@ cmake -B build \
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/guide/tutorial/index.html
 <!--#endif-->
 
-### As an external or sub-directory/online dependency
+### As an internal dependency
+
+#### Setup with a Git submodule
+
+```sh
+git submodule add -b x.y.zz https://github.com/kokkos/kokkos.git tpls/kokkos
+```
+
+```cmake
+add_subdirectory(path/to/kokkos)
+target_link_libraries(
+    my-app
+    Kokkos::kokkos
+)
+```
+
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#embedded-kokkos-via-add-subdirectory-and-git-submodules
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/command/add_subdirectory.html#command:add_subdirectory
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://git-scm.com/book/en/v2/Git-Tools-Submodules
+<!--#endif-->
+
+#### Setup with FetchContent
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+    kokkos
+    URL https://github.com/kokkos/kokkos/releases/download/x.y.zz/kokkos-x.y.zz.tar.gz
+    URL_HASH SHA256=<hash for x.y.z archive>
+)
+FetchContent_MakeAvailable(kokkos)
+target_link_libraries(
+    my-app
+    Kokkos::kokkos
+)
+```
+
+#### Configure your code
+
+```sh
+cmake -B build \
+    -DCMAKE_CXX_COMPILER=<your C++ compiler> \
+    <Kokkos compile options>
+```
+
+You may combine the external/internal dependency approaches.
+
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#embedded-kokkos-via-fetchcontent
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/module/FetchContent.html
+<!--#endif-->
+
+<!--#ifndef PRINT-->
+
+### As an external or internal dependency
 
 ```cmake
 find_package(Kokkos x.y.z QUIET)
@@ -141,11 +145,14 @@ if(Kokkos_FOUND)
     message(STATUS "Using installed Kokkos in ${Kokkos_DIR}")
 else()
     message(STATUS "Using Kokkos from ...")
-    # use either the sub-directory or the online dependency approach
+    # with either a Git submodule or FetchContent
 endif()
 ```
 
 Depending if Kokkos is already installed, you may have to call CMake with `-DKokkos_ROOT`, or with Kokkos compile options.
+
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#supporting-both-external-and-embedded-kokkos
+<!--#endif-->
 
 <!--#ifndef PRINT-->
 
@@ -411,7 +418,7 @@ cmake \
     -DKokkos_ARCH_AMD_GFX942_APU=ON
 ```
 
-Environment variable is required to access host allocations from the device.
+The environment variable is required to access host allocations from the device.
 
 #### AMD MI250 GPU with HIP
 
@@ -436,7 +443,7 @@ cmake \
     -DCMAKE_CXX_FLAGS="-fp-model=precise"
 ```
 
-Last option is for math operators precision.
+The last option is required for math operators precision.
 
 #### NVIDIA H100 GPU with CUDA
 
