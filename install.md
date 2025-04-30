@@ -51,7 +51,8 @@ title: Installation cheat sheet for Kokkos
 #### Configure, build and install Kokkos
 
 ```sh
-cd path/to/kokkos
+git clone -b x.y.zz https://github.com/kokkos/kokkos.git
+cd kokkos
 cmake -B build \
     -DCMAKE_CXX_COMPILER=<your C++ compiler> \
     -DCMAKE_INSTALL_PREFIX=path/to/kokkos/install \
