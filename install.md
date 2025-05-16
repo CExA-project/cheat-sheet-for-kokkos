@@ -153,6 +153,7 @@ endif()
 ```
 
 Depending if Kokkos is already installed, you may have to call CMake with `-DKokkos_ROOT`, or with Kokkos compile options.
+Note that this setup may not scale for a library, you should use a package manager instead.
 
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#supporting-both-external-and-embedded-kokkos
 <!--#endif-->
