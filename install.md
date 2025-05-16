@@ -46,6 +46,8 @@ title: Installation cheat sheet for Kokkos
 
 ## How to integrate Kokkos
 
+Note the difference in the version number between `x.y.z` and `x.y.zz`.
+
 ### As an external dependency
 
 #### Configure, build and install Kokkos
