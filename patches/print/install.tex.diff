@@ -1,6 +1,15 @@
---- .install.tex	2024-06-11 16:45:25.798270906 +0200
-+++ install.tex	2024-06-11 16:45:51.158407213 +0200
-@@ -497,7 +497,7 @@
+--- .install.tex	2025-04-29 15:05:59.861833564 +0200
++++ install.tex	2025-04-29 15:09:46.159589195 +0200
+@@ -591,7 +591,7 @@
+ \KeywordTok{include}\NormalTok{(FetchContent)}
+ \FunctionTok{FetchContent\_Declare}\NormalTok{(}
+ \NormalTok{    kokkos}
+-\NormalTok{    URL https://github.com/kokkos/kokkos/releases/download/x.y.zz/kokkos{-}x.y.zz.tar.gz}
++\NormalTok{    URL https://github.com/kokkos/kokkos/releases/download/x.y.zz\break{}/kokkos{-}x.y.zz.tar.gz}
+ \NormalTok{    URL\_HASH SHA256=\textless{}hash for x.y.z archive\textgreater{}}
+ \NormalTok{)}
+ \FunctionTok{FetchContent\_MakeAvailable}\NormalTok{(kokkos)}
+@@ -709,7 +709,7 @@
  \begin{tabularx}{\linewidth}{llX}
  \toprule
  
@@ -8,8 +17,8 @@
 +\tblhead{Option} & \tblhead{Arch.} & \tblhead{Associated
  cards} \\ \midrule
  
- \texttt{-DKokkos\_ARCH\_AMD\_GFX942=ON} & GFX942 & MI300A, MI300X \\
-@@ -537,7 +537,7 @@
+ \texttt{-DKokkos\_ARCH\_AMD\_GFX942\_APU=ON} & GFX942 APU & MI300A \\
+@@ -752,7 +752,7 @@
  \begin{tabularx}{\linewidth}{lllX}
  \toprule
  
@@ -18,12 +27,19 @@
  cards} \\ \midrule
  
  \texttt{-DKokkos\_ARCH\_HOPPER90=ON} & Hopper & 9.0 & H200, H100 \\
-@@ -639,7 +639,7 @@
-     \ExtensionTok{{-}DKokkos\_ENABLE\_SYCL}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
-     \ExtensionTok{{-}DKokkos\_ARCH\_INTEL\_PVC}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
-     \ExtensionTok{{-}DKokkos\_ENABLE\_OPENMP}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
--    \ExtensionTok{{-}DCMAKE\_CXX\_FLAGS}\NormalTok{=}\StringTok{"{-}fp{-}model=precise"}\NormalTok{  \# for math precision}
-+    \ExtensionTok{{-}DCMAKE\_CXX\_FLAGS}\NormalTok{=}\StringTok{"{-}fp{-}model=precise"}\CommentTok{  \# for math precision}
- \end{Highlighting}
- \end{Shaded}
- 
+@@ -766,6 +766,15 @@
+ \texttt{-DKokkos\_ARCH\_VOLTA70=ON} & Volta & 7.0 & V100 \\
+ \texttt{-DKokkos\_ARCH\_PASCAL61=ON} & Pascal & 6.1 & P6, P40, P4 \\
+ \texttt{-DKokkos\_ARCH\_PASCAL60=ON} & Pascal & 6.0 & P100 \\
++\bottomrule
++\end{tabularx}
++
++\begin{tabularx}{\linewidth}{lllX}
++\toprule
++
++\tblhead{Option} & \tblhead{Arch.} & \tblhead{CC} & \tblhead{Associated
++cards} \\ \midrule
++
+ \texttt{-DKokkos\_ARCH\_MAXWELL53=ON} & Maxwell & 5.3 &  \\
+ \texttt{-DKokkos\_ARCH\_MAXWELL52=ON} & Maxwell & 5.2 & M6, M60, M4,
+ M40 \\

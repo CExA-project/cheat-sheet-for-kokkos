@@ -6,9 +6,9 @@ title: Installation cheat sheet for Kokkos
 
 # Kokkos install cheat sheet
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/quick-start.html
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/building.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/ProgrammingGuide/Compiling.html
 
 <img title="Doc" alt="Doc" src="./images/tutorial_txt.svg" height="25"> https://github.com/kokkos/kokkos-tutorials/blob/main/LectureSeries/KokkosTutorial_01_Introduction.pdf
 
@@ -40,42 +40,21 @@ title: Installation cheat sheet for Kokkos
 | CMake        | 3.18            | For better Fortran linking  |
 | CMake        | 3.16            |                             |
 
-
 <!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/requirements.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/requirements.html
 <!--#endif-->
 
-## How to build Kokkos
+## How to integrate Kokkos
 
-### As part of your application
+Note the difference in the version number between `x.y.z` and `x.y.zz`.
 
-```cmake
-add_subdirectory(path/to/kokkos)
-target_link_libraries(
-    my-app
-    Kokkos::kokkos
-)
-```
-
-```sh
-cd path/to/your/code
-cmake -B build \
-    -DCMAKE_CXX_COMPILER=<your C++ compiler> \
-    <Kokkos compile options>
-```
-
-<!--#ifndef PRINT-->
-<img title="Code" alt="Code" src="./images/code_txt.svg" height="25"> Code example:
-
-- https://github.com/kokkos/kokkos/tree/master/example/build_cmake_in_tree
-<!--#endif-->
-
-### As an external library
+### As an external dependency
 
 #### Configure, build and install Kokkos
 
 ```sh
-cd path/to/kokkos
+git clone -b x.y.zz https://github.com/kokkos/kokkos.git
+cd kokkos
 cmake -B build \
     -DCMAKE_CXX_COMPILER=<your C++ compiler> \
     -DCMAKE_INSTALL_PREFIX=path/to/kokkos/install \
@@ -84,14 +63,10 @@ cmake --build build
 cmake --install build
 ```
 
-<!--#ifndef PRINT-->
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/building.html
-<!--#endif-->
-
-#### Use in your code
+#### Setup, and configure your code
 
 ```cmake
-find_package(Kokkos REQUIRED)
+find_package(Kokkos x.y.z REQUIRED)
 target_link_libraries(
     my-app
     Kokkos::kokkos
@@ -106,7 +81,81 @@ cmake -B build \
 ```
 
 <!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#external-kokkos-recommended-for-most-users
 <img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/guide/tutorial/index.html
+<!--#endif-->
+
+### As an internal dependency
+
+#### Setup with a Git submodule
+
+```sh
+git submodule add -b x.y.zz https://github.com/kokkos/kokkos.git tpls/kokkos
+```
+
+```cmake
+add_subdirectory(path/to/kokkos)
+target_link_libraries(
+    my-app
+    Kokkos::kokkos
+)
+```
+
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#embedded-kokkos-via-add-subdirectory-and-git-submodules
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/command/add_subdirectory.html#command:add_subdirectory
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://git-scm.com/book/en/v2/Git-Tools-Submodules
+<!--#endif-->
+
+#### Setup with FetchContent
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+    kokkos
+    URL https://github.com/kokkos/kokkos/releases/download/x.y.zz/kokkos-x.y.zz.tar.gz
+    URL_HASH SHA256=<hash for x.y.z archive>
+)
+FetchContent_MakeAvailable(kokkos)
+target_link_libraries(
+    my-app
+    Kokkos::kokkos
+)
+```
+
+#### Configure your code
+
+```sh
+cmake -B build \
+    -DCMAKE_CXX_COMPILER=<your C++ compiler> \
+    <Kokkos compile options>
+```
+
+You may combine the external/internal dependency approaches.
+
+<!--#ifndef PRINT-->
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#embedded-kokkos-via-fetchcontent
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://cmake.org/cmake/help/latest/module/FetchContent.html
+<!--#endif-->
+
+<!--#ifndef PRINT-->
+
+### As an external or internal dependency
+
+```cmake
+find_package(Kokkos x.y.z QUIET)
+if(Kokkos_FOUND)
+    message(STATUS "Using installed Kokkos in ${Kokkos_DIR}")
+else()
+    message(STATUS "Using Kokkos from ...")
+    # with either a Git submodule or FetchContent
+endif()
+```
+
+Depending if Kokkos is already installed, you may have to call CMake with `-DKokkos_ROOT`, or with Kokkos compile options.
+Note that this setup may not scale for a library, you should use a package manager instead.
+
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/integrating-kokkos-into-your-cmake-project.html#supporting-both-external-and-embedded-kokkos
 <!--#endif-->
 
 <!--#ifndef PRINT-->
@@ -115,7 +164,7 @@ cmake -B build \
 
 TODO finish this part
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> See https://kokkos.org/kokkos-core-wiki/building.html#spack
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/package-managers.html?highlight=spack#spack-https-spack-io
 
 <!--#endif-->
 
@@ -165,7 +214,7 @@ See [architecture-specific options](#architecture-specific-options).
 
 </details>
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> For more, see https://kokkos.org/kokkos-core-wiki/keywords.html
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/configuration-guide.html
 <!--#endif-->
 
 ### Architecture-specific options
@@ -346,7 +395,7 @@ They can be deduced from the device if present at CMake configuration time.
 <!--#ifndef PRINT-->
 ### Third-party Libraries (TPLs)
 
-<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25">  See https://kokkos.org/kokkos-core-wiki/keywords.html#third-party-libraries-tpls
+<img title="Doc" alt="Doc" src="./images/doc_txt.svg" height="25"> https://kokkos.org/kokkos-core-wiki/get-started/configuration-guide.html#keywords-tpls
 <!--#endif-->
 
 ### Examples for the most common architectures
@@ -373,7 +422,7 @@ cmake \
     -DKokkos_ARCH_AMD_GFX942_APU=ON
 ```
 
-Environment variable is required to access host allocations from the device.
+The environment variable is required to access host allocations from the device.
 
 #### AMD MI250 GPU with HIP
 
@@ -398,7 +447,7 @@ cmake \
     -DCMAKE_CXX_FLAGS="-fp-model=precise"
 ```
 
-Last option is for math operators precision.
+The last option is required for math operators precision.
 
 #### NVIDIA H100 GPU with CUDA
 
