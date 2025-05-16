@@ -1,15 +1,15 @@
---- .terminology.tex	2025-03-10 14:18:27.045716925 +0100
-+++ terminology.tex	2025-03-10 14:21:10.766847623 +0100
-@@ -351,8 +351,6 @@
- \begin{document}
- \maketitle
+--- .terminology.tex	2025-05-16 15:52:10.918644901 +0200
++++ terminology.tex	2025-05-16 15:52:34.345787628 +0200
+@@ -430,8 +430,6 @@
+ 
+ \relscale{\textratio}
  
 -\begin{multicols}{2}
 -
  \hypertarget{kokkos-mapping}{%
  \subsection{Kokkos mapping}\label{kokkos-mapping}}
  
-@@ -360,7 +358,7 @@
+@@ -439,7 +437,7 @@
  \subsubsection{Hierarchical
  parallelism}\label{hierarchical-parallelism}}
  
@@ -18,7 +18,7 @@
  \toprule
  
  \tblhead{Kokkos} & \tblhead{Cuda} & \tblhead{HIP} & \tblhead{SYCL} \\ \midrule
-@@ -383,7 +381,7 @@
+@@ -462,7 +460,7 @@
  \hypertarget{memory}{%
  \subsubsection{Memory}\label{memory}}
  
@@ -27,7 +27,7 @@
  \toprule
  
  \tblhead{Kokkos} & \tblhead{Cuda} & \tblhead{HIP} & \tblhead{SYCL} \\ \midrule
-@@ -405,7 +403,7 @@
+@@ -484,7 +482,7 @@
  \hypertarget{execution}{%
  \subsubsection{Execution}\label{execution}}
  
@@ -36,10 +36,12 @@
  \toprule
  
  \tblhead{Kokkos} & \tblhead{Cuda} & \tblhead{HIP} & \tblhead{SYCL} \\ \midrule
-@@ -435,6 +433,4 @@
+@@ -514,8 +512,6 @@
  \bottomrule
  \end{tabularx}
  
 -\end{multicols}
 -
- \end{document}
+ % add a watermark here
+ 
+ % \watermark

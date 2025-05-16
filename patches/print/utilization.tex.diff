@@ -1,5 +1,5 @@
---- .utilization.tex	2025-02-26 13:09:17.241716612 +0100
-+++ utilization.tex	2025-02-26 13:15:15.141388938 +0100
+--- .utilization.tex	2025-05-16 14:59:22.520240134 +0200
++++ utilization.tex	2025-05-16 15:45:59.825339129 +0200
 @@ -531,13 +531,12 @@
  \hypertarget{generic-memory-spaces}{%
  \paragraph{Generic memory spaces}\label{generic-memory-spaces}}
@@ -35,7 +35,7 @@
  
  \texttt{Operation} & See \protect\hyperlink{scatter-operation}{scatter
  operation}; defaults to \texttt{Kokkos::Experimental::ScatterSum} \\
-@@ -938,7 +937,7 @@
+@@ -942,7 +941,7 @@
  \begin{tabularx}{\linewidth}{lX}
  \toprule
  
@@ -44,7 +44,7 @@
  
  \texttt{ExecutionSpace} & See
  \protect\hyperlink{execution-spaces}{execution spaces}; defaults to
-@@ -1060,7 +1059,6 @@
+@@ -1068,7 +1067,6 @@
  \NormalTok{    Kokkos::TeamPolicy(numberOfElementsI, Kokkos::AUTO),}
  \NormalTok{    KOKKOS\_LAMBDA (}\AttributeTok{const}\NormalTok{ Kokkos::TeamPolicy\textless{}\textgreater{}::}\DataTypeTok{member\_type}\NormalTok{\& teamMember) \{}
          \AttributeTok{const} \DataTypeTok{int}\NormalTok{ i = teamMember.team\_rank();}
@@ -52,7 +52,27 @@
  \NormalTok{        Kokkos::parallel\_for(}
  \NormalTok{            Kokkos::TeamThreadRange(teamMember, firstJ, lastJ),}
  \NormalTok{            [=] (}\AttributeTok{const} \DataTypeTok{int}\NormalTok{ j) \{}
-@@ -1181,7 +1179,7 @@
+@@ -1180,6 +1178,13 @@
+ \texttt{Kokkos::atomic\_lshift(\&x,\ y)} & \texttt{x\ =\ x\ \textless{}\textless{}\ y} \\
+ \texttt{Kokkos::atomic\_max(\&x,\ y)} & \texttt{x\ =\ std::max(x,\ y)} \\
+ \texttt{Kokkos::atomic\_min(\&x,\ y)} & \texttt{x\ =\ std::min(x,\ y)} \\
++\bottomrule
++\end{tabularx}
++
++\begin{tabularx}{\linewidth}{Xl}
++\toprule
++
++\tblhead{Operation} & \tblhead{Replaces} \\ \midrule
+ \texttt{Kokkos::atomic\_mod(\&x,\ y)} & \texttt{x\ \%=\ y} \\
+ \texttt{Kokkos::atomic\_nand(\&x,\ y)} & \texttt{x\ =\ !(x\ \&\&\ y)} \\
+ \texttt{Kokkos::atomic\_or(\&x,\ y)} & \texttt{x\ \textbar{}=\ y} \\
+@@ -1191,10 +1196,13 @@
+ \bottomrule
+ \end{tabularx}
+ 
++% extra space
++\vspace{-0.4em}
++
  \hypertarget{atomic-exchanges}{%
  \subsubsection{Atomic exchanges}\label{atomic-exchanges}}
  
@@ -61,7 +81,16 @@
  \toprule
  
  \tblhead{Operation} & \tblhead{Description} \\ \midrule
-@@ -1201,13 +1199,13 @@
+@@ -1208,19 +1216,22 @@
+ \bottomrule
+ \end{tabularx}
+ 
++% extra space
++\vspace{-0.4em}
++
+ \hypertarget{mathematics}{%
+ \subsection{Mathematics}\label{mathematics}}
+ 
  \hypertarget{math-functions}{%
  \subsubsection{Math functions}\label{math-functions}}
  
@@ -77,7 +106,7 @@
  \texttt{remainder}, \texttt{fma}, \texttt{fmax}, \texttt{fmin},
  \texttt{fdim}, \texttt{nan} \\
  Exponential & \texttt{exp}, \texttt{exp2}, \texttt{expm1}, \texttt{log},
-@@ -1217,7 +1215,7 @@
+@@ -1230,7 +1241,7 @@
  \texttt{acos}, \texttt{atan}, \texttt{atan2} \\
  Hyperbolic & \texttt{sinh}, \texttt{cosh}, \texttt{tanh},
  \texttt{asinh}, \texttt{acosh}, \texttt{atanh} \\
@@ -86,3 +115,33 @@
  \texttt{lgamma} \\
  Nearest & \texttt{ceil}, \texttt{floor}, \texttt{trunc}, \texttt{round},
  \texttt{nearbyint} \\
+@@ -1243,6 +1254,9 @@
+ 
+ Note that not all C++ standard math functions are available.
+ 
++% extra space
++\vspace{-0.4em}
++
+ \hypertarget{complex-numbers}{%
+ \subsubsection{Complex numbers}\label{complex-numbers}}
+ 
+@@ -1255,6 +1269,9 @@
+ \end{Highlighting}
+ \end{Shaded}
+ 
++% extra space
++\vspace{-0.4em}
++
+ \hypertarget{manage-1}{%
+ \paragraph{Manage}\label{manage-1}}
+ 
+@@ -1269,6 +1286,9 @@
+ \bottomrule
+ \end{tabularx}
+ 
++% extra space
++\vspace{-0.4em}
++
+ \hypertarget{utilities}{%
+ \subsection{Utilities}\label{utilities}}
+ 
