@@ -111,7 +111,6 @@
 \usepackage{mdframed}
 \usepackage{fancyhdr}
 \usepackage{calc}
-\usepackage[nobottomtitles*]{titlesec}
 
 \usepackage{tabularray}
 
@@ -310,11 +309,18 @@
 
 % sections
 
+\usepackage[nobottomtitles*]{titlesec}
+
 \titleformat{\subsection}[display]
     {\Large\bfseries}
     {}
     {0pt}
     {\subsectionstyle}
+
+\titlespacing{\subsection}
+    {0pt}
+    {12pt}
+    {5pt}
 
 \titleformat{\subsubsection}[display]
     {\large\bfseries}
@@ -323,17 +329,32 @@
     {\subsubsectionstyle}
     [\subsubsectionstyleextra]
 
+\titlespacing{\subsubsection}
+    {0pt}
+    {8pt}
+    {4pt}
+
 \titleformat{\paragraph}[display]
     {\normalsize\bfseries}
     {}
     {0pt}
     {\paragraphstyle}
 
+\titlespacing{\paragraph}
+    {0pt}
+    {6pt}
+    {3pt}
+
 \titleformat{\subparagraph}[display]
     {\small\bfseries}
     {}
     {0pt}
     {\subparagraphstyle}
+
+\titlespacing{\subparagraph}
+    {0pt}
+    {6pt}
+    {3pt}
 
 \newcommand{\subsectionstyle}[1]{%
     \colorbox{main}{\parbox{\dimexpr\linewidth-2\fboxsep}{\strut#1}}%
@@ -571,7 +592,7 @@ Device options are mandatory. They can be deduced from the device if present at 
 \subparagraph{AMD GPU architectures (HIP)}
 
 {
-% temporary disable of justify aligment
+% temporary disable justify align
 \RenewDocumentCommand\TblrAlignBoth{}{\RaggedRight}
 \begin{tblr}[theme=kokkostable]{llX}
     Option & Arch. & Associated cards \\
@@ -600,6 +621,9 @@ Device options are mandatory. They can be deduced from the device if present at 
 
 \subparagraph{NVIDIA GPU architectures (CUDA)}
 
+{
+% temporary disable justify align
+\RenewDocumentCommand\TblrAlignBoth{}{\RaggedRight}
 \begin{tblr}[theme=kokkostable]{lllX}
     Option & Arch. & CC & Associated cards \\
     \mintinline{text}{-DKokkos_ARCH_HOPPER90=ON} & Hopper & 9.0 & H200, H100 \\
@@ -612,6 +636,7 @@ Device options are mandatory. They can be deduced from the device if present at 
     \mintinline{text}{-DKokkos_ARCH_PASCAL61=ON} & Pascal & 6.1 & P6, P40, P4 \\
     \mintinline{text}{-DKokkos_ARCH_PASCAL60=ON} & Pascal & 6.0 & P100 \\
 \end{tblr}
+}
 
 % table broken between two pages
 
