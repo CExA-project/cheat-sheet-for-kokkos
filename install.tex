@@ -2,15 +2,13 @@
   10pt,
   a4paper,
   table,
-  twoside]{article}
+  twoside
+]{article}
 
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{textcomp}
 
 \usepackage{microtype}
 
@@ -35,6 +33,8 @@
   pdftitle={Installation cheat sheet for Kokkos},
   hidelinks,
 }
+
+\usepackage{url}
 \urlstyle{same} % disable monospaced font for URLs
 
 \usepackage{minted}
@@ -112,8 +112,22 @@
 \usepackage{fancyhdr}
 \usepackage{calc}
 \usepackage[nobottomtitles*]{titlesec}
-\usepackage{tabularx}
-\usepackage{url}
+
+\usepackage{tabularray}
+
+\NewTblrTheme{kokkostable}{
+    \SetTblrInner{
+        width=\linewidth,
+        rowhead=1,
+        row{odd}={bg=lightgray},
+        row{1}={bg=lightmain},
+        stretch=0,
+        rowsep=3.6pt,
+    }
+}
+
+\usepackage{ragged2e}
+
 \usepackage{graphicx}
 \usepackage{fvextra}
 \usepackage{ifthen}
@@ -341,89 +355,6 @@
     {\color{main}#1}%
 }
 
-% tables
-
-\newcommand{\toprule}{%
-    \rowcolor{lightmain}
-}
-\newcommand{\midrule}{%
-}
-\newcommand{\bottomrule}{%
-}
-
-\newcommand{\tblhead}[1]{#1}
-
-\renewcommand{\arraystretch}{1.25}
-
-\AtBeginEnvironment{tabularx}{%
-    \rowcolors*{2}{lightgray}{}%
-}
-
-% code block
-
-\newcommand\codesize\scriptsize
-
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
-    breaklines,
-    breakanywhere,
-    commandchars=\\\{\}
-}
-
-\usepackage{tcolorbox}
-\tcbuselibrary{
-    breakable,
-    skins,
-}
-
-\ifcsmacro{Shaded}{
-    \renewenvironment{Shaded}[1][]{%
-        \begin{tcolorbox}[
-            skin=tilemiddle,
-            colback=lightgray,
-            leftrule=0pt,
-            rightrule=0pt,
-            toprule=0pt,
-            bottomrule=0pt,
-            fontupper=\codesize,
-            before skip=0.5em,
-            after skip=0.5em,
-            left skip=0pt,
-            right skip=0pt,
-            top=\fboxsep,
-            bottom=\fboxsep,
-            left=\fboxsep,
-            right=\fboxsep ,
-            pad at break=0.75\fboxsep,
-            #1,
-            ]%
-        }{%
-        \end{tcolorbox}
-    }
-
-    \colorlet{codemain}{kokkos}
-    \colorlet{codelightmain}{kokkos!70}
-    \colorlet{codegray}{gray!90!black}
-
-    \renewcommand{\AttributeTok}[1]{{\color{codelightmain}#1}}
-    \renewcommand{\BuiltInTok}[1]{{\color{codemain}#1}}
-    \renewcommand{\CommentTok}[1]{{\color{codegray}\textit{#1}}}
-    \renewcommand{\CommentVarTok}[1]{{\color{codegray}\textit{#1}}}
-    \renewcommand{\ConstantTok}[1]{{\color{codegray}#1}}
-    \renewcommand{\ControlFlowTok}[1]{{\color{codemain}#1}}
-    \renewcommand{\DataTypeTok}[1]{{\color{codemain}#1}}
-    \renewcommand{\DecValTok}[1]{{\color{codelightmain}#1}}
-    \renewcommand{\FunctionTok}[1]{{\color{codemain}#1}}
-    \renewcommand{\KeywordTok}[1]{{\color{codemain}\textbf{#1}}}
-    \renewcommand{\OtherTok}[1]{{\color{codelightmain}#1}}
-    \renewcommand{\PreprocessorTok}[1]{{\color{codegray}#1}}
-    \renewcommand{\StringTok}[1]{{\color{codemain}#1}}
-}{}
-
-% code inline
-
-\let\oldtexttt\texttt
-\renewcommand{\texttt}[1]{{\codesize\oldtexttt{#1}}}
-
 % widows and orphans
 
 \widowpenalty10000
@@ -484,45 +415,33 @@
 
 \subsubsection{Compiler}
 
-\begin{tabularx}{\linewidth}{Xll}
-\toprule
-
-\tblhead{Compiler} & \tblhead{Minimum
-version} & \tblhead{Notes} \\ \midrule
-
-ARM Clang & 20.1 &  \\
-Clang & 10.0.0 & For CUDA \\
-Clang & 8.0.0 & For CPU \\
-GCC & 8.2.0 &  \\
-Intel LLVM & 2023.0.0 & For SYCL \\
-Intel LLVM & 2021.1.1 & For CPU \\
-MSVC & 19.29 &  \\
-NVCC & 11.0 &  \\
-NVHPC & 22.3 &  \\
-ROCM & 5.2.0 &  \\
-
-\bottomrule
-\end{tabularx}
+\begin{tblr}[theme=kokkostable]{Xll}
+    Compiler & Minimum version & Notes \\
+    ARM Clang & 20.1 &  \\
+    Clang & 10.0.0 & For CUDA \\
+    Clang & 8.0.0 & For CPU \\
+    GCC & 8.2.0 &  \\
+    Intel LLVM & 2023.0.0 & For SYCL \\
+    Intel LLVM & 2021.1.1 & For CPU \\
+    MSVC & 19.29 &  \\
+    NVCC & 11.0 &  \\
+    NVHPC & 22.3 &  \\
+    ROCM & 5.2.0 &  \\
+\end{tblr}
 
 \subsubsection{Build system}
 
-\begin{tabularx}{\linewidth}{llX}
-\toprule
-
-\tblhead{Build system} & \tblhead{Minimum
-version} & \tblhead{Notes} \\ \midrule
-
-CMake & 3.25.2 & For Intel LLVM full support \\
-CMake & 3.21.1 & For NVHPC support \\
-CMake & 3.18 & For better Fortran linking \\
-CMake & 3.16 &  \\
-
-\bottomrule
-\end{tabularx}
+\begin{tblr}[theme=kokkostable]{llX}
+    Build system & Minimum version & Notes \\
+    CMake & 3.25.2 & For Intel LLVM full support \\
+    CMake & 3.21.1 & For NVHPC support \\
+    CMake & 3.18 & For better Fortran linking \\
+    CMake & 3.16 &  \\
+\end{tblr}
 
 \subsection{How to integrate Kokkos}
 
-Note the difference in the version number between \texttt{x.y.z} and \texttt{x.y.zz}.
+Note the difference in the version number between \mintinline{text}{x.y.z} and \mintinline{text}{x.y.zz}.
 
 \subsubsection{As an external dependency}
 
@@ -602,33 +521,23 @@ You may combine the external/internal dependency approaches.
 
 \subsubsection{Host backends}
 
-\begin{tabularx}{\linewidth}{Xl}
-\toprule
-
-\tblhead{Option} & \tblhead{Backend} \\ \midrule
-
-\texttt{-DKokkos\_ENABLE\_SERIAL=ON} & Serial \\
-\texttt{-DKokkos\_ENABLE\_OPENMP=ON} & OpenMP \\
-\texttt{-DKokkos\_ENABLE\_THREADS=ON} & Threads \\
-
-\bottomrule
-\end{tabularx}
+\begin{tblr}[theme=kokkostable]{Xl}
+    Option & Backend \\
+    \mintinline{text}{-DKokkos_ENABLE_SERIAL=ON} & Serial \\
+    \mintinline{text}{-DKokkos_ENABLE_OPENMP=ON} & OpenMP \\
+    \mintinline{text}{-DKokkos_ENABLE_THREADS=ON} & Threads \\
+\end{tblr}
 
 The serial backend is enabled by default if no other host backend is enabled.
 
 \subsubsection{Device backends}
 
-\begin{tabularx}{\linewidth}{Xll}
-\toprule
-
-\tblhead{Option} & \tblhead{Backend} & \tblhead{Device} \\ \midrule
-
-\texttt{-DKokkos\_ENABLE\_CUDA=ON} & CUDA & NVIDIA \\
-\texttt{-DKokkos\_ENABLE\_HIP=ON} & HIP & AMD \\
-\texttt{-DKokkos\_ENABLE\_SYCL=ON} & SYCL & Intel \\
-
-\bottomrule
-\end{tabularx}
+\begin{tblr}[theme=kokkostable]{Xll}
+    Option & Backend & Device \\
+    \mintinline{text}{-DKokkos_ENABLE_CUDA=ON} & CUDA & NVIDIA \\
+    \mintinline{text}{-DKokkos_ENABLE_HIP=ON} & HIP & AMD \\
+    \mintinline{text}{-DKokkos_ENABLE_SYCL=ON} & SYCL & Intel \\
+\end{tblr}
 
 You can only select the serial backend, plus another host backend and one device backend at a time.
 
@@ -636,21 +545,13 @@ See architecture-specific options.
 
 \subsubsection{Specific options}
 
-\begin{tabularx}{\linewidth}{lX}
-\toprule
-
-\tblhead{Option} & \tblhead{Description} \\ \midrule
-
-\texttt{-DKokkos\_ENABLE\_DEBUG=ON} & Activate extra debug features, may
-increase compile times \\
-\texttt{-DKokkos\_ENABLE\_DEBUG\_BOUNDS\_CHECK=ON} & Use bounds
-checking, will increase runtime \\
-\texttt{-DKokkos\_ENABLE\_EXAMPLES=ON} & Build examples \\
-\texttt{-DKokkos\_ENABLE\_TUNING=ON} & Create bindings for tuning
-tools \\
-
-\bottomrule
-\end{tabularx}
+\begin{tblr}[theme=kokkostable]{lX}
+    Option & Description \\
+    \mintinline{text}{-DKokkos_ENABLE_DEBUG=ON} & Activate extra debug features, may increase compile times \\
+    \mintinline{text}{-DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON} & Use bounds checking, will increase runtime \\
+    \mintinline{text}{-DKokkos_ENABLE_EXAMPLES=ON} & Build examples \\
+    \mintinline{text}{-DKokkos_ENABLE_TUNING=ON} & Create bindings for tuning tools \\
+\end{tblr}
 
 \subsubsection{Architecture-specific options}
 
@@ -658,15 +559,10 @@ tools \\
 
 Host options are used for controlling optimization and are optional.
 
-\begin{tabularx}{\linewidth}{Xl}
-\toprule
-
-\tblhead{Option} & \tblhead{Architecture} \\ \midrule
-
-\texttt{-DKokkos\_ARCH\_NATIVE=ON} & Local host \\
-
-\bottomrule
-\end{tabularx}
+\begin{tblr}[theme=kokkostable]{Xl}
+    Option & Architecture \\
+    \mintinline{text}{-DKokkos_ARCH_NATIVE=ON} & Local host \\
+\end{tblr}
 
 \paragraph{Device architectures}
 
@@ -674,78 +570,57 @@ Device options are mandatory. They can be deduced from the device if present at 
 
 \subparagraph{AMD GPU architectures (HIP)}
 
-\begin{tabularx}{\linewidth}{llX}
-\toprule
-
-\tblhead{Option} & \tblhead{Arch.} & \tblhead{Associated
-cards} \\ \midrule
-
-\texttt{-DKokkos\_ARCH\_AMD\_GFX942\_APU=ON} & GFX942 APU & MI300A \\
-\texttt{-DKokkos\_ARCH\_AMD\_GFX942=ON} & GFX942 & MI300X \\
-\texttt{-DKokkos\_ARCH\_AMD\_GFX90A=ON} & GFX90A & MI210, MI250,
-MI250X \\
-\texttt{-DKokkos\_ARCH\_AMD\_GFX908=ON} & GFX908 & MI100 \\
-\texttt{-DKokkos\_ARCH\_AMD\_GFX906=ON} & GFX906 & MI50, MI60 \\
-\texttt{-DKokkos\_ARCH\_AMD\_GFX1103=ON} & GFX1103 & Ryzen 8000G, Radeon
-740M, 760M, 780M, 880M, 980M \\
-\texttt{-DKokkos\_ARCH\_AMD\_GFX1100=ON} & GFX1100 & 7900xt \\
-\texttt{-DKokkos\_ARCH\_AMD\_GFX1030=ON} & GFX1030 & V620, W6800 \\
-
-\bottomrule
-\end{tabularx}
+{
+% temporary disable of justify aligment
+\RenewDocumentCommand\TblrAlignBoth{}{\RaggedRight}
+\begin{tblr}[theme=kokkostable]{llX}
+    Option & Arch. & Associated cards \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX942_APU=ON} & GFX942 APU & MI300A \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX942=ON} & GFX942 & MI300X \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX90A=ON} & GFX90A & MI210, MI250, MI250X \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX908=ON} & GFX908 & MI100 \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX906=ON} & GFX906 & MI50, MI60 \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX1103=ON} & GFX1103 & Ryzen 8000G, Radeon 740M, 760M, 780M, 880M, 980M \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX1100=ON} & GFX1100 & 7900xt \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX1030=ON} & GFX1030 & V620, W6800 \\
+\end{tblr}
+}
 
 \subparagraph{Intel GPU architectures (SYCL)}
 
-\begin{tabularx}{\linewidth}{lX}
-\toprule
-
-\tblhead{Option} & \tblhead{Architecture} \\ \midrule
-
-\texttt{-DKokkos\_ARCH\_INTEL\_GEN=ON} & Generic JIT \\
-\texttt{-DKokkos\_ARCH\_INTEL\_XEHP=ON} & Xe-HP \\
-\texttt{-DKokkos\_ARCH\_INTEL\_PVC=ON} & GPU Max (Ponte Vecchio) \\
-\texttt{-DKokkos\_ARCH\_INTEL\_DG1=ON} & Iris XeMAX \\
-\texttt{-DKokkos\_ARCH\_INTEL\_GEN12=ON} & Gen12 \\
-\texttt{-DKokkos\_ARCH\_INTEL\_GEN11=ON} & Gen11 \\
-
-\bottomrule
-\end{tabularx}
+\begin{tblr}[theme=kokkostable]{lX}
+    Option & Architecture \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN=ON} & Generic JIT \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_XEHP=ON} & Xe-HP \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_PVC=ON} & GPU Max (Ponte Vecchio) \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_DG1=ON} & Iris XeMAX \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN12=ON} & Gen12 \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN11=ON} & Gen11 \\
+\end{tblr}
 
 \subparagraph{NVIDIA GPU architectures (CUDA)}
 
-\begin{tabularx}{\linewidth}{lllX}
-\toprule
+\begin{tblr}[theme=kokkostable]{lllX}
+    Option & Arch. & CC & Associated cards \\
+    \mintinline{text}{-DKokkos_ARCH_HOPPER90=ON} & Hopper & 9.0 & H200, H100 \\
+    \mintinline{text}{-DKokkos_ARCH_ADA89=ON} & Ada & 8.9 & GeForce RTX 40 series, RTX 6000/5000 series, L4, L40 \\
+    \mintinline{text}{-DKokkos_ARCH_AMPERE86=ON} & Ampere & 8.6 & GeForce RTX 30 series, RTX A series, A40, A10, A16, A2 \\
+    \mintinline{text}{-DKokkos_ARCH_AMPERE80=ON} & Ampere & 8.0 & A100, A30 \\
+    \mintinline{text}{-DKokkos_ARCH_TURING75=ON} & Turing & 7.5 & T4 \\
+    \mintinline{text}{-DKokkos_ARCH_VOLTA72=ON} & Volta & 7.2 &  \\
+    \mintinline{text}{-DKokkos_ARCH_VOLTA70=ON} & Volta & 7.0 & V100 \\
+    \mintinline{text}{-DKokkos_ARCH_PASCAL61=ON} & Pascal & 6.1 & P6, P40, P4 \\
+    \mintinline{text}{-DKokkos_ARCH_PASCAL60=ON} & Pascal & 6.0 & P100 \\
+\end{tblr}
 
-\tblhead{Option} & \tblhead{Arch.} & \tblhead{CC} & \tblhead{Associated
-cards} \\ \midrule
+% table broken between two pages
 
-\texttt{-DKokkos\_ARCH\_HOPPER90=ON} & Hopper & 9.0 & H200, H100 \\
-\texttt{-DKokkos\_ARCH\_ADA89=ON} & Ada & 8.9 & GeForce RTX 40 series,
-RTX 6000/5000 series, L4, L40 \\
-\texttt{-DKokkos\_ARCH\_AMPERE86=ON} & Ampere & 8.6 & GeForce RTX 30
-series, RTX A series, A40, A10, A16, A2 \\
-\texttt{-DKokkos\_ARCH\_AMPERE80=ON} & Ampere & 8.0 & A100, A30 \\
-\texttt{-DKokkos\_ARCH\_TURING75=ON} & Turing & 7.5 & T4 \\
-\texttt{-DKokkos\_ARCH\_VOLTA72=ON} & Volta & 7.2 &  \\
-\texttt{-DKokkos\_ARCH\_VOLTA70=ON} & Volta & 7.0 & V100 \\
-\texttt{-DKokkos\_ARCH\_PASCAL61=ON} & Pascal & 6.1 & P6, P40, P4 \\
-\texttt{-DKokkos\_ARCH\_PASCAL60=ON} & Pascal & 6.0 & P100 \\
-\bottomrule
-\end{tabularx}
-
-\begin{tabularx}{\linewidth}{lllX}
-\toprule
-
-\tblhead{Option} & \tblhead{Arch.} & \tblhead{CC} & \tblhead{Associated
-cards} \\ \midrule
-
-\texttt{-DKokkos\_ARCH\_MAXWELL53=ON} & Maxwell & 5.3 &  \\
-\texttt{-DKokkos\_ARCH\_MAXWELL52=ON} & Maxwell & 5.2 & M6, M60, M4,
-M40 \\
-\texttt{-DKokkos\_ARCH\_MAXWELL50=ON} & Maxwell & 5.0 & M10 \\
-
-\bottomrule
-\end{tabularx}
+\begin{tblr}[theme=kokkostable]{lllX}
+    Option & Arch. & CC & Associated cards \\
+    \mintinline{text}{-DKokkos_ARCH_MAXWELL53=ON} & Maxwell & 5.3 &  \\
+    \mintinline{text}{-DKokkos_ARCH_MAXWELL52=ON} & Maxwell & 5.2 & M6, M60, M4, M40 \\
+    \mintinline{text}{-DKokkos_ARCH_MAXWELL50=ON} & Maxwell & 5.0 & M10 \\
+\end{tblr}
 
 \subsubsection{Examples for the most common architectures}
 
