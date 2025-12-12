@@ -7,41 +7,58 @@
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[T1]{fontenc}
-  \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provide euro and other symbols
-\else % if luatex or xetex
-  \usepackage{unicode-math}
-  \defaultfontfeatures{Scale=MatchLowercase}
-  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-% Use upquote if available, for straight quotes in verbatim environments
-% \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% \IfFileExists{microtype.sty}{% use microtype if available
-  \usepackage[]{microtype}
-  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-% }{}
-% \makeatletter
-% \@ifundefined{KOMAClassName}{% if non-KOMA class
-%   \IfFileExists{parskip.sty}{%
-%     \usepackage{parskip}
-%   }{% else
-%     \setlength{\parindent}{0pt}
-%     \setlength{\parskip}{6pt plus 2pt minus 1pt}}
-% }{% if KOMA class
-%   \KOMAoptions{parskip=half}}
-% \makeatother
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+
+\usepackage{microtype}
+
 \usepackage{xcolor}
-% \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-% \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+
+% base color
+\definecolor{kokkos}{RGB}{30, 120, 152}
+
+% colors
+\colorlet{main}{kokkos!80}
+\colorlet{lightmain}{kokkos!30}
+\colorlet{dimmedmain}{kokkos!50}
+\colorlet{lightgray}{gray!20}
+\colorlet{darkgray}{gray!70!black}
+\colorlet{alert}{red!70!cyan}
+\colorlet{lightalert}{alert!20}
+\colorlet{example}{cyan!80!gray!50}
+\colorlet{lightexample}{example!30}
+
 \usepackage{hyperref}
 \hypersetup{
   pdftitle={Installation cheat sheet for Kokkos},
   hidelinks,
 }
 \urlstyle{same} % disable monospaced font for URLs
-% \usepackage{color}
+
+\usepackage{minted}
+\setminted{
+    autogobble,
+    fontsize=\scriptsize,
+    bgcolor=lightgray,
+    breaklines,
+    resetmargins,
+}
+\setmintedinline{
+    bgcolor=\empty,
+}
+
+% \setminted[sh]{
+%     extrakeywords={cmake},
+% }
+
+\usepackage{etoolbox}
+\makeatletter
+% remove minted vertical margins
+\patchcmd{\minted@colorbg}{\medskip}{}{}{}
+\patchcmd{\endminted@colorbg}{\medskip}{}{}{}
+\makeatother
 
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -101,13 +118,6 @@
 \usepackage{fvextra}
 \usepackage{ifthen}
 \usepackage{relsize}
-
-\definecolor{kokkos}{RGB}{30, 120, 152}
-
-\colorlet{main}{kokkos!80}
-\colorlet{lightmain}{kokkos!30}
-\colorlet{lightgray}{gray!20}
-\colorlet{darkgray}{gray!70!black}
 
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -512,94 +522,79 @@ CMake & 3.16 &  \\
 
 \subsection{How to integrate Kokkos}
 
-Note the difference in the version number between \texttt{x.y.z} and
-\texttt{x.y.zz}.
+Note the difference in the version number between \texttt{x.y.z} and \texttt{x.y.zz}.
 
 \subsubsection{As an external dependency}
 
 \paragraph{Configure, build and install Kokkos}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{git}\NormalTok{ clone {-}b x.y.zz https://github.com/kokkos/kokkos.git}
-\BuiltInTok{cd}\NormalTok{ kokkos}
-\FunctionTok{cmake}\NormalTok{ {-}B build }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_CXX\_COMPILER}\NormalTok{=}\OperatorTok{\textless{}}\NormalTok{your C++ compiler}\OperatorTok{\textgreater{}} \KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_INSTALL\_PREFIX}\NormalTok{=path/to/kokkos/install }\KeywordTok{\textbackslash{}}
-    \OperatorTok{\textless{}}\ExtensionTok{Kokkos}\NormalTok{ compile options}\OperatorTok{\textgreater{}}
-\FunctionTok{cmake}\NormalTok{ {-}{-}build build}
-\FunctionTok{cmake}\NormalTok{ {-}{-}install build}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}{sh}
+    git clone -b x.y.zz https://github.com/kokkos/kokkos.git
+    cd kokkos
+    cmake -B build \
+        -DCMAKE_CXX_COMPILER=<your C++ compiler> \
+        -DCMAKE_INSTALL_PREFIX=path/to/kokkos/install \
+        <Kokkos compile options>
+    cmake --build build
+    cmake --install build
+\end{minted}
 
 \paragraph{Setup, and configure your code}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{find\_package}\NormalTok{(Kokkos x.y.z }\OtherTok{REQUIRED}\NormalTok{)}
-\KeywordTok{target\_link\_libraries}\NormalTok{(}
-\NormalTok{    my{-}app}
-\NormalTok{    Kokkos::kokkos}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}{cmake}
+    find_package(Kokkos x.y.z REQUIRED)
+    target_link_libraries(
+        my-app
+        Kokkos::kokkos
+    )
+\end{minted}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\BuiltInTok{cd}\NormalTok{ path/to/your/code}
-\FunctionTok{cmake}\NormalTok{ {-}B build }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_CXX\_COMPILER}\NormalTok{=}\OperatorTok{\textless{}}\NormalTok{your C++ compiler}\OperatorTok{\textgreater{}} \KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ROOT}\NormalTok{=path/to/kokkos/install}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}{sh}
+    cd path/to/your/code
+    cmake -B build \
+        -DCMAKE_CXX_COMPILER=<your C++ compiler> \
+        -DKokkos_ROOT=path/to/kokkos/install
+\end{minted}
 
 \subsubsection{As an internal dependency}
 
 \paragraph{Setup with a Git submodule}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{git}\NormalTok{ submodule add {-}b x.y.zz https://github.com/kokkos/kokkos.git tpls/kokkos}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}{sh}
+    git submodule add -b x.y.zz https://github.com/kokkos/kokkos.git tpls/kokkos
+\end{minted}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{add\_subdirectory}\NormalTok{(path/to/kokkos)}
-\KeywordTok{target\_link\_libraries}\NormalTok{(}
-\NormalTok{    my{-}app}
-\NormalTok{    Kokkos::kokkos}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}{cmake}
+    add_subdirectory(path/to/kokkos)
+    target_link_libraries(
+        my-app
+        Kokkos::kokkos
+    )
+\end{minted}
 
 \paragraph{Setup with FetchContent}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{include}\NormalTok{(FetchContent)}
-\FunctionTok{FetchContent\_Declare}\NormalTok{(}
-\NormalTok{    kokkos}
-\NormalTok{    URL https://github.com/kokkos/kokkos/releases/download/x.y.zz\break{}/kokkos{-}x.y.zz.tar.gz}
-\NormalTok{    URL\_HASH SHA256=\textless{}hash for x.y.z archive\textgreater{}}
-\NormalTok{)}
-\FunctionTok{FetchContent\_MakeAvailable}\NormalTok{(kokkos)}
-\KeywordTok{target\_link\_libraries}\NormalTok{(}
-\NormalTok{    my{-}app}
-\NormalTok{    Kokkos::kokkos}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}[breakafter=/]{cmake}
+    include(FetchContent)
+    FetchContent_Declare(
+        kokkos
+        URL https://github.com/kokkos/kokkos/releases/download/x.y.zz/kokkos-x.y.zz.tar.gz
+        URL_HASH SHA256=<hash for x.y.z archive>
+    )
+    FetchContent_MakeAvailable(kokkos)
+    target_link_libraries(
+        my-app
+        Kokkos::kokkos
+    )
+\end{minted}
 
 \paragraph{Configure your code}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{cmake}\NormalTok{ {-}B build }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_CXX\_COMPILER}\NormalTok{=}\OperatorTok{\textless{}}\NormalTok{your C++ compiler}\OperatorTok{\textgreater{}} \KeywordTok{\textbackslash{}}
-    \OperatorTok{\textless{}}\ExtensionTok{Kokkos}\NormalTok{ compile options}\OperatorTok{\textgreater{}}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}{sh}
+    cmake -B build \
+        -DCMAKE_CXX_COMPILER=<your C++ compiler> \
+        <Kokkos compile options>
+\end{minted}
 
 You may combine the external/internal dependency approaches.
 
@@ -619,8 +614,7 @@ You may combine the external/internal dependency approaches.
 \bottomrule
 \end{tabularx}
 
-The serial backend is enabled by default if no other host backend is
-enabled.
+The serial backend is enabled by default if no other host backend is enabled.
 
 \subsubsection{Device backends}
 
@@ -636,8 +630,7 @@ enabled.
 \bottomrule
 \end{tabularx}
 
-You can only select the serial backend, plus another host backend and
-one device backend at a time.
+You can only select the serial backend, plus another host backend and one device backend at a time.
 
 See architecture-specific options.
 
@@ -758,85 +751,72 @@ M40 \\
 
 \paragraph{Current CPU with OpenMP}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{cmake} \KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}B}\NormalTok{ build }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_BUILD\_TYPE}\NormalTok{=Release }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ENABLE\_OPENMP}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ARCH\_NATIVE}\NormalTok{=ON}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}{sh}
+    cmake \
+        -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_OPENMP=ON \
+        -DKokkos_ARCH_NATIVE=ON
+\end{minted}
 
 \paragraph{AMD MI300A APU with HIP}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\BuiltInTok{export} \VariableTok{HSA\_XNACK=}\NormalTok{1}
-\FunctionTok{cmake} \KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}B}\NormalTok{ build }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_CXX\_COMPILER}\NormalTok{=hipcc }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_BUILD\_TYPE}\NormalTok{=Release }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ENABLE\_HIP}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ARCH\_AMD\_GFX942\_APU}\NormalTok{=ON}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}{sh}
+    export HSA_XNACK=1
+    cmake \
+        -B build \
+        -DCMAKE_CXX_COMPILER=hipcc \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_HIP=ON \
+        -DKokkos_ARCH_AMD_GFX942_APU=ON
+\end{minted}
 
 The environment variable is required to access host allocations from the device.
 
 \paragraph{AMD MI250 GPU with HIP}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{cmake} \KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}B}\NormalTok{ build }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_CXX\_COMPILER}\NormalTok{=hipcc }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_BUILD\_TYPE}\NormalTok{=Release }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ENABLE\_HIP}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ARCH\_AMD\_GFX90A}\NormalTok{=ON}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}{sh}
+    cmake \
+        -B build \
+        -DCMAKE_CXX_COMPILER=hipcc \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_HIP=ON \
+        -DKokkos_ARCH_AMD_GFX90A=ON
+\end{minted}
 
 \paragraph{Intel GPU Max 1550 (Ponte Vecchio) with SYCL}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{cmake} \KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}B}\NormalTok{ build }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_CXX\_COMPILER}\NormalTok{=icpx }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_BUILD\_TYPE}\NormalTok{=Release }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ENABLE\_SYCL}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ARCH\_INTEL\_PVC}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_CXX\_FLAGS}\NormalTok{=}\StringTok{"{-}fp{-}model=precise"}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}{sh}
+    cmake \
+        -B build \
+        -DCMAKE_CXX_COMPILER=icpx \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_SYCL=ON \
+        -DKokkos_ARCH_INTEL_PVC=ON \
+        -DCMAKE_CXX_FLAGS="-fp-model=precise"
+\end{minted}
 
 The last option is required for math operators precision.
 
 \paragraph{NVIDIA H100 GPU with CUDA}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{cmake} \KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}B}\NormalTok{ build }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_BUILD\_TYPE}\NormalTok{=Release }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ENABLE\_CUDA}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ARCH\_HOPPER90}\NormalTok{=ON}
-\end{Highlighting}
-\end{Shaded}
+\begin{minted}{sh}
+    cmake \
+        -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_CUDA=ON \
+        -DKokkos_ARCH_HOPPER90=ON
+\end{minted}
 
 \paragraph{NVIDIA A100 GPU with CUDA}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{cmake} \KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}B}\NormalTok{ build }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DCMAKE\_BUILD\_TYPE}\NormalTok{=Release }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ENABLE\_CUDA}\NormalTok{=ON }\KeywordTok{\textbackslash{}}
-    \ExtensionTok{{-}DKokkos\_ARCH\_AMPERE80}\NormalTok{=ON}
-\end{Highlighting}
-\end{Shaded}
-
+\begin{minted}{sh}
+    cmake \
+        -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_CUDA=ON \
+        -DKokkos_ARCH_AMPERE80=ON
+\end{minted}
 
 \end{multicols}
 
