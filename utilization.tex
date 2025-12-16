@@ -140,7 +140,7 @@ Memory traits are indicated with \mintinline{c++}{Kokkos::MemoryTraits<>} and ar
 \subsection{Deep copy}
 
 \begin{minted}{c++}
-Kokkos::deep_copy(dest, src);
+Kokkos::deep_copy(destination, source);
 \end{minted}
 
 The views must have the same dimensions, data type, and reside in the same memory space (mirror views can be deep copied on different memory spaces).
