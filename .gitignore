@@ -3,4 +3,4 @@
 *.log
 *.synctex.gz
 /*.pdf
-/*.tex
+_minted*
