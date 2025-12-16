@@ -1,6 +1,8 @@
-**.DS_Store
 *.aux
 *.log
 *.synctex.gz
+*.fdb_latexmk
+*.fls
+*.out
 /*.pdf
 _minted*
