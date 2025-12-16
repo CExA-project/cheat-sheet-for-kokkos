@@ -23,6 +23,10 @@
     Instance of \mintinline{text}{Kokkos::TeamVector*Range}, \mintinline{text}{Kokkos::ThreadVector*Range} & Thread & Thread, work item & Work-item \\
 \end{tblr}
 
+% source for Cuda: https://docs.nvidia.com/cuda/cuda-c-programming-guide/#thread-hierarchy
+% source for HIP: https://rocm.docs.amd.com/projects/HIP/en/develop/reference/kernel_language.html
+% source for SYCL: https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2025-0/sycl-thread-and-memory-hierarchy.html
+
 \subsection{Memory}
 
 \begin{tblr}[theme=kokkostable]{lllX}
@@ -33,6 +37,10 @@
     \mintinline{text}{Kokkos::SharedHostPinnedSpace} & Pinned host memory & Pinned host memory & Unified shared memory (USM) of type host \\
     \mintinline{text}{Kokkos::SharedSpace} & Unified virtual memory (UVM) & Unified memory & Unified shared memory (USM) of type shared \\
 \end{tblr}
+
+% source for Cuda: https://docs.nvidia.com/cuda/cuda-c-programming-guide/#memory-hierarchy
+% source for HIP: https://rocm.docs.amd.com/projects/HIP/en/docs-develop/how-to/hip_runtime_api/memory_management/device_memory.html
+% source for SYCL: https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2025-0/sycl-thread-and-memory-hierarchy.html
 
 \subsection{Execution}
 
