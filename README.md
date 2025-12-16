@@ -6,6 +6,14 @@ This repository contains printable cheat-sheets for Kokkos, typed in LaTeX.
 
 - PDFLatex (from at least `texlive-latex-extra`).
 
+## Build
+
+Build all documents with:
+
+```sh
+make
+```
+
 ## Resources
 
 - Full documentation: https://kokkos.org/kokkos-core-wiki/index.html
