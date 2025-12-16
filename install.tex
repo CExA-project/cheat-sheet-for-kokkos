@@ -21,9 +21,9 @@
 
 \begin{multicols}{2}
 
-\subsection{Requirements}
+\section{Requirements}
 
-\subsubsection{Compiler}
+\subsection{Compiler}
 
 \begin{tblr}[theme=kokkostable]{Xll}
     Compiler & Minimum version & Notes \\
@@ -39,7 +39,7 @@
     ROCM & 5.2.0 &  \\
 \end{tblr}
 
-\subsubsection{Build system}
+\subsection{Build system}
 
 \begin{tblr}[theme=kokkostable]{llX}
     Build system & Minimum version & Notes \\
@@ -49,13 +49,13 @@
     CMake & 3.16 &  \\
 \end{tblr}
 
-\subsection{How to integrate Kokkos}
+\section{How to integrate Kokkos}
 
 Note the difference in the version number between \mintinline{text}{x.y.z} and \mintinline{text}{x.y.zz}.
 
-\subsubsection{As an external dependency}
+\subsection{As an external dependency}
 
-\paragraph{Configure, build and install Kokkos}
+\subsubsection{Configure, build and install Kokkos}
 
 \begin{minted}{sh}
     git clone -b x.y.zz https://github.com/kokkos/kokkos.git
@@ -68,7 +68,7 @@ Note the difference in the version number between \mintinline{text}{x.y.z} and \
     cmake --install build
 \end{minted}
 
-\paragraph{Setup, and configure your code}
+\subsubsection{Setup, and configure your code}
 
 \begin{minted}{cmake}
     find_package(Kokkos x.y.z REQUIRED)
@@ -85,9 +85,9 @@ Note the difference in the version number between \mintinline{text}{x.y.z} and \
         -DKokkos_ROOT=path/to/kokkos/install
 \end{minted}
 
-\subsubsection{As an internal dependency}
+\subsection{As an internal dependency}
 
-\paragraph{Setup with a Git submodule}
+\subsubsection{Setup with a Git submodule}
 
 \begin{minted}{sh}
     git submodule add -b x.y.zz https://github.com/kokkos/kokkos.git tpls/kokkos
@@ -101,7 +101,7 @@ Note the difference in the version number between \mintinline{text}{x.y.z} and \
     )
 \end{minted}
 
-\paragraph{Setup with FetchContent}
+\subsubsection{Setup with FetchContent}
 
 \begin{minted}[breakafter=/]{cmake}
     include(FetchContent)
@@ -117,7 +117,7 @@ Note the difference in the version number between \mintinline{text}{x.y.z} and \
     )
 \end{minted}
 
-\paragraph{Configure your code}
+\subsubsection{Configure your code}
 
 \begin{minted}{sh}
     cmake -B build \
@@ -127,9 +127,9 @@ Note the difference in the version number between \mintinline{text}{x.y.z} and \
 
 You may combine the external/internal dependency approaches.
 
-\subsection{Kokkos compile options}
+\section{Kokkos compile options}
 
-\subsubsection{Host backends}
+\subsection{Host backends}
 
 \begin{tblr}[theme=kokkostable]{Xl}
     Option & Backend \\
@@ -140,7 +140,7 @@ You may combine the external/internal dependency approaches.
 
 The serial backend is enabled by default if no other host backend is enabled.
 
-\subsubsection{Device backends}
+\subsection{Device backends}
 
 \begin{tblr}[theme=kokkostable]{Xll}
     Option & Backend & Device \\
@@ -153,7 +153,7 @@ You can only select the serial backend, plus another host backend and one device
 
 See architecture-specific options.
 
-\subsubsection{Specific options}
+\subsection{Specific options}
 
 \begin{tblr}[theme=kokkostable]{lX}
     Option & Description \\
@@ -163,9 +163,9 @@ See architecture-specific options.
     \mintinline{text}{-DKokkos_ENABLE_TUNING=ON} & Create bindings for tuning tools \\
 \end{tblr}
 
-\subsubsection{Architecture-specific options}
+\subsection{Architecture-specific options}
 
-\paragraph{Host architectures}
+\subsubsection{Host architectures}
 
 Host options are used for controlling optimization and are optional.
 
@@ -174,11 +174,11 @@ Host options are used for controlling optimization and are optional.
     \mintinline{text}{-DKokkos_ARCH_NATIVE=ON} & Local host \\
 \end{tblr}
 
-\paragraph{Device architectures}
+\subsubsection{Device architectures}
 
 Device options are mandatory. They can be deduced from the device if present at CMake configuration time.
 
-\subparagraph{AMD GPU architectures (HIP)}
+\paragraph{AMD GPU architectures (HIP)}
 
 {
 % temporary disable justify align
@@ -196,7 +196,7 @@ Device options are mandatory. They can be deduced from the device if present at 
 \end{tblr}
 }
 
-\subparagraph{Intel GPU architectures (SYCL)}
+\paragraph{Intel GPU architectures (SYCL)}
 
 \begin{tblr}[theme=kokkostable]{lX}
     Option & Architecture \\
@@ -208,7 +208,7 @@ Device options are mandatory. They can be deduced from the device if present at 
     \mintinline{text}{-DKokkos_ARCH_INTEL_GEN11=ON} & Gen11 \\
 \end{tblr}
 
-\subparagraph{NVIDIA GPU architectures (CUDA)}
+\paragraph{NVIDIA GPU architectures (CUDA)}
 
 {
 % temporary disable justify align
@@ -236,9 +236,9 @@ Device options are mandatory. They can be deduced from the device if present at 
     \mintinline{text}{-DKokkos_ARCH_MAXWELL50=ON} & Maxwell & 5.0 & M10 \\
 \end{tblr}
 
-\subsubsection{Examples for the most common architectures}
+\subsection{Examples for the most common architectures}
 
-\paragraph{Current CPU with OpenMP}
+\subsubsection{Current CPU with OpenMP}
 
 \begin{minted}{sh}
     cmake \
@@ -248,7 +248,7 @@ Device options are mandatory. They can be deduced from the device if present at 
         -DKokkos_ARCH_NATIVE=ON
 \end{minted}
 
-\paragraph{AMD MI300A APU with HIP}
+\subsubsection{AMD MI300A APU with HIP}
 
 \begin{minted}{sh}
     export HSA_XNACK=1
@@ -262,7 +262,7 @@ Device options are mandatory. They can be deduced from the device if present at 
 
 The environment variable is required to access host allocations from the device.
 
-\paragraph{AMD MI250 GPU with HIP}
+\subsubsection{AMD MI250 GPU with HIP}
 
 \begin{minted}{sh}
     cmake \
@@ -273,7 +273,7 @@ The environment variable is required to access host allocations from the device.
         -DKokkos_ARCH_AMD_GFX90A=ON
 \end{minted}
 
-\paragraph{Intel GPU Max 1550 (Ponte Vecchio) with SYCL}
+\subsubsection{Intel GPU Max 1550 (Ponte Vecchio) with SYCL}
 
 \begin{minted}{sh}
     cmake \
@@ -287,7 +287,7 @@ The environment variable is required to access host allocations from the device.
 
 The last option is required for math operators precision.
 
-\paragraph{NVIDIA H100 GPU with CUDA}
+\subsubsection{NVIDIA H100 GPU with CUDA}
 
 \begin{minted}{sh}
     cmake \
@@ -297,7 +297,7 @@ The last option is required for math operators precision.
         -DKokkos_ARCH_HOPPER90=ON
 \end{minted}
 
-\paragraph{NVIDIA A100 GPU with CUDA}
+\subsubsection{NVIDIA A100 GPU with CUDA}
 
 \begin{minted}{sh}
     cmake \

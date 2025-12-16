@@ -11,9 +11,9 @@
 \begin{document}
 \maketitle
 
-\subsection{Kokkos mapping}
+\section{Kokkos mapping}
 
-\subsubsection{Hierarchical parallelism}
+\subsection{Hierarchical parallelism}
 
 \begin{tblr}[theme=kokkostable]{lXlX}
     Kokkos & Cuda & HIP & SYCL \\
@@ -23,7 +23,7 @@
     Instance of \mintinline{text}{Kokkos::TeamVector*Range}, \mintinline{text}{Kokkos::ThreadVector*Range} & Thread & Thread, work item & Work-item \\
 \end{tblr}
 
-\subsubsection{Memory}
+\subsection{Memory}
 
 \begin{tblr}[theme=kokkostable]{lllX}
     Kokkos & Cuda & HIP & SYCL \\
@@ -34,14 +34,14 @@
     \mintinline{text}{Kokkos::SharedSpace} & Unified virtual memory (UVM) & Unified memory & Unified shared memory (USM) of type shared \\
 \end{tblr}
 
-\subsubsection{Execution}
+\subsection{Execution}
 
 \begin{tblr}[theme=kokkostable]{lXXX}
     Kokkos & Cuda & HIP & SYCL \\
     Instance of \mintinline{text}{Kokkos::DefaultExecutionSpace} & Stream & Stream & Queue \\
 \end{tblr}
 
-\subsection{GPU terminology equivalences}
+\section{GPU terminology equivalences}
 
 \begin{tblr}[theme=kokkostable]{XXXX}
     Cuda on NVIDIA & HIP on AMD & SYCL/OpenCL on Intel & Notes \\

@@ -268,31 +268,42 @@
 % sections
 \RequirePackage[nobottomtitles*]{titlesec}
 
-\titleformat{\subsection}[display]
+\titleformat{\section}[display]
     {\Large\bfseries}
     {}
     {0pt}
-    {\subsectionstyle}
+    {\sectionstyle}
 
-\titlespacing{\subsection}
+\titlespacing{\section}
     {0pt}
     {10pt}
     {5pt}
 
-\titleformat{\subsubsection}[display]
+\titleformat{\subsection}[display]
     {\large\bfseries}
     {}
     {0pt}
-    {\subsubsectionstyle}
-    [\subsubsectionstyleextra]
+    {\subsectionstyle}
+    [\subsectionstyleextra]
 
-\titlespacing{\subsubsection}
+\titlespacing{\subsection}
     {0pt}
     {8pt}
     {4pt}
 
-\titleformat{\paragraph}[display]
+\titleformat{\subsubsection}[display]
     {\normalsize\bfseries}
+    {}
+    {0pt}
+    {\subsubsectionstyle}
+
+\titlespacing{\subsubsection}
+    {0pt}
+    {5pt}
+    {2.5pt}
+
+\titleformat{\paragraph}[display]
+    {\small\bfseries}
     {}
     {0pt}
     {\paragraphstyle}
@@ -302,34 +313,23 @@
     {5pt}
     {2.5pt}
 
-\titleformat{\subparagraph}[display]
-    {\small\bfseries}
-    {}
-    {0pt}
-    {\subparagraphstyle}
-
-\titlespacing{\subparagraph}
-    {0pt}
-    {5pt}
-    {2.5pt}
-
-\newcommand{\subsectionstyle}[1]{%
+\newcommand{\sectionstyle}[1]{%
     \colorbox{main}{\parbox{\dimexpr\linewidth-2\fboxsep}{\strut#1}}%
 }
 
-\newcommand{\subsubsectionstyle}[1]{%
+\newcommand{\subsectionstyle}[1]{%
     \strut#1%
 }
 
-\newcommand{\subsubsectionstyleextra}{%
+\newcommand{\subsectionstyleextra}{%
     \titleline{\color{main}\titlerule}%
 }
 
-\newcommand{\paragraphstyle}[1]{%
+\newcommand{\subsubsectionstyle}[1]{%
     #1%
 }
 
-\newcommand{\subparagraphstyle}[1]{%
+\newcommand{\paragraphstyle}[1]{%
     {\color{main}#1}%
 }
 
@@ -379,7 +379,7 @@
 
 % command to add notes section with dotted lines
 \newcommand\notessection[1]{%
-    \subsection{Notes}
+    \section{Notes}
 
     \vspace{1em}
 
