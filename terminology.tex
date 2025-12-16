@@ -1,0 +1,67 @@
+\documentclass{./cheat_sheet_kokkos}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% document properties
+\title{Terminology cheat sheet for Kokkos}
+\author{CExA}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\subsection{Kokkos mapping}
+
+\subsubsection{Hierarchical parallelism}
+
+\begin{tblr}[theme=kokkostable]{lXlX}
+    Kokkos & Cuda & HIP & SYCL \\
+    Instance of \mintinline{text}{Kokkos::TeamPolicy</* ... */>} & Grid & Grid, index range & ND-Range \\
+    Instance of \mintinline{text}{Kokkos::TeamPolicy</* ... */>::member_type} (one-dimensional only) & Block & Block, work group & Work-group \\
+    Instance of \mintinline{text}{Kokkos::TeamThread*Range} & Warp & Warp, wavefront & Sub-group \\
+    Instance of \mintinline{text}{Kokkos::TeamVector*Range}, \mintinline{text}{Kokkos::ThreadVector*Range} & Thread & Thread, work item & Work-item \\
+\end{tblr}
+
+\subsubsection{Memory}
+
+\begin{tblr}[theme=kokkostable]{lllX}
+    Kokkos & Cuda & HIP & SYCL \\
+    \mintinline{text}{Kokkos::DefaultExecutionSpace::memory_space} & Global memory & Global memory & Global memory \\
+    \mintinline{text}{Kokkos::ScratchMemorySpace} (space level 0) & Shared memory & Shared memory & (Shared) local memory \\
+    \mintinline{text}{Kokkos::ScratchMemorySpace} (space level 1) & Global memory & Global memory & Global memory \\
+    \mintinline{text}{Kokkos::SharedHostPinnedSpace} & Pinned host memory & Pinned host memory & Unified shared memory (USM) of type host \\
+    \mintinline{text}{Kokkos::SharedSpace} & Unified virtual memory (UVM) & Unified memory & Unified shared memory (USM) of type shared \\
+\end{tblr}
+
+\subsubsection{Execution}
+
+\begin{tblr}[theme=kokkostable]{lXXX}
+    Kokkos & Cuda & HIP & SYCL \\
+    Instance of \mintinline{text}{Kokkos::DefaultExecutionSpace} & Stream & Stream & Queue \\
+\end{tblr}
+
+\subsection{GPU terminology equivalences}
+
+\begin{tblr}[theme=kokkostable]{XXXX}
+    Cuda on NVIDIA & HIP on AMD & SYCL/OpenCL on Intel & Notes \\
+    Streaming multiprocessor (SM) & Compute unit (CU) & Compute unit &  \\
+    Streaming processor & Processing element & Processing element &  \\
+    Warp & Wavefront, warp & Sub-group &  \\
+    Thread & Work item & Work-item &  \\
+    NVPTX & AMDIL & SPIR-V & Not strictly equivalent \\
+\end{tblr}
+
+% add a watermark here
+
+% \watermark
+
+% add a notes section here
+
+% \notessection
+
+% add a notes section followed by a watermark here
+
+% \notessection{\watermark}
+
+\end{document}
