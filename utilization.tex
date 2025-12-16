@@ -147,19 +147,19 @@ The views must have the same dimensions, data type, and reside in the same memor
 
 \subsection{Mirror view}
 
-\subsubsection{Create and always allocate on host}
+Create and always allocate on host
 
 \begin{minted}{c++}
 auto mirrorView = Kokkos::create_mirror(view);
 \end{minted}
 
-\subsubsection{Create and allocate on host if source view is not in host space}
+Create and allocate on host if source view is not in host space
 
 \begin{minted}{c++}
 auto mirrorView = Kokkos::create_mirror_view(view);
 \end{minted}
 
-\subsubsection{Create, allocate and synchronize if source view is not in same space as destination view}
+Create, allocate and synchronize if source view is not in same space as destination view
 
 \begin{minted}{c++}
 auto mirrorView = Kokkos::create_mirror_view_and_copy(ExecutionSpace(), view);
@@ -484,9 +484,6 @@ Kokkos::parallel_for(
     \mintinline{c++}{Kokkos::atomic_xor(&x, y)} & \mintinline{c++}{x ^= y} \\
 \end{tblr}
 
-% % extra space
-% \vspace{-0.4em}
-
 \subsection{Atomic exchanges}
 
 \begin{tblr}[theme=kokkostable]{XX}
@@ -494,9 +491,6 @@ Kokkos::parallel_for(
     \mintinline{c++}{Kokkos::atomic_exchange(&x, desired)} & Assign desired value to object and return old value \\
     \mintinline{c++}{Kokkos::atomic_compare_exchange(&x, expected, desired)} & Assign desired value to object if the object has the expected value and return the old value \\
 \end{tblr}
-
-% % extra space
-% \vspace{-0.4em}
 
 \section{Mathematics}
 
@@ -517,9 +511,6 @@ Kokkos::parallel_for(
 
 Note that not all C++ standard math functions are available.
 
-% % extra space
-% \vspace{-0.4em}
-
 \subsection{Complex numbers}
 
 \subsubsection{Create}
@@ -527,9 +518,6 @@ Note that not all C++ standard math functions are available.
 \begin{minted}{c++}
 Kokkos::complex<double> complex(realPart, imagPart);
 \end{minted}
-
-% % extra space
-% \vspace{-0.4em}
 
 \subsubsection{Manage}
 
@@ -539,12 +527,9 @@ Kokkos::complex<double> complex(realPart, imagPart);
     \mintinline{c++}{imag()} & Returns or sets the imaginary part \\
 \end{tblr}
 
-% % extra space
-% \vspace{-0.4em}
-
 \section{Utilities}
 
-\subsection{Code interruption}
+\subsection{Program interruption}
 
 \begin{minted}{c++}
 Kokkos::abort("message");
@@ -578,7 +563,7 @@ Kokkos::Timer timer;
 
 \begin{tblr}[theme=kokkostable]{lX}
     Function & Description \\
-    \mintinline{c++}{Kokkos::device_id()} & Returns the device ID of the current device \\
+    \mintinline{c++}{Kokkos::device_id()} & Returns the ID of the current device \\
     \mintinline{c++}{Kokkos::num_devices()} & Returns the number of devices available to the current execution space \\
 \end{tblr}
 
@@ -610,14 +595,14 @@ Kokkos::Timer timer;
 
 % add a watermark here
 
-% \watermark
+%\watermark
 
 % add a notes section here
 
-% \notessection
+%\notessection
 
 % add a notes section followed by a watermark here
 
-% \notessection{\watermark}
+%\notessection{\watermark}
 
 \end{document}
