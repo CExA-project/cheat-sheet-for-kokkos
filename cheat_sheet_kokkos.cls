@@ -62,8 +62,8 @@
 
 %% remove minted vertical margins
 \makeatletter
-\patchcmd{\minted@colorbg}{\medskip}{}{}{}
-\patchcmd{\endminted@colorbg}{\medskip}{}{}{}
+\patchcmd{\minted@colorbg}{\medskip}{\smallskip}{}{}
+\patchcmd{\endminted@colorbg}{\medskip}{\smallskip}{}{}
 \makeatother
 
 % page
@@ -88,6 +88,9 @@
         rowsep=3.6pt,
     }
 }
+
+\AtBeginEnvironment{tblr}{\smallskip}
+\AtEndEnvironment{tblr}{\smallskip}
 
 % text alignment
 \RequirePackage{ragged2e}
@@ -273,7 +276,7 @@
 
 \titlespacing{\subsection}
     {0pt}
-    {12pt}
+    {10pt}
     {5pt}
 
 \titleformat{\subsubsection}[display]
@@ -296,8 +299,8 @@
 
 \titlespacing{\paragraph}
     {0pt}
-    {6pt}
-    {3pt}
+    {5pt}
+    {2.5pt}
 
 \titleformat{\subparagraph}[display]
     {\small\bfseries}
@@ -307,8 +310,8 @@
 
 \titlespacing{\subparagraph}
     {0pt}
-    {6pt}
-    {3pt}
+    {5pt}
+    {2.5pt}
 
 \newcommand{\subsectionstyle}[1]{%
     \colorbox{main}{\parbox{\dimexpr\linewidth-2\fboxsep}{\strut#1}}%
