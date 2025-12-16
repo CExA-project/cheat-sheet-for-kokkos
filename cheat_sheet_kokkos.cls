@@ -54,6 +54,7 @@
     bgcolor=lightgray,
     breaklines,
     resetmargins,
+    style=lovelace
 }
 
 \setmintedinline{
