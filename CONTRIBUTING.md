@@ -13,11 +13,13 @@ The cheat sheet version is a combination of the Kokkos version and the timestamp
 +------ Kokkos major version
 ```
 
+The version is stored in the `VERSION` file.
+
 ## Custom syntax highlight
 
 ### Use a GUI LaTeX editor
 
-As explained in the [main page](README.md), the syntax highlight of Minted is provided by a custom package that has to be installed.
+As explained in the [main page](README.md), the syntax highlight theme for Minted is provided by a custom package that has to be installed.
 In order to use your favorite GUI LaTeX editor, you either need to install the package at user level (which may not work on recent systems, as this practice is [being discouraged](https://peps.python.org/pep-0668/)):
 
 ```sh
@@ -48,7 +50,7 @@ The style would fallback to `friendly`:
 
 In order to print the file with a printer that cannot print the entire area of the paper, you can enable the print mode.
 This mode is suited for A3 printing on a foldable booklet.
-It adds extra internal and external margins, and take care of possible miss-alignment of the page with the printer:
+It adds extra internal and external margins, and takes care of possible small miss-alignments of the page with the printer:
 
 ```latex
 \documentclass[
