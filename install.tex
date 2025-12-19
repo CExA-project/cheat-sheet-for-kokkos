@@ -203,13 +203,13 @@ Device options are mandatory. They can be deduced from the device if present at 
 \RenewDocumentCommand\TblrAlignBoth{}{\RaggedRight}
 \begin{tblr}[theme=kokkostable]{llX}
     Option & Arch. & Associated cards \\
-    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN=ON} & \SetCell[c=2]{l} Generic JIT \\
-    \mintinline{text}{-DKokkos_ARCH_INTEL_PVC=ON} & Xe-HPC & GPU Max (Ponte Vecchio) \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN=ON} & \SetCell[c=2]{l} (Generic JIT) \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_PVC=ON} & Xe-HPC & GPU Max 1550 (Ponte Vecchio) \\
     \mintinline{text}{-DKokkos_ARCH_INTEL_XEHP=ON} & Xe-HP & \\
-    \mintinline{text}{-DKokkos_ARCH_INTEL_DG2=ON} & DG2 & Intel Flex, Intel Arc \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_DG2=ON} & DG2 & Flex, Arc \\
     \mintinline{text}{-DKokkos_ARCH_INTEL_DG1=ON} & DG1 & Iris Xe MAX \\
-    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN12LP=ON} & Gen12LP & Intel UHD Graphics 770 \\
-    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN11=ON} & Gen11 & Intel UHD Graphics \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN12LP=ON} & Gen12LP & UHD Graphics 770 \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN11=ON} & Gen11 & UHD Graphics \\
 \end{tblr}
 }
 
