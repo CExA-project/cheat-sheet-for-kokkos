@@ -1,14 +1,9 @@
-\documentclass{./cheat_sheet_kokkos}
+\documentclass[
+    kokkoshighlight
+]{./cheat_sheet_kokkos}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-
-% color some commands if minted is recent enough
-\IfPackageAtLeastTF{minted}{2024/01/01}{
-    \setminted[sh]{
-        extrakeywords={cmake,git},
-    }
-}{}
 
 % document properties
 \title{Installation cheat sheet for Kokkos}
@@ -58,12 +53,12 @@ Note the difference in the version number between \mintinline{text}{x.y.z} and \
 \subsubsection{Configure, build and install Kokkos}
 
 \begin{minted}{sh}
-    git clone -b x.y.zz https://github.com/kokkos/kokkos.git
+    git clone -b x.y.zz "https://github.com/kokkos/kokkos.git"
     cd kokkos
     cmake -B build \
-        -DCMAKE_CXX_COMPILER=<your C++ compiler> \
-        -DCMAKE_INSTALL_PREFIX=path/to/kokkos/install \
-        <Kokkos compile options>
+        -DCMAKE_CXX_COMPILER="<your C++ compiler>" \
+        -DCMAKE_INSTALL_PREFIX="path/to/kokkos/install" \
+        "<Kokkos compile options>"
     cmake --build build
     cmake --install build
 \end{minted}
@@ -79,10 +74,10 @@ Note the difference in the version number between \mintinline{text}{x.y.z} and \
 \end{minted}
 
 \begin{minted}{sh}
-    cd path/to/your/code
+    cd "path/to/your/code"
     cmake -B build \
-        -DCMAKE_CXX_COMPILER=<your C++ compiler> \
-        -DKokkos_ROOT=path/to/kokkos/install
+        -DCMAKE_CXX_COMPILER="<your C++ compiler>" \
+        -DKokkos_ROOT="path/to/kokkos/install"
 \end{minted}
 
 \subsection{As an internal dependency}
@@ -90,7 +85,7 @@ Note the difference in the version number between \mintinline{text}{x.y.z} and \
 \subsubsection{Setup with a Git submodule}
 
 \begin{minted}{sh}
-    git submodule add -b x.y.zz https://github.com/kokkos/kokkos.git tpls/kokkos
+    git submodule add -b x.y.zz "https://github.com/kokkos/kokkos.git" tpls/kokkos
 \end{minted}
 
 \begin{minted}{cmake}
@@ -121,8 +116,8 @@ Note the difference in the version number between \mintinline{text}{x.y.z} and \
 
 \begin{minted}{sh}
     cmake -B build \
-        -DCMAKE_CXX_COMPILER=<your C++ compiler> \
-        <Kokkos compile options>
+        -DCMAKE_CXX_COMPILER="<your C++ compiler>" \
+        "<Kokkos compile options>"
 \end{minted}
 
 You may combine the external/internal dependency approaches.

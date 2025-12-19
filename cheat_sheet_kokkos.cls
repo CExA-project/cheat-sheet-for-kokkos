@@ -10,6 +10,13 @@
 % tweaking
 \RequirePackage{etoolbox}
 
+% option for text highlighting
+\newtoggle{kokkoshighlight}
+\togglefalse{kokkoshighlight}
+\DeclareOption{kokkoshighlight}{\toggletrue{kokkoshighlight}}
+
+\ProcessOptions\relax
+
 % fonts
 \RequirePackage{lmodern}
 
@@ -25,6 +32,7 @@
 \colorlet{main}{kokkos!80}
 \colorlet{lightmain}{kokkos!30}
 \colorlet{dimmedmain}{kokkos!50}
+\colorlet{darkmain}{kokkos!80!black}
 \colorlet{lightgray}{gray!20}
 \colorlet{darkgray}{gray!70!black}
 \colorlet{alert}{red!70!cyan}
@@ -54,7 +62,12 @@
     bgcolor=lightgray,
     breaklines,
     resetmargins,
-    style=lovelace
+}
+
+\iftoggle{kokkoshighlight}{
+    \setminted{style=kokkos}
+}{
+    \setminted{style=friendly}
 }
 
 \setmintedinline{
