@@ -38,7 +38,7 @@
 \subsection{Build system}
 
 \begin{tblr}[theme=kokkostable]{llX}
-    Build system & Minimum version & Notes \\
+    Build system & Min. vers. & Notes \\
     CMake & 3.25.2 & For Intel LLVM full support and Cuda CMake language support \\
     CMake & 3.22 &  \\
 \end{tblr}
@@ -59,6 +59,14 @@
     cmake --build build
     cmake --install build
 \end{minted}
+
+\subsubsection{Install Kokkos with Spack}
+
+\begin{minted}{sh}
+    spack install kokkos@x.y.z "<Kokkos variants>"
+\end{minted}
+
+See \url{https://packages.spack.io} for the list of variants.
 
 \subsubsection{Setup, and configure your code}
 
@@ -211,7 +219,7 @@ Device options are mandatory. They can be deduced from the device if present at 
 % temporary disable justify align
 \RenewDocumentCommand\TblrAlignBoth{}{\RaggedRight}
 \begin{tblr}[theme=kokkostable]{lllX}
-    Option & Arch. & CC & Associated cards \\
+    Option & Arch. & CC & Assoc. cards \\
     \mintinline{text}{-DKokkos_ARCH_BLACKWELL120=ON} & Blackwell & 12.0 & RTX 5080 \\
     \mintinline{text}{-DKokkos_ARCH_BLACKWELL100=ON} & Blackwell & 10.0 & B200, B100 \\
     \mintinline{text}{-DKokkos_ARCH_HOPPER90=ON} & Hopper & 9.0 & H200, H100 \\
@@ -219,10 +227,6 @@ Device options are mandatory. They can be deduced from the device if present at 
     \mintinline{text}{-DKokkos_ARCH_AMPERE87=ON} & Ampere & 8.7 & Jetson Orin \\
     \mintinline{text}{-DKokkos_ARCH_AMPERE86=ON} & Ampere & 8.6 & A40, A10, A16, A2 \\
     \mintinline{text}{-DKokkos_ARCH_AMPERE80=ON} & Ampere & 8.0 & A100, A30 \\
-    \mintinline{text}{-DKokkos_ARCH_TURING75=ON} & Turing & 7.5 & T4 \\
-    \mintinline{text}{-DKokkos_ARCH_VOLTA70=ON} & Volta & 7.0 & V100 \\
-    \mintinline{text}{-DKokkos_ARCH_PASCAL61=ON} & Pascal & 6.1 & P6, P40, P4 \\
-    \mintinline{text}{-DKokkos_ARCH_PASCAL60=ON} & Pascal & 6.0 & P100 \\
 \end{tblr}
 }
 
@@ -230,6 +234,10 @@ Device options are mandatory. They can be deduced from the device if present at 
 
 \begin{tblr}[theme=kokkostable]{lllX}
     Option & Arch. & CC & Associated cards \\
+    \mintinline{text}{-DKokkos_ARCH_TURING75=ON} & Turing & 7.5 & T4 \\
+    \mintinline{text}{-DKokkos_ARCH_VOLTA70=ON} & Volta & 7.0 & V100 \\
+    \mintinline{text}{-DKokkos_ARCH_PASCAL61=ON} & Pascal & 6.1 & P6, P40, P4 \\
+    \mintinline{text}{-DKokkos_ARCH_PASCAL60=ON} & Pascal & 6.0 & P100 \\
     \mintinline{text}{-DKokkos_ARCH_MAXWELL53=ON} & Maxwell & 5.3 &  \\
     \mintinline{text}{-DKokkos_ARCH_MAXWELL52=ON} & Maxwell & 5.2 & M6, M60, M4, M40 \\
     \mintinline{text}{-DKokkos_ARCH_MAXWELL50=ON} & Maxwell & 5.0 & M10 \\
