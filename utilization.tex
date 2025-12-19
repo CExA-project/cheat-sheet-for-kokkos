@@ -1,0 +1,611 @@
+\documentclass[
+    kokkoshighlight,
+    % print,
+]{./cheat_sheet_kokkos}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% document properties
+\title{Utilization cheat sheet for Kokkos}
+\author{CExA}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{multicols}{2}
+
+\section{Header}
+
+\begin{minted}{c++}
+#include <Kokkos_Core.hpp>
+\end{minted}
+
+\section{Initialization}
+
+\subsection{Initialize and finalize}
+
+\begin{minted}{c++}
+int main(int argc, char* argv[]) {
+    Kokkos::initialize(argc, argv);
+    { /* ... */ }
+    Kokkos::finalize();
+}
+\end{minted}
+
+\subsection{Scope guard}
+
+\begin{minted}{c++}
+int main(int argc, char* argv[]) {
+    Kokkos::ScopeGuard kokkos(argc, argv);
+    /* ... */
+}
+\end{minted}
+
+\section{Kokkos concepts}
+
+\subsection{Execution spaces}
+
+\begin{tblr}[theme=kokkostable]{Xll}
+    Execution space & Device backend & Host backend \\
+    \mintinline{c++}{Kokkos::DefaultExecutionSpace} & On device & On host \\
+    \mintinline{c++}{Kokkos::DefaultHostExecutionSpace} & On host & On host \\
+\end{tblr}
+
+\subsection{Memory spaces}
+
+\subsubsection{Generic memory spaces}
+
+\begin{tblr}[theme=kokkostable]{lXX}
+    Memory space & Device backend & Host backend \\
+    \mintinline{c++}{Kokkos::DefaultExecutionSpace::memory_space} & On dev. & On host \\
+    \mintinline{c++}{Kokkos::DefaultHostExecutionSpace::memory_space} & On host & On host \\
+\end{tblr}
+
+\subsubsection{Specific memory spaces}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Memory space & Description \\
+    \mintinline{c++}{Kokkos::HostSpace} & Accessible from the host but maybe not from the device \\
+    \mintinline{c++}{Kokkos::SharedSpace} & Accessible from the host and the device; copy managed by the driver \\
+    \mintinline{c++}{Kokkos::SharedHostPinnedSpace} & Accessible from the host and the device; zero copy access in small chunks \\
+\end{tblr}
+
+\section{Memory management}
+
+\subsection{View}
+
+\subsubsection{Create}
+
+\begin{minted}{c++}
+Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElementsAtRuntimeI, numberOfElementsAtRuntimeJ);
+\end{minted}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Template arg. & Description \\
+    \mintinline{c++}{DataType} & \mintinline{c++}{ScalarType} for the data type, followed by a \mintinline{c++}{*} for each runtime dimension, then by a \mintinline{c++}{[numberOfElements]} for each compile time dimension, mandatory \\
+    \mintinline{c++}{LayoutType} & See memory layouts, optional \\
+    \mintinline{c++}{MemorySpace} & See memory spaces, optional \\
+    \mintinline{c++}{MemoryTraits} & See memory traits, optional \\
+\end{tblr}
+
+The order of template arguments is important.
+
+\subsubsection{Manage}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Method & Description \\
+    \mintinline{c++}{(i, j...)} & Returns and sets the value at index \mintinline{c++}{i},
+    \mintinline{c++}{j}, etc. \\
+    \mintinline{c++}{size()} & Returns the total number of elements in the view \\
+    \mintinline{c++}{rank()} & Returns the number of dimensions \\
+    \mintinline{c++}{layout()} & Returns the layout of the view \\
+    \mintinline{c++}{extent(dim)} & Returns the number of elements in the requested dimension \\
+    \mintinline{c++}{data()} & Returns a pointer to the underlying data \\
+\end{tblr}
+
+Resize and preserve content
+
+\begin{minted}{c++}
+Kokkos::resize(view, newNumberOfElementsI, newNumberOfElementsJ...);
+\end{minted}
+
+Reallocate and do not preserve content
+
+\begin{minted}{c++}
+Kokkos::realloc(view, newNumberOfElementsI, newNumberOfElementsJ...);
+\end{minted}
+
+\subsection{Memory Layouts}
+
+\begin{tblr}[theme=kokkostable]{lXl}
+    Layout & Description & Default \\
+    \mintinline{c++}{Kokkos::LayoutRight} & Strides increase from the right most to the left most dimension, also known as row-major or C-like & CPU \\
+    \mintinline{c++}{Kokkos::LayoutLeft} & Strides increase from the left most to the right most dimension, also known as column-major or Fortran-like & GPU \\
+    \mintinline{c++}{Kokkos::LayoutStride} & Strides can be arbitrary for each dimension &  \\
+\end{tblr}
+
+By default, a layout suited for loops on the high frequency index is used.
+
+\subsection{Memory trait}
+
+Memory traits are indicated with \mintinline{c++}{Kokkos::MemoryTraits<>} and are combined with the \mintinline{c++}{|} (pipe) operator.
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Memory trait & Description \\
+    \mintinline{c++}{Kokkos::Unmanaged} & The allocation has to be managed manually \\
+    \mintinline{c++}{Kokkos::Atomic} & All accesses to the view are atomic \\
+    \mintinline{c++}{Kokkos::RandomAccess} & Hint that the view is used in a random access manner; if the view is also \mintinline{c++}{const} this may trigger more efficient load operations on GPUs \\
+    \mintinline{c++}{Kokkos::Restrict} & There is no aliasing of the view by other data structures in the current scope \\
+\end{tblr}
+
+\subsection{Deep copy}
+
+\begin{minted}{c++}
+Kokkos::deep_copy(destination, source);
+\end{minted}
+
+The views must have the same dimensions, data type, and reside in the same memory space (mirror views can be deep copied on different memory spaces).
+
+\subsection{Mirror view}
+
+Create and always allocate on host
+
+\begin{minted}{c++}
+auto mirrorView = Kokkos::create_mirror(view);
+\end{minted}
+
+Create and allocate on host if source view is not in host space
+
+\begin{minted}{c++}
+auto mirrorView = Kokkos::create_mirror_view(view);
+\end{minted}
+
+Create, allocate and synchronize if source view is not in same space as destination view
+
+\begin{minted}{c++}
+auto mirrorView = Kokkos::create_mirror_view_and_copy(ExecutionSpace(), view);
+\end{minted}
+
+\subsection{Subview}
+
+A subview has the same reference count as its parent view, so the parent view won't be deallocated before all subviews go away.
+
+\begin{minted}{c++}
+auto subview = Kokkos::subview(view, selector1, selector2, ...);
+\end{minted}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Subset selector & Description \\
+    \mintinline{c++}{Kokkos::ALL} & All elements in this dimension \\
+    \mintinline{c++}{Kokkos::pair(first, last)} & Range of elements in this dimension \\
+    \mintinline{c++}{value} & Specific element in this dimension \\
+\end{tblr}
+
+\subsection{Scatter view (experimental)}
+
+\subsubsection{Specific header}
+
+\begin{minted}{c++}
+#include <Kokkos_ScatterView.hpp>
+\end{minted}
+
+\subsubsection{Create}
+
+\begin{minted}{c++}
+auto scatterView = Kokkos::Experimental::create_scatter_view<Operation, Duplication, Contribution>(targetView);
+\end{minted}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Template arg. & Description \\
+    \mintinline{c++}{Operation} & See scatter operation; defaults to \mintinline{c++}{Kokkos::Experimental::ScatterSum} \\
+    \mintinline{c++}{Duplication} & Whether to duplicate the grid or not; choices are
+    \mintinline{c++}{Kokkos::Experimental::ScatterDuplicated}, and
+    \mintinline{c++}{Kokkos::Experimental::ScatterNonDuplicated}; defaults to the option that is the most optimised for \mintinline{c++}{targetView}'s execution space \\
+    \mintinline{c++}{Contribution} & Whether to contribute using atomics or not; choices are \mintinline{c++}{Kokkos::Experimental::ScatterAtomic}, or
+    \mintinline{c++}{Kokkos::Experimental::ScatterNonAtomic}; defaults to the option that is the most optimised for \mintinline{c++}{targetView}'s execution space \\
+\end{tblr}
+
+\subsubsection{Scatter operation}
+
+\begin{tblr}[theme=kokkostable]{Xl}
+    Operation & Description \\
+    \mintinline{c++}{Kokkos::Experimental::ScatterSum} & Sum \\
+    \mintinline{c++}{Kokkos::Experimental::ScatterProd} & Product \\
+    \mintinline{c++}{Kokkos::Experimental::ScatterMin} & Minimum value \\
+    \mintinline{c++}{Kokkos::Experimental::ScatterMax} & Maximum value \\
+\end{tblr}
+
+\subsubsection{Scatter, compute, and gather}
+
+\begin{minted}{c++}
+Kokkos::parallel_for(
+    "label",
+    /* ... */,
+    KOKKOS_LAMBDA (/* ... */) {
+        // scatter
+        auto scatterAccess = scatterView.access();
+
+        // compute
+        scatterAccess(/* index */) /* operation */ /* contribution */;
+    }
+);
+
+// gather
+Kokkos::Experimental::contribute(targetView, scatterView);
+\end{minted}
+
+\section{Parallel constructs}
+
+\subsection{For loop}
+
+\begin{minted}{c++}
+Kokkos::parallel_for(
+    "label",
+    ExecutionPolicy</* ... */>(/* ... */),
+    KOKKOS_LAMBDA (/* ... */) { /* ... */ }
+);
+\end{minted}
+
+\subsection{Reduction}
+
+\begin{minted}{c++}
+ScalarType result;
+Kokkos::parallel_reduce(
+    "label",
+    ExecutionPolicy</* ... */>(/* ... */),
+    KOKKOS_LAMBDA (/* ... */, ScalarType& resultLocal) { /* ... */ },
+    Kokkos::ReducerConcept<ScalarType>(result)
+);
+\end{minted}
+
+With \mintinline{c++}{Kokkos::ReducerConcept} being one of the following:
+
+\begin{tblr}[theme=kokkostable]{llX}
+    Reducer & Operation & Description \\
+    \mintinline{c++}{Kokkos::BAnd} & \mintinline{c++}{&} & Binary and \\
+    \mintinline{c++}{Kokkos::BOr} & \mintinline{c++}{|} & Binary or \\
+    \mintinline{c++}{Kokkos::LAnd} & \mintinline{c++}{&&} & Logical and \\
+    \mintinline{c++}{Kokkos::LOr} & \mintinline{c++}{||} & Logical or \\
+    \mintinline{c++}{Kokkos::Max} & \mintinline{c++}{std::max} & Maximum \\
+    \mintinline{c++}{Kokkos::MaxLoc} & \mintinline{c++}{std::max_element} & Maximum and associated index \\
+    \mintinline{c++}{Kokkos::Min} & \mintinline{c++}{std::min} & Minimum \\
+    \mintinline{c++}{Kokkos::MinLoc} & \mintinline{c++}{std::min_element} & Minimum and associated index \\
+    \mintinline{c++}{Kokkos::MinMax} & \mintinline{c++}{std::minmax} & Minimum and maximum \\
+    \mintinline{c++}{Kokkos::MinMaxLoc} & \mintinline{c++}{std::minmax_element} & Minimum and maximum and associated indices \\
+    \mintinline{c++}{Kokkos::Prod} & \mintinline{c++}{*} & Product \\
+    \mintinline{c++}{Kokkos::Sum} & \mintinline{c++}{+} & Sum \\
+\end{tblr}
+
+A scalar value may be passed, for which the reduction is limited to a sum.
+When using the \mintinline{c++}{TeamVectorMDRange}, the \mintinline{c++}{TeamThreadMDRange}, or the \mintinline{c++}{ThreadVectorMDRange} execution policy, only a scalar value may be passed, for which the reduction is also limited to a sum.
+
+\subsection{Fences}
+
+\subsubsection{Global fence}
+
+\begin{minted}{c++}
+Kokkos::fence("label");
+\end{minted}
+
+\subsubsection{Execution space fence}
+
+\begin{minted}{c++}
+ExecutionSpace().fence("label");
+\end{minted}
+
+\subsubsection{Team barrier}
+
+\begin{minted}{c++}
+Kokkos::TeamPolicy<>::member_type().team_barrier();
+\end{minted}
+
+\section{Execution policy}
+
+\subsection{Create}
+
+\begin{minted}{c++}
+ExecutionPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> policy(/* ... */);
+\end{minted}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Template arg. & Description \\
+    \mintinline{c++}{ExecutionSpace} & See execution spaces; defaults to \mintinline{c++}{Kokkos::DefaultExecutionSpace} \\
+    \mintinline{c++}{Schedule} & How to schedule work items; defaults to machine and backend specifics \\
+    \mintinline{c++}{IndexType} & Integer type to be used for the index; defaults to
+    \mintinline{c++}{int64_t} \\
+    \mintinline{c++}{LaunchBounds} & Hints for CUDA and HIP launch bounds \\
+    \mintinline{c++}{WorkTag} & Empty tag class to call the functor \\
+\end{tblr}
+
+\subsection{Ranges}
+
+\subsubsection{One-dimensional range}
+
+\begin{minted}{c++}
+Kokkos::RangePolicy<ExecutionSpace, Schedule, IndexType LaunchBounds, WorkTag> policy(first, last);
+\end{minted}
+
+If the range starts at 0 and uses default parameters, can be replaced by just the number of elements.
+
+\subsubsection{Multi-dimensional (dimension 2)}
+
+\begin{minted}{c++}
+Kokkos::MDRangePolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag, Kokkos::Rank<2>> policy({firstI, firstJ}, {lastI, lastJ});
+\end{minted}
+
+\subsection{Hierarchical parallelism}
+
+\subsubsection{Team policy}
+
+\begin{minted}{c++}
+Kokkos::TeamPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> policy(leagueSize, teamSize);
+\end{minted}
+
+Usually, \mintinline{c++}{teamSize} is replaced by \mintinline{c++}{Kokkos::AUTO} to let Kokkos determine it. A kernel running in a team policy has a \mintinline{c++}{Kokkos::TeamPolicy<>::member_type} argument:
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Method & Description \\
+    \mintinline{c++}{league_size()} & Number of teams in the league \\
+    \mintinline{c++}{league_rank()} & Index of the team within the league \\
+    \mintinline{c++}{team_size()} & Number of threads in the team \\
+    \mintinline{c++}{team_rank()} & Index of the thread within the team \\
+\end{tblr}
+
+Note that nested parallel constructs do not use \mintinline{c++}{KOKKOS_LAMBDA} to create lambdas. One must use the C++ syntax, for example \mintinline{c++}{[=]} or \mintinline{c++}{[&]}.
+
+\subsubsection{Team vector level (2-level hierarchy)}
+
+\begin{minted}{c++}
+Kokkos::parallel_for(
+    "label",
+    Kokkos::TeamPolicy(numberOfElementsI, Kokkos::AUTO),
+    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
+        const int i = teamMember.team_rank();
+
+        Kokkos::parallel_for(
+            Kokkos::TeamVectorRange(teamMember, firstJ, lastJ),
+            [=] (const int j) { /* ... */ }
+        );
+    }
+);
+\end{minted}
+
+\paragraph{One-dimensional range}
+
+\begin{minted}{c++}
+Kokkos::TeamVectorRange range(teamMember, firstJ, lastJ);
+\end{minted}
+
+\paragraph{Multi-dimensional range (dimension 2)}
+
+\begin{minted}{c++}
+Kokkos::TeamVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy<>::member_type> range(teamMember, numberOfElementsJ, numberOfElementsK);
+\end{minted}
+
+\subsubsection{Team thread vector level (3-level hierarchy)}
+
+\begin{minted}{c++}
+Kokkos::parallel_for(
+    "label",
+    Kokkos::TeamPolicy(numberOfElementsI, Kokkos::AUTO),
+    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
+        const int i = teamMember.team_rank();
+
+        Kokkos::parallel_for(
+            Kokkos::TeamThreadRange(teamMember, firstJ, lastJ),
+            [=] (const int j) {
+                Kokkos::parallel_for(
+                    Kokkos::ThreadVectorRange(teamMember, firstK, lastK),
+                    [=] (const int k) { /* ... */ }
+                );
+            }
+        );
+    }
+);
+\end{minted}
+
+\paragraph{One-dimensional range}
+
+\begin{minted}{c++}
+Kokkos::TeamThreadRange range(teamMember, firstJ, lastJ);
+Kokkos::ThreadVectorRange range(teamMember, firstK, lastK);
+\end{minted}
+
+\paragraph{Multi-dimensional range (dimension 2)}
+
+\begin{minted}{c++}
+Kokkos::TeamThreadMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy<>::member_type> range(teamMember, numberOfElementsJ, numberOfElementsK);
+Kokkos::ThreadVectorMDRange<Kokkos::Rank<2>, Kokkos::TeamPolicy<>::member_type> range(teamMember, numberOfElementsL, numberOfElementsM);
+\end{minted}
+
+\section{Scratch memory}
+
+Each team has access to a scratch memory pad, which has the team's lifetime, and is only accessible by the team's threads.
+
+\subsection{Scratch memory space}
+
+\begin{tblr}[theme=kokkostable]{lXl}
+    Space level & Memory size & Access speed \\
+    0 & Limited (tens of kilobytes) & Fast \\
+    1 & Larger (few gigabytes) & Medium \\
+\end{tblr}
+
+Used when passing the team policy to the parallel construct and when creating the scratch memory pad.
+
+\subsection{Create and populate}
+
+\begin{minted}{c++}
+// Define a scratch memory pad type
+using ScratchPad = Kokkos::View<DataType, Kokkos::DefaultExecutionSpace::scratch_memory_space, Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
+
+// Compute how much scratch memory is needed (in bytes)
+size_t bytes = ScratchPad::shmem_size(vectorSize);
+
+// Create the team policy and specify the total scratch memory needed
+Kokkos::parallel_for(
+    "label",
+    Kokkos::TeamPolicy<>(leagueSize, teamSize).set_scratch_size(spaceLevel, Kokkos::PerTeam(bytes)),
+    KOKKOS_LAMBDA (const Kokkos::TeamPolicy<>::member_type& teamMember) {
+        const int i = teamMember.league_rank();
+
+        // Create the scratch pad
+        ScratchPad scratch(teamMember.team_scratch(spaceLevel), vectorSize);
+
+        // Initialize it
+        Kokkos::parallel_for(
+            Kokkos::TeamVectorRange(teamMember, vectorSize),
+            [=] (const int j) { scratch(j) = getScratchData(i, j); }
+        );
+
+        // Synchronize
+        teamMember.team_barrier();
+    }
+);
+\end{minted}
+
+\section{Atomics}
+
+\subsection{Atomic operations}
+
+\begin{tblr}[theme=kokkostable]{Xl}
+    Operation & Replaces \\
+    \mintinline{c++}{Kokkos::atomic_add(&x, y)} & \mintinline{c++}{x += y} \\
+    \mintinline{c++}{Kokkos::atomic_and(&x, y)} & \mintinline{c++}{x &= y} \\
+    \mintinline{c++}{Kokkos::atomic_dec(&x)} & \mintinline{c++}{x--} \\
+    \mintinline{c++}{Kokkos::atomic_inc(&x)} & \mintinline{c++}{x++} \\
+    \mintinline{c++}{Kokkos::atomic_lshift(&x, y)} & \mintinline{c++}{x = x << y} \\
+    \mintinline{c++}{Kokkos::atomic_max(&x, y)} & \mintinline{c++}{x = std::max(x, y)} \\
+    \mintinline{c++}{Kokkos::atomic_min(&x, y)} & \mintinline{c++}{x = std::min(x, y)} \\
+    \mintinline{c++}{Kokkos::atomic_mod(&x, y)} & \mintinline{c++}{x }{\scriptsize\texttt{\%}}\mintinline{c++}{= y} \\
+    \mintinline{c++}{Kokkos::atomic_nand(&x, y)} & \mintinline{c++}{x = !(x && y)} \\
+    \mintinline{c++}{Kokkos::atomic_or(&x, y)} & \mintinline{c++}{x |= y} \\
+    \mintinline{c++}{Kokkos::atomic_rshift(&x, y)} & \mintinline{c++}{x = x >> y} \\
+    \mintinline{c++}{Kokkos::atomic_sub(&x, y)} & \mintinline{c++}{x -= y} \\
+    \mintinline{c++}{Kokkos::atomic_store(&x, y)} & \mintinline{c++}{x = y} \\
+    \mintinline{c++}{Kokkos::atomic_xor(&x, y)} & \mintinline{c++}{x ^= y} \\
+\end{tblr}
+
+\subsection{Atomic exchanges}
+
+\begin{tblr}[theme=kokkostable]{XX}
+    Operation & Description \\
+    \mintinline{c++}{Kokkos::atomic_exchange(&x, desired)} & Assign desired value to object and return old value \\
+    \mintinline{c++}{Kokkos::atomic_compare_exchange(&x, expected, desired)} & Assign desired value to object if the object has the expected value and return the old value \\
+\end{tblr}
+
+\section{Mathematics}
+
+\subsection{Math functions}
+
+\begin{tblr}[theme=kokkostable]{Xl}
+    Function type & List of functions (prefixed by \mintinline{c++}{Kokkos::}) \\
+    Basic ops. & \mintinline{c++}{abs}, \mintinline{c++}{fabs}, \mintinline{c++}{fmod}, \mintinline{c++}{remainder}, \mintinline{c++}{fma}, \mintinline{c++}{fmax}, \mintinline{c++}{fmin}, \mintinline{c++}{fdim}, \mintinline{c++}{nan} \\
+    Exponential & \mintinline{c++}{exp}, \mintinline{c++}{exp2}, \mintinline{c++}{expm1}, \mintinline{c++}{log}, \mintinline{c++}{log2}, \mintinline{c++}{log10}, \mintinline{c++}{log1p} \\
+    Power & \mintinline{c++}{pow}, \mintinline{c++}{sqrt}, \mintinline{c++}{cbrt}, \mintinline{c++}{hypot} \\
+    Trigonometric & \mintinline{c++}{sin}, \mintinline{c++}{cos}, \mintinline{c++}{tan}, \mintinline{c++}{asin}, \mintinline{c++}{acos}, \mintinline{c++}{atan}, \mintinline{c++}{atan2} \\
+    Hyperbolic & \mintinline{c++}{sinh}, \mintinline{c++}{cosh}, \mintinline{c++}{tanh}, \mintinline{c++}{asinh}, \mintinline{c++}{acosh}, \mintinline{c++}{atanh} \\
+    Error, gamma & \mintinline{c++}{erf}, \mintinline{c++}{erfc}, \mintinline{c++}{tgamma}, \mintinline{c++}{lgamma} \\
+    Nearest & \mintinline{c++}{ceil}, \mintinline{c++}{floor}, \mintinline{c++}{trunc}, \mintinline{c++}{round}, \mintinline{c++}{nearbyint} \\
+    Floating point & \mintinline{c++}{logb}, \mintinline{c++}{nextafter}, \mintinline{c++}{copysign} \\
+    Comparisons & \mintinline{c++}{isfinite}, \mintinline{c++}{isinf}, \mintinline{c++}{isnan}, \mintinline{c++}{signbit} \\
+\end{tblr}
+
+Note that not all C++ standard math functions are available.
+
+\subsection{Complex numbers}
+
+\subsubsection{Create}
+
+\begin{minted}{c++}
+Kokkos::complex<double> complex(realPart, imagPart);
+\end{minted}
+
+\subsubsection{Manage}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Method & Description \\
+    \mintinline{c++}{real()} & Returns or sets the real part \\
+    \mintinline{c++}{imag()} & Returns or sets the imaginary part \\
+\end{tblr}
+
+\section{Utilities}
+
+\subsection{Program interruption}
+
+\begin{minted}{c++}
+Kokkos::abort("message");
+\end{minted}
+
+\subsection{Print inside a kernel}
+
+\begin{minted}{c++}
+Kokkos::printf("format string", arg1, arg2);
+\end{minted}
+
+Similar to \mintinline{c++}{std::printf}.
+
+\subsection{Timer}
+
+\subsubsection{Create}
+
+\begin{minted}{c++}
+Kokkos::Timer timer;
+\end{minted}
+
+\subsubsection{Manage}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Method & Description \\
+    \mintinline{c++}{seconds()} & Returns the time in seconds since construction or last reset \\
+    \mintinline{c++}{reset()} & Resets the timer to zero \\
+\end{tblr}
+
+\subsection{Manage parallel environment}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Function & Description \\
+    \mintinline{c++}{Kokkos::device_id()} & Returns the ID of the current device \\
+    \mintinline{c++}{Kokkos::num_devices()} & Returns the number of devices available to the current execution space \\
+\end{tblr}
+
+\section{Macros}
+
+\subsection{Essential macros}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Macro & Description \\
+    \mintinline{c++}{KOKKOS_LAMBDA} & Replaces capture argument for lambdas \\
+    \mintinline{c++}{KOKKOS_CLASS_LAMBDA} & Replaces capture argument for lambdas, captures \mintinline{c++}{this} \\
+    \mintinline{c++}{KOKKOS_FUNCTION} & Functor attribute \\
+    \mintinline{c++}{KOKKOS_INLINE_FUNCTION} & Inlined functor attribute \\
+\end{tblr}
+
+\subsection{Extra macros}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Macro & Description \\
+    \mintinline{c++}{KOKKOS_VERSION} & Kokkos full version \\
+    \mintinline{c++}{KOKKOS_VERSION_MAJOR} & Kokkos major version \\
+    \mintinline{c++}{KOKKOS_VERSION_MINOR} & Kokkos minor version \\
+    \mintinline{c++}{KOKKOS_VERSION_PATCH} & Kokkos patch level \\
+    \mintinline{c++}{KOKKOS_ENABLE_*} & Any equivalent CMake option passed when building Kokkos, see installation cheat sheet \\
+    \mintinline{c++}{KOKKOS_ARCH_*} & Any equivalent CMake option passed when building Kokkos, see installation cheat sheet \\
+\end{tblr}
+
+\end{multicols}
+
+% add a watermark here
+
+%\watermark
+
+% add a notes section here
+
+%\notessection
+
+% add a notes section followed by a watermark here
+
+%\notessection{\watermark}
+
+\end{document}

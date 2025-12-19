@@ -1,42 +1,129 @@
-% custom header
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{cheat_sheet_kokkos}[2025/12/15 Cheat sheet for Kokkos class]
 
-\usepackage[hmargin=0.5cm, vmargin=0cm, includeheadfoot]{geometry}
-\usepackage{multicol}
-\usepackage{mdframed}
-\usepackage{fancyhdr}
-\usepackage{calc}
-\usepackage[nobottomtitles*]{titlesec}
-\usepackage{tabularx}
-\usepackage{url}
-\usepackage{graphicx}
-\usepackage{fvextra}
-\usepackage{ifthen}
-\usepackage{relsize}
+\LoadClass[
+  10pt,
+  a4paper,
+  twoside
+]{article}
 
-\definecolor{kokkos}{RGB}{30, 120, 152}
+% tweaking
+\RequirePackage{etoolbox}
 
-\colorlet{main}{kokkos!80}
-\colorlet{lightmain}{kokkos!30}
-\colorlet{lightgray}{gray!20}
-\colorlet{darkgray}{gray!70!black}
+% option for text highlighting
+\newtoggle{kokkoshighlightmode}
+\togglefalse{kokkoshighlightmode}
+\DeclareOption{kokkoshighlight}{\toggletrue{kokkoshighlightmode}}
+
+% option for print margins
+\newtoggle{printmode}
+\togglefalse{printmode}
+\DeclareOption{print}{\toggletrue{printmode}}
+
+\ProcessOptions\relax
+
+% fonts
+\RequirePackage{lmodern}
 
 \renewcommand{\familydefault}{\sfdefault}
 
-% reset maketitle
+% colors
+\RequirePackage{xcolor}
 
-\renewcommand\maketitle{}
+%% base color
+\definecolor{kokkos}{RGB}{30, 120, 152}
 
-% title
+%% other colors
+\colorlet{main}{kokkos!80}
+\colorlet{lightmain}{kokkos!30}
+\colorlet{dimmedmain}{kokkos!50}
+\colorlet{darkmain}{kokkos!80!black}
+\colorlet{lightgray}{gray!20}
+\colorlet{darkgray}{gray!70!black}
+\colorlet{alert}{red!70!cyan}
+\colorlet{lightalert}{alert!20}
+\colorlet{example}{cyan!80!gray!50}
+\colorlet{lightexample}{example!30}
 
+% links
+\RequirePackage{hyperref}
+
+\hypersetup{
+  hidelinks,
+}
+
+% urls
+\RequirePackage{url}
+
+%% disable monospaced font for URLs
+\urlstyle{same}
+
+% listings
+\RequirePackage{minted}
+
+\setminted{
+    autogobble,
+    fontsize=\scriptsize,
+    bgcolor=lightgray,
+    breaklines,
+    resetmargins,
+}
+
+\iftoggle{kokkoshighlightmode}{
+    \setminted{style=kokkos}
+}{
+    \setminted{style=friendly}
+}
+
+\setmintedinline{
+    bgcolor=\empty,
+}
+
+%% remove minted vertical margins
 \makeatletter
-\def\gettitle{\@title}
+\patchcmd{\minted@colorbg}{\medskip}{\smallskip}{}{}
+\patchcmd{\endminted@colorbg}{\medskip}{\smallskip}{}{}
 \makeatother
 
+% page
+\RequirePackage[hmargin=0.5cm, vmargin=0cm, includeheadfoot]{geometry}
+
+% columns
+\RequirePackage{multicol}
+
+% computations
+\RequirePackage{calc}
+
+% tables
+\RequirePackage{tabularray}
+
+\NewTblrTheme{kokkostable}{
+    \SetTblrInner{
+        width=\linewidth,
+        rowhead=1,
+        row{odd}={bg=lightgray},
+        row{1}={bg=lightmain},
+        stretch=0,
+        rowsep=3.6pt,
+    }
+}
+
+\AtBeginEnvironment{tblr}{\smallskip}
+\AtEndEnvironment{tblr}{\smallskip}
+
+% text alignment
+\RequirePackage{ragged2e}
+
 % images
+\RequirePackage{graphicx}
 
 \graphicspath{{images/}}
 
+% conditions
+\RequirePackage{ifthen}
+
 % headers and footers
+\RequirePackage{fancyhdr}
 
 \newlength{\headerheight}
 \newlength{\footerheight}
@@ -52,36 +139,53 @@
 \newlength{\headerfooterskip}
 \newlength{\headerfooterskipreduction}
 
-% print sizes tuning
+%% print sizes tuning
 
-% change here to add print margin
-% this adds \printmargin on the outer horizontal margin (think two-sided document)
-% and 0.75\printmargin on the top and bottom vertical margins
-% in other words, this adds \printmargin horizontally and 1.5\printmargin vertically
-% note that using this variable will certainly mess with the page layout!
-% to counterbalance this, you can tune the other lengths defined below
-% a good first guess is 0.4cm
+%%% change here to add print margin
+%%% This adds \printmargin on the outer horizontal margin (think two-sided
+%%% document) and 0.75\printmargin on the top and bottom vertical
+%%% margins in other words, this adds \printmargin horizontally and
+%%% 1.5\printmargin vertically note that using this variable will certainly mess
+%%% with the page layout! To counterbalance this, you can tune the other
+%%% lengths defined below.
+%%% a good first guess is 0.4cm
 \setlength{\printmargin}{0cm}
+\iftoggle{printmode}{
+    \setlength{\printmargin}{0.4cm}
+}
 
-% change here to reduce the effect of \printmargin on the outer horizontal margin for the text body only
-% a good first guess is 0.2cm
+%%% change here to reduce the effect of \printmargin on the outer horizontal
+%%% margin for the text body only
+%%% a good first guess is 0.2cm
 \setlength{\marginwidthreduction}{0cm}
+\iftoggle{printmode}{
+    \setlength{\marginwidthreduction}{0.2cm}
+}
 
-% change here to reduce the space between the text and the header/footer
-% a good first guess is 0.2cm
+%%% change here to reduce the space between the text and the header/footer
+%%% a good first guess is 0.2cm
 \setlength{\headerfooterskipreduction}{0cm}
+\iftoggle{printmode}{
+    \setlength{\headerfooterskipreduction}{0.2cm}
+}
 
-% change here to reduce the height of the header
-% a good first guess is 0.2cm
+%%% change here to reduce the height of the header
+%%% a good first guess is 0.2cm
 \setlength{\headerheightreduction}{0cm}
+\iftoggle{printmode}{
+    \setlength{\headerheightreduction}{0.2cm}
+}
 
-% change here to reduce the height of the footer
-% a good first guess is 0.2cm
+%%% change here to reduce the height of the footer
+%%% a good first guess is 0.2cm
 \setlength{\footerheightreduction}{0cm}
+\iftoggle{printmode}{
+    \setlength{\footerheightreduction}{0.2cm}
+}
 
-% change here to put a factor ratio on text size
-% change this value if nothing else helps!
-% a good first guess is 0.95
+%%% change here to put a factor ratio on text size
+%%% change this value if nothing else helps!
+%%% a good first guess is 0.95
 \newcommand{\textratio}{1}
 
 \fancypagestyle{kokkos}{%
@@ -196,145 +300,103 @@
 \pagestyle{kokkos}
 
 % sections
+\RequirePackage[nobottomtitles*]{titlesec}
 
-\titleformat{\subsection}[display]
+\titleformat{\section}[display]
     {\Large\bfseries}
     {}
     {0pt}
-    {\subsectionstyle}
+    {\sectionstyle}
 
-\titleformat{\subsubsection}[display]
+\titlespacing{\section}
+    {0pt}
+    {10pt}
+    {5pt}
+
+\titleformat{\subsection}[display]
     {\large\bfseries}
     {}
     {0pt}
+    {\subsectionstyle}
+    [\subsectionstyleextra]
+
+\titlespacing{\subsection}
+    {0pt}
+    {8pt}
+    {4pt}
+
+\titleformat{\subsubsection}[display]
+    {\normalsize\bfseries}
+    {}
+    {0pt}
     {\subsubsectionstyle}
-    [\subsubsectionstyleextra]
+
+\titlespacing{\subsubsection}
+    {0pt}
+    {5pt}
+    {2.5pt}
 
 \titleformat{\paragraph}[display]
-    {\normalsize\bfseries}
+    {\small\bfseries}
     {}
     {0pt}
     {\paragraphstyle}
 
-\titleformat{\subparagraph}[display]
-    {\small\bfseries}
-    {}
+\titlespacing{\paragraph}
     {0pt}
-    {\subparagraphstyle}
+    {5pt}
+    {2.5pt}
 
-\newcommand{\subsectionstyle}[1]{%
+\newcommand{\sectionstyle}[1]{%
     \colorbox{main}{\parbox{\dimexpr\linewidth-2\fboxsep}{\strut#1}}%
 }
 
-\newcommand{\subsubsectionstyle}[1]{%
+\newcommand{\subsectionstyle}[1]{%
     \strut#1%
 }
 
-\newcommand{\subsubsectionstyleextra}{%
+\newcommand{\subsectionstyleextra}{%
     \titleline{\color{main}\titlerule}%
 }
 
-\newcommand{\paragraphstyle}[1]{%
+\newcommand{\subsubsectionstyle}[1]{%
     #1%
 }
 
-\newcommand{\subparagraphstyle}[1]{%
+\newcommand{\paragraphstyle}[1]{%
     {\color{main}#1}%
 }
 
-% tables
+% kerning
+\RequirePackage{microtype}
 
-\newcommand{\toprule}{%
-    \rowcolor{lightmain}
-}
-\newcommand{\midrule}{%
-}
-\newcommand{\bottomrule}{%
-}
+% remove section numbering
+\setcounter{secnumdepth}{-\maxdimen}
 
-\newcommand{\tblhead}[1]{#1}
-
-\renewcommand{\arraystretch}{1.25}
-
-\AtBeginEnvironment{tabularx}{%
-    \rowcolors*{2}{lightgray}{}%
-}
-
-% code block
-
-\newcommand\codesize\scriptsize
-
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
-    breaklines,
-    breakanywhere,
-    commandchars=\\\{\}
-}
-
-\usepackage{tcolorbox}
-\tcbuselibrary{
-    breakable,
-    skins,
-}
-
-\ifcsmacro{Shaded}{
-    \renewenvironment{Shaded}[1][]{%
-        \begin{tcolorbox}[
-            skin=tilemiddle,
-            colback=lightgray,
-            leftrule=0pt,
-            rightrule=0pt,
-            toprule=0pt,
-            bottomrule=0pt,
-            fontupper=\codesize,
-            before skip=0.5em,
-            after skip=0.5em,
-            left skip=0pt,
-            right skip=0pt,
-            top=\fboxsep,
-            bottom=\fboxsep,
-            left=\fboxsep,
-            right=\fboxsep ,
-            pad at break=0.75\fboxsep,
-            #1,
-            ]%
-        }{%
-        \end{tcolorbox}
-    }
-
-    \colorlet{codemain}{kokkos}
-    \colorlet{codelightmain}{kokkos!70}
-    \colorlet{codegray}{gray!90!black}
-
-    \renewcommand{\AttributeTok}[1]{{\color{codelightmain}#1}}
-    \renewcommand{\BuiltInTok}[1]{{\color{codemain}#1}}
-    \renewcommand{\CommentTok}[1]{{\color{codegray}\textit{#1}}}
-    \renewcommand{\CommentVarTok}[1]{{\color{codegray}\textit{#1}}}
-    \renewcommand{\ConstantTok}[1]{{\color{codegray}#1}}
-    \renewcommand{\ControlFlowTok}[1]{{\color{codemain}#1}}
-    \renewcommand{\DataTypeTok}[1]{{\color{codemain}#1}}
-    \renewcommand{\DecValTok}[1]{{\color{codelightmain}#1}}
-    \renewcommand{\FunctionTok}[1]{{\color{codemain}#1}}
-    \renewcommand{\KeywordTok}[1]{{\color{codemain}\textbf{#1}}}
-    \renewcommand{\OtherTok}[1]{{\color{codelightmain}#1}}
-    \renewcommand{\PreprocessorTok}[1]{{\color{codegray}#1}}
-    \renewcommand{\StringTok}[1]{{\color{codemain}#1}}
-}{}
-
-% code inline
-
-\let\oldtexttt\texttt
-\renewcommand{\texttt}[1]{{\codesize\oldtexttt{#1}}}
+% remove indentation
+\setlength{\parindent}{0pt}
 
 % widows and orphans
-
 \widowpenalty10000
 \clubpenalty10000
 
-% extra commands
-
+% reset maketitle
 \makeatletter
+\renewcommand\maketitle{
+    \hypersetup{
+        pdftitle=\@title,
+        pdfauthor=\@author,
+    }
+}
+\makeatother
 
-% fill with dotted lines until the end of the page
+% title command
+\makeatletter
+\def\gettitle{\@title}
+\makeatother
+
+% command to fill with dotted lines until the end of the page
+\makeatletter
 \newcommand{\dotcolumnfill}[1]{%
     % https://tex.stackexchange.com/a/319436
     \par
@@ -347,19 +409,18 @@
     \vskip \ht\strutbox
     \break
 }
-
 \makeatother
 
-% notes section with dotted lines
+% command to add notes section with dotted lines
 \newcommand\notessection[1]{%
-    \subsection{Notes}
+    \section{Notes}
 
     \vspace{1em}
 
     \dotcolumnfill{#1}
 }
 
-% watermark with CExA and MDLS logos
+% command to add watermark with CExA and MDLS logos
 \newcommand\watermark{%
     \begin{flushright}
         Brought to you by%

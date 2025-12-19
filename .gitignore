@@ -1,6 +1,10 @@
-**.DS_Store
 *.aux
 *.log
 *.synctex.gz
+*.fdb_latexmk
+*.fls
+*.out
 /*.pdf
-/*.tex
+_minted*
+build/
+*.egg-info/

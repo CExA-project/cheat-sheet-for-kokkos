@@ -1,0 +1,27 @@
+[project]
+name = "kokkos_pygments"
+version = "0.0.1"
+requires-python = ">=3.10"
+dependencies = ["pygments"]
+
+# Declare plugin styles in this table. The key *is* significant: it is the name
+# the style will be recognized as. In this example, we can use
+#
+#   pygmentize -Ostyle=example-style"
+#
+# on the command line. Also,
+#
+#   pygments.styles.get_style_by_name("example-style")
+#
+# will return the style class.
+
+[project.entry-points."pygments.styles"]
+kokkos = "kokkos_pygments:KokkosStyle"
+
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+

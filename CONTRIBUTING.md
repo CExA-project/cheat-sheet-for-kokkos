@@ -13,55 +13,50 @@ The cheat sheet version is a combination of the Kokkos version and the timestamp
 +------ Kokkos major version
 ```
 
-## Pre-processor
+The version is stored in the `VERSION` file.
 
-Since Markdown does not have branching controls, we use pre-processor instructions, that are parsed by [GPP (Generic Preprocessor)](https://logological.org/gpp).
-These instructions have the similar syntax as the C pre-processor ones, but are encapsulated within Markdown comments, so that the un-pre-processed file remains a valid Markdown file:
+## Custom syntax highlight
 
-```md
-<!--#PRE_PROCESSOR_INSTRUCTION-->
-```
+### Use a GUI LaTeX editor
 
-Note that there are *no spaces* between the Markdown comment symbol and the pre-processor instruction.
-By instance, in order to display text only if the `PRINT` macro is defined:
-
-```md
-<!--#ifdef PRINT-->
-Only visible in printed version!
-<!--#endif-->
-```
-
-Reversely, in order to hide text if the `PRINT` macro is defined (which is the most common case):
-
-```md
-<!--#ifndef PRINT-->
-Not visible in printed version!
-<!--#endif-->
-```
-
-Passing macros to GPP is similar with passing macros to a C compiler:
+As explained in the [main page](README.md), the syntax highlight theme for Minted is provided by a custom package that has to be installed.
+In order to use your favorite GUI LaTeX editor, you either need to install the package at user level (which may not work on recent systems, as this practice is [being discouraged](https://peps.python.org/pep-0668/)):
 
 ```sh
-gpp <file.md> -DPRINT
+pip install --user .
 ```
 
-For now, the `PRINT` macro is used for print mode.
-
-## Patching
-
-Patches are used to keep specific adjustments in the final document that cannot be present in the source Markdown file.
-Namely, such changes include manual page breaks, abbreviations, etc.
-Large modification, however, such as the removal of an entire section, are better handled by the pre-processor discussed above.
-
-A patch is associated with a converted file in the form `name.ext.diff`, and is stored under `patches/<mode>/name.ext.diff` (with `<mode>` being `print` for print mode).
-If a patch file exists with the same name, then the patch is automatically applied when calling `convert.sh`.
-
-The creation of the patch uses the following workflow:
+or keep it in a virtual env, and open your LaTeX editor from the same terminal:
 
 ```sh
-./generate_patch.sh <file.md> start
-# edit <file.tex> and perform specific adjustments
-./generate_patch.sh <file.md> end
+source venv/bin/activate
+
+texstudio &
 ```
 
-Any consecutive call to `generate_patch.sh` will cumulate the modifications.
+### Disable custom syntax highlight
+
+If the custom style cannot be used, comment out the `kokkoshighlight` class option in the LaTeX files you want to build.
+The style would fallback to `friendly`:
+
+```latex
+\documentclass[
+    %...
+    %kokkoshighlight,
+]{./cheat_sheet_kokkos}
+```
+
+## Print mode
+
+In order to print the file with a printer that cannot print the entire area of the paper, you can enable the print mode.
+This mode is suited for A3 printing on a foldable booklet.
+It adds extra internal and external margins, and takes care of possible small miss-alignments of the page with the printer:
+
+```latex
+\documentclass[
+    %...
+    print,
+]{./cheat_sheet_kokkos}
+```
+
+The margins can be adjusted within the class file `cheat_sheet_kokkos.cls`.

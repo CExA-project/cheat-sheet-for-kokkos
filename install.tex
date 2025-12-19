@@ -1,0 +1,320 @@
+\documentclass[
+    kokkoshighlight,
+    % print,
+]{./cheat_sheet_kokkos}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% document properties
+\title{Installation cheat sheet for Kokkos}
+\author{CExA}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{multicols}{2}
+
+\section{Requirements}
+
+\subsection{Compiler}
+
+\begin{tblr}[theme=kokkostable]{Xll}
+    Compiler & Minimum version & Notes \\
+    ARM Clang & 20.1 &  \\
+    Clang & 10.0.0 & For CUDA \\
+    Clang & 8.0.0 & For CPU \\
+    GCC & 8.2.0 &  \\
+    Intel LLVM & 2023.0.0 & For SYCL \\
+    Intel LLVM & 2021.1.1 & For CPU \\
+    MSVC & 19.29 &  \\
+    NVCC & 11.0 &  \\
+    NVHPC & 22.3 &  \\
+    ROCM & 5.2.0 &  \\
+\end{tblr}
+
+\subsection{Build system}
+
+\begin{tblr}[theme=kokkostable]{llX}
+    Build system & Minimum version & Notes \\
+    CMake & 3.25.2 & For Intel LLVM full support \\
+    CMake & 3.21.1 & For NVHPC support \\
+    CMake & 3.18 & For better Fortran linking \\
+    CMake & 3.16 &  \\
+\end{tblr}
+
+\section{How to integrate Kokkos}
+
+Note the difference in the version number between \mintinline{text}{x.y.z} and \mintinline{text}{x.y.zz}.
+
+\subsection{As an external dependency}
+
+\subsubsection{Configure, build and install Kokkos}
+
+\begin{minted}{sh}
+    git clone -b x.y.zz "https://github.com/kokkos/kokkos.git"
+    cd kokkos
+    cmake -B build \
+        -DCMAKE_CXX_COMPILER="<your C++ compiler>" \
+        -DCMAKE_INSTALL_PREFIX="path/to/kokkos/install" \
+        "<Kokkos compile options>"
+    cmake --build build
+    cmake --install build
+\end{minted}
+
+\subsubsection{Setup, and configure your code}
+
+\begin{minted}{cmake}
+    find_package(Kokkos x.y.z REQUIRED)
+    target_link_libraries(
+        my-app
+        Kokkos::kokkos
+    )
+\end{minted}
+
+\begin{minted}{sh}
+    cd "path/to/your/code"
+    cmake -B build \
+        -DCMAKE_CXX_COMPILER="<your C++ compiler>" \
+        -DKokkos_ROOT="path/to/kokkos/install"
+\end{minted}
+
+\subsection{As an internal dependency}
+
+\subsubsection{Setup with a Git submodule}
+
+\begin{minted}{sh}
+    git submodule add -b x.y.zz "https://github.com/kokkos/kokkos.git" tpls/kokkos
+\end{minted}
+
+\begin{minted}{cmake}
+    add_subdirectory(path/to/kokkos)
+    target_link_libraries(
+        my-app
+        Kokkos::kokkos
+    )
+\end{minted}
+
+\subsubsection{Setup with FetchContent}
+
+\begin{minted}[breakafter=/]{cmake}
+    include(FetchContent)
+    FetchContent_Declare(
+        kokkos
+        URL https://github.com/kokkos/kokkos/releases/download/x.y.zz/kokkos-x.y.zz.tar.gz
+        URL_HASH SHA256=<hash for x.y.z archive>
+    )
+    FetchContent_MakeAvailable(kokkos)
+    target_link_libraries(
+        my-app
+        Kokkos::kokkos
+    )
+\end{minted}
+
+\subsubsection{Configure your code}
+
+\begin{minted}{sh}
+    cmake -B build \
+        -DCMAKE_CXX_COMPILER="<your C++ compiler>" \
+        "<Kokkos compile options>"
+\end{minted}
+
+You may combine the external/internal dependency approaches.
+
+\section{Kokkos compile options}
+
+\subsection{Host backends}
+
+\begin{tblr}[theme=kokkostable]{Xl}
+    Option & Backend \\
+    \mintinline{text}{-DKokkos_ENABLE_SERIAL=ON} & Serial \\
+    \mintinline{text}{-DKokkos_ENABLE_OPENMP=ON} & OpenMP \\
+    \mintinline{text}{-DKokkos_ENABLE_THREADS=ON} & Threads \\
+\end{tblr}
+
+The serial backend is enabled by default if no other host backend is enabled.
+
+\subsection{Device backends}
+
+\begin{tblr}[theme=kokkostable]{Xll}
+    Option & Backend & Device \\
+    \mintinline{text}{-DKokkos_ENABLE_CUDA=ON} & CUDA & NVIDIA \\
+    \mintinline{text}{-DKokkos_ENABLE_HIP=ON} & HIP & AMD \\
+    \mintinline{text}{-DKokkos_ENABLE_SYCL=ON} & SYCL & Intel \\
+\end{tblr}
+
+You can only select the serial backend, plus another host backend and one device backend at a time.
+
+See architecture-specific options.
+
+\subsection{Specific options}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Option & Description \\
+    \mintinline{text}{-DKokkos_ENABLE_DEBUG=ON} & Activate extra debug features, may increase compile times \\
+    \mintinline{text}{-DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON} & Use bounds checking, will increase runtime \\
+    \mintinline{text}{-DKokkos_ENABLE_EXAMPLES=ON} & Build examples \\
+    \mintinline{text}{-DKokkos_ENABLE_TUNING=ON} & Create bindings for tuning tools \\
+\end{tblr}
+
+\subsection{Architecture-specific options}
+
+\subsubsection{Host architectures}
+
+Host options are used for controlling optimization and are optional.
+
+\begin{tblr}[theme=kokkostable]{Xl}
+    Option & Architecture \\
+    \mintinline{text}{-DKokkos_ARCH_NATIVE=ON} & Local host \\
+\end{tblr}
+
+\subsubsection{Device architectures}
+
+Device options are mandatory. They can be deduced from the device if present at CMake configuration time.
+
+\paragraph{AMD GPU architectures (HIP)}
+
+{
+% temporary disable justify align
+\RenewDocumentCommand\TblrAlignBoth{}{\RaggedRight}
+\begin{tblr}[theme=kokkostable]{llX}
+    Option & Arch. & Associated cards \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX942_APU=ON} & GFX942 APU & MI300A \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX942=ON} & GFX942 & MI300X \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX90A=ON} & GFX90A & MI210, MI250, MI250X \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX908=ON} & GFX908 & MI100 \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX906=ON} & GFX906 & MI50, MI60 \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX1103=ON} & GFX1103 & Ryzen 8000G, Radeon 740M, 760M, 780M, 880M, 980M \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX1100=ON} & GFX1100 & 7900xt \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX1030=ON} & GFX1030 & V620, W6800 \\
+\end{tblr}
+}
+
+\paragraph{Intel GPU architectures (SYCL)}
+
+\begin{tblr}[theme=kokkostable]{lX}
+    Option & Architecture \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN=ON} & Generic JIT \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_XEHP=ON} & Xe-HP \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_PVC=ON} & GPU Max (Ponte Vecchio) \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_DG1=ON} & Iris XeMAX \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN12=ON} & Gen12 \\
+    \mintinline{text}{-DKokkos_ARCH_INTEL_GEN11=ON} & Gen11 \\
+\end{tblr}
+
+\paragraph{NVIDIA GPU architectures (CUDA)}
+
+{
+% temporary disable justify align
+\RenewDocumentCommand\TblrAlignBoth{}{\RaggedRight}
+\begin{tblr}[theme=kokkostable]{lllX}
+    Option & Arch. & CC & Associated cards \\
+    \mintinline{text}{-DKokkos_ARCH_HOPPER90=ON} & Hopper & 9.0 & H200, H100 \\
+    \mintinline{text}{-DKokkos_ARCH_ADA89=ON} & Ada & 8.9 & GeForce RTX 40 series, RTX 6000/5000 series, L4, L40 \\
+    \mintinline{text}{-DKokkos_ARCH_AMPERE86=ON} & Ampere & 8.6 & GeForce RTX 30 series, RTX A series, A40, A10, A16, A2 \\
+    \mintinline{text}{-DKokkos_ARCH_AMPERE80=ON} & Ampere & 8.0 & A100, A30 \\
+    \mintinline{text}{-DKokkos_ARCH_TURING75=ON} & Turing & 7.5 & T4 \\
+    \mintinline{text}{-DKokkos_ARCH_VOLTA72=ON} & Volta & 7.2 &  \\
+    \mintinline{text}{-DKokkos_ARCH_VOLTA70=ON} & Volta & 7.0 & V100 \\
+    \mintinline{text}{-DKokkos_ARCH_PASCAL61=ON} & Pascal & 6.1 & P6, P40, P4 \\
+    \mintinline{text}{-DKokkos_ARCH_PASCAL60=ON} & Pascal & 6.0 & P100 \\
+\end{tblr}
+}
+
+% table broken between two pages
+
+\begin{tblr}[theme=kokkostable]{lllX}
+    Option & Arch. & CC & Associated cards \\
+    \mintinline{text}{-DKokkos_ARCH_MAXWELL53=ON} & Maxwell & 5.3 &  \\
+    \mintinline{text}{-DKokkos_ARCH_MAXWELL52=ON} & Maxwell & 5.2 & M6, M60, M4, M40 \\
+    \mintinline{text}{-DKokkos_ARCH_MAXWELL50=ON} & Maxwell & 5.0 & M10 \\
+\end{tblr}
+
+\subsection{Examples for the most common architectures}
+
+\subsubsection{Current CPU with OpenMP}
+
+\begin{minted}{sh}
+    cmake \
+        -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_OPENMP=ON \
+        -DKokkos_ARCH_NATIVE=ON
+\end{minted}
+
+\subsubsection{AMD MI300A APU with HIP}
+
+\begin{minted}{sh}
+    export HSA_XNACK=1
+    cmake \
+        -B build \
+        -DCMAKE_CXX_COMPILER=hipcc \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_HIP=ON \
+        -DKokkos_ARCH_AMD_GFX942_APU=ON
+\end{minted}
+
+The environment variable is required to access host allocations from the device.
+
+\subsubsection{AMD MI250 GPU with HIP}
+
+\begin{minted}{sh}
+    cmake \
+        -B build \
+        -DCMAKE_CXX_COMPILER=hipcc \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_HIP=ON \
+        -DKokkos_ARCH_AMD_GFX90A=ON
+\end{minted}
+
+\subsubsection{Intel GPU Max 1550 (Ponte Vecchio) with SYCL}
+
+\begin{minted}{sh}
+    cmake \
+        -B build \
+        -DCMAKE_CXX_COMPILER=icpx \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_SYCL=ON \
+        -DKokkos_ARCH_INTEL_PVC=ON \
+        -DCMAKE_CXX_FLAGS="-fp-model=precise"
+\end{minted}
+
+The last option is required for math operators precision.
+
+\subsubsection{NVIDIA H100 GPU with CUDA}
+
+\begin{minted}{sh}
+    cmake \
+        -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_CUDA=ON \
+        -DKokkos_ARCH_HOPPER90=ON
+\end{minted}
+
+\subsubsection{NVIDIA A100 GPU with CUDA}
+
+\begin{minted}{sh}
+    cmake \
+        -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKokkos_ENABLE_CUDA=ON \
+        -DKokkos_ARCH_AMPERE80=ON
+\end{minted}
+
+\end{multicols}
+
+% add a watermark here
+
+%\watermark
+
+% add a notes section here
+
+%\notessection
+
+% add a notes section followed by a watermark here
+
+%\notessection{\watermark}
+
+\end{document}
