@@ -11,9 +11,14 @@
 \RequirePackage{etoolbox}
 
 % option for text highlighting
-\newtoggle{kokkoshighlight}
-\togglefalse{kokkoshighlight}
-\DeclareOption{kokkoshighlight}{\toggletrue{kokkoshighlight}}
+\newtoggle{kokkoshighlightmode}
+\togglefalse{kokkoshighlightmode}
+\DeclareOption{kokkoshighlight}{\toggletrue{kokkoshighlightmode}}
+
+% option for print margins
+\newtoggle{printmode}
+\togglefalse{printmode}
+\DeclareOption{print}{\toggletrue{printmode}}
 
 \ProcessOptions\relax
 
@@ -64,7 +69,7 @@
     resetmargins,
 }
 
-\iftoggle{kokkoshighlight}{
+\iftoggle{kokkoshighlightmode}{
     \setminted{style=kokkos}
 }{
     \setminted{style=friendly}
@@ -145,23 +150,38 @@
 %%% lengths defined below.
 %%% a good first guess is 0.4cm
 \setlength{\printmargin}{0cm}
+\iftoggle{printmode}{
+    \setlength{\printmargin}{0.4cm}
+}
 
 %%% change here to reduce the effect of \printmargin on the outer horizontal
 %%% margin for the text body only
 %%% a good first guess is 0.2cm
 \setlength{\marginwidthreduction}{0cm}
+\iftoggle{printmode}{
+    \setlength{\marginwidthreduction}{0.2cm}
+}
 
 %%% change here to reduce the space between the text and the header/footer
 %%% a good first guess is 0.2cm
 \setlength{\headerfooterskipreduction}{0cm}
+\iftoggle{printmode}{
+    \setlength{\headerfooterskipreduction}{0.2cm}
+}
 
 %%% change here to reduce the height of the header
 %%% a good first guess is 0.2cm
 \setlength{\headerheightreduction}{0cm}
+\iftoggle{printmode}{
+    \setlength{\headerheightreduction}{0.2cm}
+}
 
 %%% change here to reduce the height of the footer
 %%% a good first guess is 0.2cm
 \setlength{\footerheightreduction}{0cm}
+\iftoggle{printmode}{
+    \setlength{\footerheightreduction}{0.2cm}
+}
 
 %%% change here to put a factor ratio on text size
 %%% change this value if nothing else helps!
