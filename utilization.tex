@@ -481,7 +481,7 @@ Kokkos::parallel_for(
     \mintinline{c++}{Kokkos::atomic_min(&x, y)} & \mintinline{c++}{x = std::min(x, y)} \\
     \mintinline{c++}{Kokkos::atomic_mod(&x, y)} & \mintinline{c++}{x }{\scriptsize\texttt{\%}}\mintinline{c++}{= y} \\
     \mintinline{c++}{Kokkos::atomic_mul(&x)} & \mintinline{c++}{x *= y} \\
-    \mintinline{c++}{Kokkos::atomic_nand(&x, y)} & \mintinline{c++}{x = !(x && y)} \\
+    \mintinline{c++}{Kokkos::atomic_nand(&x, y)} & \mintinline{c++}{x = ~(x & y)} \\
     \mintinline{c++}{Kokkos::atomic_or(&x, y)} & \mintinline{c++}{x |= y} \\
     \mintinline{c++}{Kokkos::atomic_rshift(&x, y)} & \mintinline{c++}{x = x >> y} \\
     \mintinline{c++}{Kokkos::atomic_sub(&x, y)} & \mintinline{c++}{x -= y} \\
