@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
 \subsubsection{Create}
 
 \begin{minted}{c++}
-Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElementsAtRuntimeI, numberOfElementsAtRuntimeJ);
+Kokkos::View<DataType, LayoutType, MemorySpace, MemoryTraits> view("label", numberOfElementsAtRuntimeI, numberOfElementsAtRuntimeJ, ...);
 \end{minted}
 
 \begin{tblr}[theme=kokkostable]{lX}
@@ -96,7 +96,7 @@ The order of template arguments is important.
 
 \begin{tblr}[theme=kokkostable]{lX}
     Method & Description \\
-    \mintinline{c++}{(i, j...)} & Returns and sets the value at index \mintinline{c++}{i},
+    \mintinline{c++}{(i, j, ...)} & Returns and sets the value at index \mintinline{c++}{i},
     \mintinline{c++}{j}, etc. \\
     \mintinline{c++}{size()} & Returns the total number of elements in the view \\
     \mintinline{c++}{rank()} & Returns the number of dimensions \\
@@ -108,13 +108,13 @@ The order of template arguments is important.
 Resize and preserve content
 
 \begin{minted}{c++}
-Kokkos::resize(view, newNumberOfElementsI, newNumberOfElementsJ...);
+Kokkos::resize(view, newNumberOfElementsI, newNumberOfElementsJ, ...);
 \end{minted}
 
 Reallocate and do not preserve content
 
 \begin{minted}{c++}
-Kokkos::realloc(view, newNumberOfElementsI, newNumberOfElementsJ...);
+Kokkos::realloc(view, newNumberOfElementsI, newNumberOfElementsJ, ...);
 \end{minted}
 
 \subsection{Memory Layouts}
@@ -541,7 +541,7 @@ Kokkos::abort("message");
 \subsection{Print inside a kernel}
 
 \begin{minted}{c++}
-Kokkos::printf("format string", arg1, arg2);
+Kokkos::printf("format string", arg1, arg2, ...);
 \end{minted}
 
 Similar to \mintinline{c++}{std::printf}.
