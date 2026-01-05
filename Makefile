@@ -7,3 +7,6 @@ clean:
 cleanall:
 	latexmk -C
 	rm -rf _minted-*
+
+%:
+	latexmk -pdf $@
