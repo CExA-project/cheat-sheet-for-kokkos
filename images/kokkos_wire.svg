@@ -7,36 +7,60 @@
    viewBox="0 0 38.724598 65.877686"
    version="1.1"
    id="svg5"
+   sodipodi:docname="kokkos_wire.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:export-filename="../../../../Téléchargements/kokkos_wire.png"
+   inkscape:export-xdpi="600"
+   inkscape:export-ydpi="600"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview141"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.2861516"
+     inkscape:cx="87.483261"
+     inkscape:cy="138.00484"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg5" />
   <defs
      id="defs2" />
-  <g
-     id="layer1"
-     transform="translate(-44.660088,-48.011167)">
-    <path
-       style="fill:none;stroke:#bbd7e0;stroke-width:2.11667;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 45.794501,49.0695 H 81.888525 L 45.718383,112.83052 H 82.326429 Z"
-       id="path128" />
-    <path
-       style="fill:none;stroke:#bbd7e0;stroke-width:2.11667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 45.718421,49.0695 v 63.71306"
-       id="path130" />
-    <path
-       style="fill:none;stroke:#bbd7e0;stroke-width:1.41111;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 81.888525,49.0695 45.590068,70.026423"
-       id="path132" />
-    <path
-       style="fill:none;stroke:#bbd7e0;stroke-width:1.41111;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 82.326429,112.83052 45.821396,91.754326"
-       id="path134" />
-    <path
-       style="fill:none;stroke:#bbd7e0;stroke-width:0.705556;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 45.794501,112.78256 73.173859,96.975079"
-       id="path136" />
-    <path
-       style="fill:none;stroke:#bbd7e0;stroke-width:0.705556;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 45.794501,49.0695 72.978157,64.76399"
-       id="path138" />
-  </g>
+  <path
+     style="fill:none;stroke:#bbd7e0;stroke-width:0.705556;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 1.134413,1.058333 28.513771,16.865814"
+     id="path405" />
+  <path
+     style="fill:none;stroke:#bbd7e0;stroke-width:1.41111;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 37.666341,1.010373 1.161308,22.086567"
+     id="path403" />
+  <path
+     style="fill:none;stroke:#bbd7e0;stroke-width:2.11667;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 1.134413,64.819353 H 37.666341 L 1.134413,1.058333 h 36.531928 z"
+     id="path128"
+     sodipodi:nodetypes="ccccc" />
+  <path
+     style="fill:none;stroke:#bbd7e0;stroke-width:2.11667;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 1.058333,64.771393 V 1.058333"
+     id="path130" />
+  <path
+     style="fill:none;stroke:#bbd7e0;stroke-width:1.41111;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 37.666341,64.819353 1.161308,43.743159"
+     id="path134" />
+  <path
+     style="fill:none;stroke:#bbd7e0;stroke-width:0.705556;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 1.134413,64.771393 28.513771,48.963912"
+     id="path136" />
 </svg>
