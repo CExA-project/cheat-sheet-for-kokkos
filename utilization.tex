@@ -579,7 +579,7 @@ Kokkos::Timer timer;
 \begin{tblr}[theme=kokkostable]{lX}
     Macro & Description \\
     \mintinline{c++}{KOKKOS_LAMBDA} & Replaces capture argument for lambdas \\
-    \mintinline{c++}{KOKKOS_CLASS_LAMBDA} & Replaces capture argument for lambdas, captures \mintinline{c++}{this} \\
+    \mintinline{c++}{KOKKOS_CLASS_LAMBDA} & Replaces capture argument for lambdas, captures \mintinline{c++}{*this} \\
     \mintinline{c++}{KOKKOS_FUNCTION} & Functor attribute \\
     \mintinline{c++}{KOKKOS_INLINE_FUNCTION} & Inlined functor attribute \\
 \end{tblr}
