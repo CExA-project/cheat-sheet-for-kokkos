@@ -5,6 +5,7 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{adjustbox}
 
 % document properties
 \title{Installation cheat sheet for Kokkos}
@@ -185,12 +186,16 @@ Device options are mandatory. They can be deduced from the device if present at 
 \RenewDocumentCommand\TblrAlignBoth{}{\RaggedRight}
 \begin{tblr}[theme=kokkostable]{llX}
     Option & Arch. & Associated cards \\
-    \mintinline{text}{-DKokkos_ARCH_AMD_GFX942_APU=ON} & GFX942 APU & MI300A \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX950=ON} & GFX950 & MI350X, MI355X \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX942_APU=ON} & \adjustbox{scale={0.85}{1}}{GFX942 APU} & MI300A \\
     \mintinline{text}{-DKokkos_ARCH_AMD_GFX942=ON} & GFX942 & MI300X \\
     \mintinline{text}{-DKokkos_ARCH_AMD_GFX90A=ON} & GFX90A & MI210, MI250, MI250X \\
     \mintinline{text}{-DKokkos_ARCH_AMD_GFX908=ON} & GFX908 & MI100 \\
     \mintinline{text}{-DKokkos_ARCH_AMD_GFX906=ON} & GFX906 & MI50, MI60 \\
-    \mintinline{text}{-DKokkos_ARCH_AMD_GFX1103=ON} & GFX1103 & Ryzen 8000G, Radeon 740M, 760M, 780M, 880M, 980M \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX1152=ON} & GFX1152 & Radeon 860M \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX1151=ON} & GFX1151 & Strix Halo \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX1103=ON} & GFX1103 & Ryzen 8000G, Radeon 740M, \adjustbox{scale={0.75}{1}}{760M, 780M, 880M, 980M} \\
+    \mintinline{text}{-DKokkos_ARCH_AMD_GFX1101=ON} & GFX1101 & Radeon RX 7800 XT, RX 7700 XT, RX 7700 \\
     \mintinline{text}{-DKokkos_ARCH_AMD_GFX1100=ON} & GFX1100 & 7900xt \\
     \mintinline{text}{-DKokkos_ARCH_AMD_GFX1030=ON} & GFX1030 & V620, W6800 \\
 \end{tblr}
@@ -221,6 +226,7 @@ Device options are mandatory. They can be deduced from the device if present at 
 \begin{tblr}[theme=kokkostable]{lllX}
     Option & Arch. & CC & Assoc. cards \\
     \mintinline{text}{-DKokkos_ARCH_BLACKWELL120=ON} & Blackwell & 12.0 & RTX 5080 \\
+    \mintinline{text}{-DKokkos_ARCH_BLACKWELL103=ON} & Blackwell & 10.0 & B300 \\
     \mintinline{text}{-DKokkos_ARCH_BLACKWELL100=ON} & Blackwell & 10.0 & B200, B100 \\
     \mintinline{text}{-DKokkos_ARCH_HOPPER90=ON} & Hopper & 9.0 & H200, H100 \\
     \mintinline{text}{-DKokkos_ARCH_ADA89=ON} & Ada & 8.9 & L4, L40 \\
