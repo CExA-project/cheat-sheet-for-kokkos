@@ -313,8 +313,7 @@ ExecutionPolicy<ExecutionSpace, Schedule, IndexType, LaunchBounds, WorkTag> poli
     Template arg. & Description \\
     \mintinline{c++}{ExecutionSpace} & See execution spaces; defaults to \mintinline{c++}{Kokkos::DefaultExecutionSpace} \\
     \mintinline{c++}{Schedule} & How to schedule work items; defaults to machine and backend specifics \\
-    \mintinline{c++}{IndexType} & Integer type to be used for the index; defaults to
-    \mintinline{c++}{int64_t} \\
+    \mintinline{c++}{IndexType} & Integer type for the index; defaults to the one defined by \mintinline{c++}{ExecutionSpace}, usually \mintinline{c++}{int64_t} on CPUs and \mintinline{c++}{int32_t} on GPUs \\
     \mintinline{c++}{LaunchBounds} & Hints for CUDA and HIP launch bounds \\
     \mintinline{c++}{WorkTag} & Empty tag class to call the functor \\
 \end{tblr}
@@ -474,13 +473,13 @@ Kokkos::parallel_for(
     \mintinline{c++}{Kokkos::atomic_add(&x, y)} & \mintinline{c++}{x += y} \\
     \mintinline{c++}{Kokkos::atomic_and(&x, y)} & \mintinline{c++}{x &= y} \\
     \mintinline{c++}{Kokkos::atomic_dec(&x)} & \mintinline{c++}{x--} \\
-    \mintinline{c++}{Kokkos::atomic_div(&x)} & \mintinline{c++}{x /= y} \\
+    \mintinline{c++}{Kokkos::atomic_div(&x, y)} & \mintinline{c++}{x /= y} \\
     \mintinline{c++}{Kokkos::atomic_inc(&x)} & \mintinline{c++}{x++} \\
     \mintinline{c++}{Kokkos::atomic_lshift(&x, y)} & \mintinline{c++}{x <<= y} \\
     \mintinline{c++}{Kokkos::atomic_max(&x, y)} & \mintinline{c++}{x = std::max(x, y)} \\
     \mintinline{c++}{Kokkos::atomic_min(&x, y)} & \mintinline{c++}{x = std::min(x, y)} \\
     \mintinline{c++}{Kokkos::atomic_mod(&x, y)} & \mintinline{c++}{x }{\scriptsize\texttt{\%}}\mintinline{c++}{= y} \\
-    \mintinline{c++}{Kokkos::atomic_mul(&x)} & \mintinline{c++}{x *= y} \\
+    \mintinline{c++}{Kokkos::atomic_mul(&x, y)} & \mintinline{c++}{x *= y} \\
     \mintinline{c++}{Kokkos::atomic_nand(&x, y)} & \mintinline{c++}{x = ~(x & y)} \\
     \mintinline{c++}{Kokkos::atomic_or(&x, y)} & \mintinline{c++}{x |= y} \\
     \mintinline{c++}{Kokkos::atomic_rshift(&x, y)} & \mintinline{c++}{x >>= y} \\
@@ -578,11 +577,13 @@ Kokkos::Timer timer;
 
 \begin{tblr}[theme=kokkostable]{lX}
     Macro & Description \\
-    \mintinline{c++}{KOKKOS_LAMBDA} & Replaces capture argument for lambdas \\
-    \mintinline{c++}{KOKKOS_CLASS_LAMBDA} & Replaces capture argument for lambdas, captures \mintinline{c++}{*this} \\
-    \mintinline{c++}{KOKKOS_FUNCTION} & Functor attribute \\
-    \mintinline{c++}{KOKKOS_INLINE_FUNCTION} & Inlined functor attribute \\
+    \mintinline{c++}{KOKKOS_LAMBDA} & Annotations and capture argument for lambdas \\
+    \mintinline{c++}{KOKKOS_CLASS_LAMBDA} & Annotations and capture argument, including \mintinline{c++}{*this}, for lambdas \\
+    \mintinline{c++}{KOKKOS_FUNCTION} & Annotations for free functions or functors \\
+    \mintinline{c++}{KOKKOS_INLINE_FUNCTION} & Annotations and inline specifier for free functions or functors \\
 \end{tblr}
+
+These macros add the compiler-specific annotations required by the enabled GPU backend (\mintinline{cuda}{__host__ __device__} for CUDA and HIP).
 
 \subsection{Extra macros}
 
