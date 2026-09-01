@@ -162,10 +162,10 @@ Create and allocate on host if source view is not in host space
 auto mirrorView = Kokkos::create_mirror_view(view);
 \end{minted}
 
-Create, allocate and synchronize if source view is not in same space as destination view
+Create, allocate and synchronize on host if source view is not in host space
 
 \begin{minted}{c++}
-auto mirrorView = Kokkos::create_mirror_view_and_copy(ExecutionSpace(), view);
+auto mirrorView = Kokkos::create_mirror_view_and_copy(view);
 \end{minted}
 
 \subsection{Subview}
