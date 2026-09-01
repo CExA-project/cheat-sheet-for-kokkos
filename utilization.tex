@@ -577,10 +577,10 @@ Kokkos::Timer timer;
 
 \begin{tblr}[theme=kokkostable]{lX}
     Macro & Description \\
-    \mintinline{c++}{KOKKOS_LAMBDA} & Replaces capture argument for lambdas \\
-    \mintinline{c++}{KOKKOS_CLASS_LAMBDA} & Replaces capture argument for lambdas, captures \mintinline{c++}{*this} \\
-    \mintinline{c++}{KOKKOS_FUNCTION} & Annotation for device-callable functions \\
-    \mintinline{c++}{KOKKOS_INLINE_FUNCTION} & Inline attribute for functions \\
+    \mintinline{c++}{KOKKOS_LAMBDA} & Annotations and capture argument for lambdas \\
+    \mintinline{c++}{KOKKOS_CLASS_LAMBDA} & Annotations and capture argument, including \mintinline{c++}{*this}, for lambdas \\
+    \mintinline{c++}{KOKKOS_FUNCTION} & Annotations for free functions or functors \\
+    \mintinline{c++}{KOKKOS_INLINE_FUNCTION} & Annotations and inline specifier for free functions or functors \\
 \end{tblr}
 
 These macros add the compiler-specific annotations required by the enabled GPU backend (\mintinline{c++}{__host__ __device__} for CUDA and HIP).
