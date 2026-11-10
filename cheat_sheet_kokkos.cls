@@ -76,7 +76,7 @@
 }
 
 \setmintedinline{
-    bgcolor=\empty,
+    bgcolor={},
 }
 
 %% remove minted vertical margins
